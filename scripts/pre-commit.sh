@@ -34,6 +34,9 @@ if [ "$nonformatted" ]; then
   printf "\n"
 fi
 
+# Run linter.
+make linter || exit 1
+
 # Build binaries to ensure program can be built
 make build || exit 1
 

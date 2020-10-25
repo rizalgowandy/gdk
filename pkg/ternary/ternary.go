@@ -24,6 +24,7 @@ func Int(condition bool, yes, no int) int {
 	return no
 }
 
+// Float64 returns float64 based on condition.
 func Float64(condition bool, yes, no float64) float64 {
 	if condition {
 		return yes
