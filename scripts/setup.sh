@@ -1,6 +1,6 @@
 #!/usr/bin/zsh
 
-echo -e "\e[32mSetup: \e[33mstarting.\e[0m\n"
+echo -e "\e[32mRunning: \e[33msetup.\e[0m\n"
 
 echo -e "\e[32mInstalling: \e[33mgin for live reload.\e[0m"
 command -v gin 2>/dev/null || go get -v github.com/codegangsta/gin
