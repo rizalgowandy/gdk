@@ -4,7 +4,7 @@ import (
 	"testing"
 )
 
-func TestToString(t *testing.T) {
+func TestToStr(t *testing.T) {
 	type args struct {
 		v interface{}
 	}
@@ -96,8 +96,8 @@ func TestToString(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := ToString(tt.args.v); got != tt.want {
-				t.Errorf("ToString() = %v, want %v", got, tt.want)
+			if got := ToStr(tt.args.v); got != tt.want {
+				t.Errorf("ToStr() = %v, want %v", got, tt.want)
 			}
 		})
 	}

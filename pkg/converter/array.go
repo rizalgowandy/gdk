@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 )
 
-// ToArrayOfInt convert any value to []int.
-func ToArrayOfInt(v interface{}) []int {
+// ToArrInt convert any value to []int.
+func ToArrInt(v interface{}) []int {
 	switch v := v.(type) {
 	case string:
 		var result []int
@@ -31,8 +31,8 @@ func ToArrayOfInt(v interface{}) []int {
 	}
 }
 
-// ToArrayOfString convert any value to []string.
-func ToArrayOfString(v interface{}) []string {
+// ToArrStr convert any value to []string.
+func ToArrStr(v interface{}) []string {
 	switch v := v.(type) {
 	case string:
 		var result []string

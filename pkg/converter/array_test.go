@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func TestToArrayOfInt(t *testing.T) {
+func TestToArrInt(t *testing.T) {
 	type args struct {
 		v interface{}
 	}
@@ -55,14 +55,14 @@ func TestToArrayOfInt(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := ToArrayOfInt(tt.args.v); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("ToArrayOfInt() = %v, want %v", got, tt.want)
+			if got := ToArrInt(tt.args.v); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("TestToArrInt() = %v, want %v", got, tt.want)
 			}
 		})
 	}
 }
 
-func TestToArrayOfString(t *testing.T) {
+func TestToArrStr(t *testing.T) {
 	type args struct {
 		v interface{}
 	}
@@ -112,8 +112,8 @@ func TestToArrayOfString(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := ToArrayOfString(tt.args.v); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("ToArrayOfString() = %v, want %v", got, tt.want)
+			if got := ToArrStr(tt.args.v); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("TestToArrStr() = %v, want %v", got, tt.want)
 			}
 		})
 	}

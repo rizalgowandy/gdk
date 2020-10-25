@@ -6,8 +6,8 @@ import (
 	"strings"
 )
 
-// ToString converts any value to string.
-func ToString(v interface{}) string {
+// ToStr converts any value to string.
+func ToStr(v interface{}) string {
 	if v == nil {
 		return ""
 	}
