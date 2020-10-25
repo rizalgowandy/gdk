@@ -1,0 +1,10 @@
+.PHONY: help
+help: # print all available make commands and their usages.
+	@printf "\e[32musage: make [target]\n\n\e[0m"
+	@grep -E '^[a-zA-Z_-]+:.*?# .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?# "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
+
+build: # ensure all binary can be build.
+	@go build -o bin/gdk
+
+setup: # install configuration and dependencies for development.
+	@./scripts/setup.sh
