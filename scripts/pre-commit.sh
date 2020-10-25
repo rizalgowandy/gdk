@@ -45,4 +45,5 @@ go mod tidy
 git add go.mod
 git add go.sum
 
-echo -e "\e[35mCommitting...\e[0m"
+echo ""
+echo -e "\e[32mCommitting...\e[0m"

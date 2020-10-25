@@ -1,15 +1,6 @@
 #!/usr/bin/zsh
 
-echo -e "\e[32mInstalling: \e[33mtoilet to improve your terminal.\e[0m"
-if [[ "$OSTYPE" == "linux-gnu"* ]]; then
-  command -v toilet 2>/dev/null || sudo apt-get install toilet
-elif [[ "$OSTYPE" == "darwin"* ]]; then
-  command -v toilet 2>/dev/null || brew install toilet
-else
-  echo -e "\e[31mOops, your OS is not supported yet.\e[0m"
-  exit 1
-fi
-echo ""
+echo -e "\e[32mSetup: \e[33mstarting.\e[0m\n"
 
 echo -e "\e[32mInstalling: \e[33mgin for live reload.\e[0m"
 command -v gin 2>/dev/null || go get -v github.com/codegangsta/gin
@@ -46,5 +37,4 @@ chmod +x $file
 test -f $file && echo "$file exists."
 echo ""
 
-toilet -f pagga --metal SETUP SUCCESS
-echo ""
+echo -e "\e[32mSetup: \e[33msuccess.\e[0m"
