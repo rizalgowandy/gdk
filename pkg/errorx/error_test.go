@@ -84,11 +84,49 @@ func TestError_Error(t *testing.T) {
 				},
 			},
 		},
+		{
+			name: "3 layer with no Op",
+			input: &Error{
+				Code:    Internal,
+				Message: "Internal server error.",
+				Op:      "userService.FindUserByID",
+				Err: &Error{
+					Code:    Internal,
+					Message: "",
+					Op:      "",
+					Err: &Error{
+						Code:    Gateway,
+						Message: "Gateway server error.",
+						Op:      "accountGateway.FindUserByID",
+						Err:     nil,
+					},
+				},
+			},
+		},
+		{
+			name: "3 layer with no Op and Unknown",
+			input: &Error{
+				Code:    Internal,
+				Message: "Internal server error.",
+				Op:      "userService.FindUserByID",
+				Err: &Error{
+					Code:    Unknown,
+					Message: "Random error.",
+					Op:      "",
+					Err: &Error{
+						Code:    Gateway,
+						Message: "Gateway server error.",
+						Op:      "accountGateway.FindUserByID",
+						Err:     nil,
+					},
+				},
+			},
+		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			t.Log(tt.input.Error())
+			t.Log("\n\n" + tt.input.Error() + "\n")
 		})
 	}
 }

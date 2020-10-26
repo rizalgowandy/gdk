@@ -130,6 +130,7 @@ issues:
         - scopelint
         - dupl
         - stylecheck
+        - funlen
 
     # https://github.com/go-critic/go-critic/issues/926
     - linters:

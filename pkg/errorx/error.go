@@ -33,11 +33,14 @@ func (e *Error) Error() string {
 		pad(b, ": ")
 		b.WriteString(string(e.Op))
 	}
-	if e.Code != Unknown || e.Message != "" {
+	if e.Op != "" && (e.Code != Unknown || e.Message != "") {
 		pad(b, ": ")
 	}
 	if e.Code != Unknown {
-		b.WriteString("<" + string(e.Code) + "> ")
+		b.WriteString("<" + string(e.Code) + ">")
+		if e.Message != "" {
+			b.WriteString(" ")
+		}
 	}
 	if e.Message != "" {
 		b.WriteString(e.Message)
