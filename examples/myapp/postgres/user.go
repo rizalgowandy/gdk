@@ -12,7 +12,7 @@ type userPostgres struct {
 	db sql.DB
 }
 
-// FindUserByID returns a user by ID. Returns ENOTFOUND if user does not exist.
+// FindUserByID returns a user by ID. Returns ENotFound if user does not exist.
 func (u *userPostgres) FindUserByID(ctx context.Context, id int) (*myapp.User, error) {
 	const op = "userPostgres.FindUserByID"
 
@@ -30,7 +30,7 @@ func (u *userPostgres) FindUserByID(ctx context.Context, id int) (*myapp.User, e
 
 	if err == sql.ErrNoRows {
 		return nil, &errorx.Error{
-			Code: errorx.ENOTFOUND,
+			Code: errorx.ENotFound,
 			Op:   op,
 			Err:  err,
 		}

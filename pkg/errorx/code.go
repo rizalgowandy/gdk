@@ -2,13 +2,14 @@ package errorx
 
 // Application error codes.
 const (
-	ECONFLICT = "conflict"  // action cannot be performed
-	EINTERNAL = "internal"  // internal error
-	EINVALID  = "invalid"   // validation failed
-	ENOTFOUND = "not_found" // entity does not exist
+	EConflict = "conflict"  // action cannot be performed
+	EInternal = "internal"  // internal error
+	EInvalid  = "invalid"   // validation failed
+	ENotFound = "not_found" // entity does not exist
+	EGateway  = "gateway"   // gateway return error
 )
 
-// Code returns the code of the root error, if available. Otherwise returns EINTERNAL.
+// Code returns the code of the root error, if available. Otherwise returns EInternal.
 func Code(err error) string {
 	if err == nil {
 		return ""
@@ -17,5 +18,5 @@ func Code(err error) string {
 	} else if ok && e.Err != nil {
 		return Code(e.Err)
 	}
-	return EINTERNAL
+	return EInternal
 }
