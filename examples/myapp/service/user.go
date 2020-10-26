@@ -7,11 +7,11 @@ import (
 	"github.com/peractio/gdk/pkg/errorx"
 )
 
-type UserService struct {
+type userService struct {
 	repository myapp.UserRepository
 }
 
-func (u *UserService) FindUserByID(ctx context.Context, id int) (*myapp.User, error) {
+func (u *userService) FindUserByID(ctx context.Context, id int) (*myapp.User, error) {
 	user, err := u.repository.FindUserByID(ctx, id)
 	if errorx.Code(err) == errorx.ENOTFOUND {
 		// retry another method of finding our user
@@ -23,26 +23,37 @@ func (u *UserService) FindUserByID(ctx context.Context, id int) (*myapp.User, er
 }
 
 // CreateUser creates a new user in the system.
-// Returns EINVALID if the username is blank or already exists.
+// Returns EINVALID if the username is blank.
 // Returns ECONFLICT if the username is already in use.
-func (u *UserService) CreateUser(ctx context.Context, user *myapp.User) error {
+func (u *userService) CreateUser(ctx context.Context, user *myapp.User) error {
+	const op = "userService.CreateUser"
+
 	// Validate username is non-blank.
 	if user.Username == "" {
-		return &errorx.Error{Code: errorx.EINVALID, Message: "Username is required."}
+		return &errorx.Error{
+			Code:    errorx.EINVALID,
+			Message: "Username is required.",
+			Op:      op,
+			Err:     nil,
+		}
 	}
 
 	// Verify user does not already exist.
-	user, err := u.repository.FindUserByUsername(ctx, user.Username)
-	if user != nil {
-		return &errorx.Error{
-			Code:    errorx.ECONFLICT,
-			Message: "Username is already in use. Please choose a different username.",
-		}
-	}
-	if errorx.Code(err) != errorx.ENOTFOUND {
+	inUse, err := u.isUsernameInUse(ctx, user.Username)
+	if err != nil {
 		return &errorx.Error{
 			Code:    errorx.EINTERNAL,
 			Message: "An internal error has occurred. Please contact technical support.",
+			Op:      op,
+			Err:     err,
+		}
+	}
+	if inUse {
+		return &errorx.Error{
+			Code:    errorx.ECONFLICT,
+			Message: "Username is already in use. Please choose a different username.",
+			Op:      op,
+			Err:     nil,
 		}
 	}
 
@@ -52,8 +63,30 @@ func (u *UserService) CreateUser(ctx context.Context, user *myapp.User) error {
 		return &errorx.Error{
 			Code:    errorx.EINTERNAL,
 			Message: "An internal error has occurred. Please contact technical support.",
+			Op:      op,
+			Err:     err,
 		}
 	}
 
 	return nil
+}
+
+func (u *userService) isUsernameInUse(ctx context.Context, username string) (bool, error) {
+	const op = "isUsernameInUse"
+
+	user, err := u.repository.FindUserByUsername(ctx, username)
+	if errorx.Code(err) == errorx.ENOTFOUND {
+		return false, nil
+	}
+
+	if err != nil {
+		return false, &errorx.Error{
+			Code:    errorx.EINTERNAL,
+			Message: "An internal error has occurred. Please contact technical support.",
+			Op:      op,
+			Err:     err,
+		}
+	}
+
+	return user != nil, nil
 }

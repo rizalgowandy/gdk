@@ -8,13 +8,13 @@ import (
 	"github.com/peractio/gdk/pkg/errorx"
 )
 
-type UserPostgres struct {
+type userPostgres struct {
 	db sql.DB
 }
 
 // FindUserByID returns a user by ID. Returns ENOTFOUND if user does not exist.
-func (u *UserPostgres) FindUserByID(ctx context.Context, id int) (*myapp.User, error) {
-	const op = "UserPostgres.FindUserByID"
+func (u *userPostgres) FindUserByID(ctx context.Context, id int) (*myapp.User, error) {
+	const op = "userPostgres.FindUserByID"
 
 	query := `
 		SELECT id, username
@@ -44,8 +44,8 @@ func (u *UserPostgres) FindUserByID(ctx context.Context, id int) (*myapp.User, e
 }
 
 // CreateUser creates a new user in the system with a default role.
-func (u *UserPostgres) CreateUser(ctx context.Context, user *myapp.User) error {
-	const op = "UserPostgres.CreateUser"
+func (u *userPostgres) CreateUser(ctx context.Context, user *myapp.User) error {
+	const op = "userPostgres.CreateUser"
 
 	// Perform validation...
 
@@ -62,7 +62,7 @@ func (u *UserPostgres) CreateUser(ctx context.Context, user *myapp.User) error {
 }
 
 // insertUser inserts the user into the database.
-func (u *UserPostgres) insertUser(ctx context.Context, user *myapp.User) error {
+func (u *userPostgres) insertUser(ctx context.Context, user *myapp.User) error {
 	const op = "insertUser"
 
 	query := `
@@ -76,7 +76,7 @@ func (u *UserPostgres) insertUser(ctx context.Context, user *myapp.User) error {
 }
 
 // attachRole inserts a role record for a user in the database
-func (u *UserPostgres) attachRole(ctx context.Context, id int, role string) error {
+func (u *userPostgres) attachRole(ctx context.Context, id int, role string) error {
 	const op = "attachRole"
 
 	query := `
