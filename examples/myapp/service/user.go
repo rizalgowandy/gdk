@@ -13,7 +13,7 @@ type UserService struct {
 
 func (u *UserService) FindUserByID(ctx context.Context, id int) (*myapp.User, error) {
 	user, err := u.repository.FindUserByID(ctx, id)
-	if errorx.ErrorCode(err) == errorx.ENOTFOUND {
+	if errorx.Code(err) == errorx.ENOTFOUND {
 		// retry another method of finding our user
 	} else if err != nil {
 		return nil, err
@@ -39,7 +39,7 @@ func (u *UserService) CreateUser(ctx context.Context, user *myapp.User) error {
 			Message: "Username is already in use. Please choose a different username.",
 		}
 	}
-	if errorx.ErrorCode(err) != errorx.ENOTFOUND {
+	if errorx.Code(err) != errorx.ENOTFOUND {
 		return &errorx.Error{
 			Code:    errorx.EINTERNAL,
 			Message: "An internal error has occurred. Please contact technical support.",
