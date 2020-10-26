@@ -13,7 +13,7 @@ type userService struct {
 
 func (u *userService) FindUserByID(ctx context.Context, id int) (*myapp.User, error) {
 	user, err := u.repository.FindUserByID(ctx, id)
-	if errorx.Code(err) == errorx.ENotFound {
+	if errorx.GetCode(err) == errorx.NotFound {
 		// retry another method of finding our user
 	} else if err != nil {
 		return nil, err
@@ -23,15 +23,15 @@ func (u *userService) FindUserByID(ctx context.Context, id int) (*myapp.User, er
 }
 
 // CreateUser creates a new user in the system.
-// Returns EInvalid if the username is blank.
-// Returns EConflict if the username is already in use.
+// Returns Invalid if the username is blank.
+// Returns Conflict if the username is already in use.
 func (u *userService) CreateUser(ctx context.Context, user *myapp.User) error {
 	const op = "userService.CreateUser"
 
 	// Validate username is non-blank.
 	if user.Username == "" {
 		return &errorx.Error{
-			Code:    errorx.EInvalid,
+			Code:    errorx.Invalid,
 			Message: "Username is required.",
 			Op:      op,
 			Err:     nil,
@@ -42,7 +42,7 @@ func (u *userService) CreateUser(ctx context.Context, user *myapp.User) error {
 	inUse, err := u.isUsernameInUse(ctx, user.Username)
 	if err != nil {
 		return &errorx.Error{
-			Code:    errorx.EInternal,
+			Code:    errorx.Internal,
 			Message: "An internal error has occurred. Please contact technical support.",
 			Op:      op,
 			Err:     err,
@@ -50,7 +50,7 @@ func (u *userService) CreateUser(ctx context.Context, user *myapp.User) error {
 	}
 	if inUse {
 		return &errorx.Error{
-			Code:    errorx.EConflict,
+			Code:    errorx.Conflict,
 			Message: "Username is already in use. Please choose a different username.",
 			Op:      op,
 			Err:     nil,
@@ -61,7 +61,7 @@ func (u *userService) CreateUser(ctx context.Context, user *myapp.User) error {
 	err = u.repository.CreateUser(ctx, user)
 	if err != nil {
 		return &errorx.Error{
-			Code:    errorx.EInternal,
+			Code:    errorx.Internal,
 			Message: "An internal error has occurred. Please contact technical support.",
 			Op:      op,
 			Err:     err,
@@ -75,13 +75,13 @@ func (u *userService) isUsernameInUse(ctx context.Context, username string) (boo
 	const op = "isUsernameInUse"
 
 	user, err := u.repository.FindUserByUsername(ctx, username)
-	if errorx.Code(err) == errorx.ENotFound {
+	if errorx.GetCode(err) == errorx.NotFound {
 		return false, nil
 	}
 
 	if err != nil {
 		return false, &errorx.Error{
-			Code:    errorx.EInternal,
+			Code:    errorx.Internal,
 			Message: "An internal error has occurred. Please contact technical support.",
 			Op:      op,
 			Err:     err,
