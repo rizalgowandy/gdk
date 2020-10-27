@@ -18,6 +18,7 @@ type errorString struct {
 	s string
 }
 
+// Error returns the string representation of the error message.
 func (e *errorString) Error() string {
 	return e.s
 }

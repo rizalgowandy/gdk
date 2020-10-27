@@ -2,7 +2,6 @@ package errorx
 
 import (
 	"bytes"
-	"encoding/binary"
 )
 
 // Separator is the string used to separate nested errors.
@@ -16,17 +15,22 @@ var Separator = ":\n\t"
 // Error defines a standard application error.
 type Error struct {
 	// Machine-readable error code.
-	Code Code
+	Code Code `json:"code,omitempty"`
 
 	// Human-readable message.
-	Message string
+	Message string `json:"message,omitempty"`
 
 	// Logical operation and nested error.
-	Op  Op
-	Err error
+	Op  Op    `json:"op,omitempty"`
+	Err error `json:"child,omitempty"`
 }
 
 // Error returns the string representation of the error message.
+//
+// Example:
+//  userService.FindUserByID: <internal> Internal server error.:
+//      accountGateway.FindUserByID: <gateway> Gateway server error.:
+//      io.Write: Unknown error.
 func (e *Error) Error() string {
 	b := new(bytes.Buffer)
 	if e.Op != "" {
@@ -63,48 +67,6 @@ func (e *Error) Error() string {
 	return b.String()
 }
 
-// MarshalAppend marshals err into a byte slice. The result is appended to b,
-// which may be nil.
-// It returns the argument slice unchanged if the error is nil.
-func (e *Error) MarshalAppend(b []byte) []byte {
-	if e == nil {
-		return b
-	}
-	b = appendString(b, e.Message)
-	b = appendString(b, string(e.Op))
-	b = appendString(b, string(e.Code))
-	b = MarshalErrorAppend(e.Err, b)
-	return b
-}
-
-// MarshalBinary marshals its receiver into a byte slice, which it returns.
-// It returns nil if the error is nil. The returned error is always nil.
-func (e *Error) MarshalBinary() ([]byte, error) {
-	return e.MarshalAppend(nil), nil
-}
-
-// UnmarshalBinary unmarshal the byte slice into the receiver, which must be non-nil.
-// The returned error is always nil.
-func (e *Error) UnmarshalBinary(b []byte) error {
-	if len(b) == 0 {
-		return nil
-	}
-	data, b := getBytes(b)
-	if data != nil {
-		e.Message = string(data)
-	}
-	data, b = getBytes(b)
-	if data != nil {
-		e.Op = Op(data)
-	}
-	data, b = getBytes(b)
-	if data != nil {
-		e.Code = Code(data)
-	}
-	e.Err = UnmarshalError(b)
-	return nil
-}
-
 func (e *Error) isZero() bool {
 	return e.Code == Unknown && e.Message == "" && e.Op == "" && e.Err == nil
 }
@@ -115,18 +77,4 @@ func pad(b *bytes.Buffer, str string) {
 		return
 	}
 	b.WriteString(str)
-}
-
-// getBytes unmarshal the byte slice at b (uvarint count followed by bytes)
-// and returns the slice followed by the remaining bytes.
-// If there is insufficient data, both return values will be nil.
-func getBytes(b []byte) (data, remaining []byte) {
-	u, N := binary.Uvarint(b)
-	if len(b) < N+int(u) {
-		return nil, nil
-	}
-	if N == 0 {
-		return nil, b
-	}
-	return b[N : N+int(u)], b[N+int(u):]
 }

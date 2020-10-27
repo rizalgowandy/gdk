@@ -1,5 +1,6 @@
 package errorx
 
+// DefaultMessage is the string used as default response for GetMessage.
 var DefaultMessage = "An internal error has occurred. Please contact technical support."
 
 // GetMessage returns the human-readable message of the error, if available.

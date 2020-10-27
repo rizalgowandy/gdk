@@ -59,8 +59,9 @@ func E(args ...interface{}) error {
 	if !ok {
 		return e
 	}
-	// The previous error was also one of ours. Suppress duplications
-	// so the message won't contain the same code and message twice.
+	// The previous error was also one of ours.
+	// Suppress duplications so the message won't
+	// contain the same code and message twice.
 	if prev.Code == e.Code {
 		prev.Code = Unknown
 	}
@@ -90,7 +91,7 @@ func E(args ...interface{}) error {
 // Elements that are in the second argument but not present in
 // the first are ignored.
 //
-// For example:
+// Example:
 //  Match(errors.E(errorx.Permission, "message"), err)
 //  tests whether err is an Error with Code=Permission and Message=message.
 func Match(err1, err2 error) bool {

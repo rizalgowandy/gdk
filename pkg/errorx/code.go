@@ -6,7 +6,7 @@ type Code string
 
 // Application error codes.
 const (
-	Unknown    Code = ""           // Unclassified or unknown error. This value is not printed in the error message.
+	Unknown    Code = ""           // Unclassified or unknown error.
 	Permission Code = "permission" // Permission denied.
 	Internal   Code = "internal"   // Internal error or inconsistency.
 	Conflict   Code = "conflict"   // Action cannot be performed.
