@@ -22,7 +22,7 @@ type Error struct {
 
 	// Logical operation and nested error.
 	Op  Op    `json:"op,omitempty"`
-	Err error `json:"child,omitempty"`
+	Err error `json:"-"`
 }
 
 // Error returns the string representation of the error message.
