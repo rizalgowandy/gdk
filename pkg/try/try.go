@@ -6,8 +6,11 @@ var MaxRetries = 10
 // Do keeps trying the function until the second argument
 // returns false, or no error is returned.
 func Do(fn func(attempt int) (retry bool, err error)) error {
-	var err error
-	var cont bool
+	var (
+		err  error
+		cont bool
+	)
+
 	attempt := 1
 	for {
 		cont, err = fn(attempt)
@@ -19,6 +22,7 @@ func Do(fn func(attempt int) (retry bool, err error)) error {
 			return errMaxRetriesReached
 		}
 	}
+
 	return err
 }
 
