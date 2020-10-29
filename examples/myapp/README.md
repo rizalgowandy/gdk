@@ -1,2 +1,2 @@
 # MyApp
-MyApp is an example service with multiple binaries.
+MyApp is an example of a monolithic application with multiple binaries.
