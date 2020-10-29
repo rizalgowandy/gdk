@@ -1,4 +1,4 @@
-package myapp
+package entity
 
 // User represents user data model.
 type User struct {

@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-func TestGet(t *testing.T) {
+func TestGetCurrent(t *testing.T) {
 	tests := []struct {
 		name  string
 		input func()
@@ -31,7 +31,7 @@ func TestGet(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			tt.input()
-			got := Get()
+			got := GetCurrent()
 			if !reflect.DeepEqual(tt.want, got) {
 				msg := "\nwant = %#v" + "\ngot  = %#v"
 				t.Errorf(msg, tt.want, got)

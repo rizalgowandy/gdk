@@ -3,15 +3,16 @@ package service
 import (
 	"context"
 
-	"github.com/peractio/gdk/examples/myapp"
+	"github.com/peractio/gdk/examples/myapp/internal"
+	"github.com/peractio/gdk/examples/myapp/internal/entity"
 	"github.com/peractio/gdk/pkg/errorx"
 )
 
 type userService struct {
-	repository myapp.UserRepository
+	repository internal.UserRepository
 }
 
-func (u *userService) FindUserByID(ctx context.Context, id int) (*myapp.User, error) {
+func (u *userService) FindUserByID(ctx context.Context, id int) (*entity.User, error) {
 	user, err := u.repository.FindUserByID(ctx, id)
 	if errorx.GetCode(err) == errorx.NotFound {
 		// retry another method of finding our user
@@ -25,7 +26,7 @@ func (u *userService) FindUserByID(ctx context.Context, id int) (*myapp.User, er
 // CreateUser creates a new user in the system.
 // Returns Invalid if the username is blank.
 // Returns Conflict if the username is already in use.
-func (u *userService) CreateUser(ctx context.Context, user *myapp.User) error {
+func (u *userService) CreateUser(ctx context.Context, user *entity.User) error {
 	const op = "userService.CreateUser"
 
 	// Validate username is non-blank.

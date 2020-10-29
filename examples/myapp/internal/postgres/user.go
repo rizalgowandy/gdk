@@ -4,7 +4,7 @@ import (
 	"context"
 	"database/sql"
 
-	"github.com/peractio/gdk/examples/myapp"
+	"github.com/peractio/gdk/examples/myapp/internal/entity"
 	"github.com/peractio/gdk/pkg/errorx"
 )
 
@@ -13,7 +13,7 @@ type userPostgres struct {
 }
 
 // FindUserByID returns a user by ID. Returns NotFound if user does not exist.
-func (u *userPostgres) FindUserByID(ctx context.Context, id int) (*myapp.User, error) {
+func (u *userPostgres) FindUserByID(ctx context.Context, id int) (*entity.User, error) {
 	const op = "userPostgres.FindUserByID"
 
 	query := `
@@ -22,7 +22,7 @@ func (u *userPostgres) FindUserByID(ctx context.Context, id int) (*myapp.User, e
 		WHERE id = $1
 	`
 
-	var user myapp.User
+	var user entity.User
 	err := u.db.QueryRowContext(ctx, query, id).Scan(
 		&user.ID,
 		&user.Username,
@@ -44,7 +44,7 @@ func (u *userPostgres) FindUserByID(ctx context.Context, id int) (*myapp.User, e
 }
 
 // CreateUser creates a new user in the system with a default role.
-func (u *userPostgres) CreateUser(ctx context.Context, user *myapp.User) error {
+func (u *userPostgres) CreateUser(ctx context.Context, user *entity.User) error {
 	const op = "userPostgres.CreateUser"
 
 	// Perform validation...
@@ -62,7 +62,7 @@ func (u *userPostgres) CreateUser(ctx context.Context, user *myapp.User) error {
 }
 
 // insertUser inserts the user into the database.
-func (u *userPostgres) insertUser(ctx context.Context, user *myapp.User) error {
+func (u *userPostgres) insertUser(ctx context.Context, user *entity.User) error {
 	const op = "insertUser"
 
 	query := `

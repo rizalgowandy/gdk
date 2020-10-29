@@ -13,9 +13,9 @@ const (
 	Production  = "production"
 )
 
-// Get returns the current environment, if available.
+// GetCurrent returns the current environment, if available.
 // Otherwise returns environment as development.
-func Get() string {
+func GetCurrent() string {
 	env := os.Getenv("GDK_ENV")
 	if env != "" {
 		return env
@@ -26,25 +26,25 @@ func Get() string {
 
 // IsDevelopment return true when current environment is development.
 func IsDevelopment() bool {
-	return Get() == Development
+	return GetCurrent() == Development
 }
 
 // IsAlpha return true when current environment is alpha.
 func IsAlpha() bool {
-	return Get() == Alpha
+	return GetCurrent() == Alpha
 }
 
 // IsBeta return true when current environment is beta.
 func IsBeta() bool {
-	return Get() == Beta
+	return GetCurrent() == Beta
 }
 
 // IsStaging return true when current environment is staging.
 func IsStaging() bool {
-	return Get() == Staging
+	return GetCurrent() == Staging
 }
 
 // IsProduction return true when current environment is production.
 func IsProduction() bool {
-	return Get() == Production
+	return GetCurrent() == Production
 }

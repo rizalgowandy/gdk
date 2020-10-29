@@ -1,7 +1,6 @@
 package main
 
 import (
-	_ "github.com/peractio/gdk/examples/myapp"
 	_ "github.com/peractio/gdk/pkg/converter"
 	_ "github.com/peractio/gdk/pkg/env"
 	_ "github.com/peractio/gdk/pkg/errorx"
