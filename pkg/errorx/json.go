@@ -72,6 +72,5 @@ func convertAsArr(input error) []Error {
 	}
 
 	res = append(res, convertAsArr(subErr)...)
-
 	return res
 }

@@ -10,7 +10,9 @@ import (
 // Str returns an error that formats as the given text. It is intended to
 // be used as the error-typed argument to the E function.
 func Str(text string) error {
-	return &errorString{text}
+	return &errorString{
+		s: text,
+	}
 }
 
 // errorString is a trivial implementation of error.
@@ -26,5 +28,7 @@ func (e *errorString) Error() string {
 // Errorf is equivalent to fmt.Errorf, but allows clients to import only this
 // package for all error handling.
 func Errorf(format string, args ...interface{}) error {
-	return &errorString{fmt.Sprintf(format, args...)}
+	return &errorString{
+		s: fmt.Sprintf(format, args...),
+	}
 }

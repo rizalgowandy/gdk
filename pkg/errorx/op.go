@@ -22,6 +22,5 @@ func GetOps(err error) []Op {
 	}
 
 	res = append(res, GetOps(subErr)...)
-
 	return res
 }
