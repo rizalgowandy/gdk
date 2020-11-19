@@ -6,31 +6,35 @@ import (
 )
 
 var (
-	PanicKeyword           = []byte("src/runtime/panic.go")
-	CompanyKeyword         = []byte("github.com/peractio")
-	FunctionPackageKeyword = []byte("/github.com/peractio/gdk/pkg/stack")
+	panicKeyword           = []byte("src/runtime/panic.go")
+	companyKeyword         = []byte("github.com/peractio")
+	functionPackageKeyword = []byte("/github.com/peractio/gdk/pkg/stack/")
 )
 
 // Trim removes unnecessary stack trace.
 // Only take stack trace with current company keyword.
 // Also, excludes lines with function package keyword.
 func Trim(stack []byte) []byte {
+	if stack == nil {
+		return nil
+	}
+
 	// remove all log before panic keyword.
-	idx := bytes.Index(stack, PanicKeyword)
+	idx := bytes.Index(stack, panicKeyword)
 	if idx == -1 {
 		idx = 0
 	}
 	stack = stack[idx:]
 
 	// remove all log before company keyword.
-	idx = bytes.Index(stack, CompanyKeyword)
+	idx = bytes.Index(stack, companyKeyword)
 	if idx == -1 {
 		idx = 0
 	}
 	stack = stack[idx:]
 
 	// remove all log before current function location keyword.
-	idx = bytes.Index(stack, FunctionPackageKeyword)
+	idx = bytes.Index(stack, functionPackageKeyword)
 	if idx != -1 {
 		newlineIdx := bytes.Index(stack[idx:], []byte("\n"))
 		if newlineIdx != -1 {
@@ -50,6 +54,10 @@ func Trim(stack []byte) []byte {
 // Result => gdk/pkg/stack.go 130
 //
 func ToArr(stack []byte) []string {
+	if stack == nil {
+		return nil
+	}
+
 	msg := string(stack)
 	arr := strings.Split(msg, "\n")
 
@@ -60,7 +68,7 @@ func ToArr(stack []byte) []string {
 		}
 
 		tmp := []byte(v)
-		idx := bytes.Index(tmp, CompanyKeyword)
+		idx := bytes.Index(tmp, companyKeyword)
 		if idx == -1 {
 			idx = 0
 		}

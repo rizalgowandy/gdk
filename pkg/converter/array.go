@@ -7,6 +7,23 @@ import (
 // ToArrInt convert any value to []int.
 func ToArrInt(v interface{}) []int {
 	switch v := v.(type) {
+	case []int:
+		return v
+
+	case []int32:
+		result := make([]int, len(v))
+		for k, one := range v {
+			result[k] = ToInt(one)
+		}
+		return result
+
+	case []int64:
+		result := make([]int, len(v))
+		for k, one := range v {
+			result[k] = ToInt(one)
+		}
+		return result
+
 	case string:
 		var result []int
 		err := json.Unmarshal([]byte(v), &result)
@@ -14,12 +31,14 @@ func ToArrInt(v interface{}) []int {
 			return nil
 		}
 		return result
+
 	case []string:
 		var result []int
 		for _, vv := range v {
 			result = append(result, ToInt(vv))
 		}
 		return result
+
 	case [][]byte:
 		var result []int
 		for _, vv := range v {
@@ -41,12 +60,14 @@ func ToArrStr(v interface{}) []string {
 			return nil
 		}
 		return result
+
 	case [][]byte:
 		var result []string
 		for _, vv := range v {
 			result = append(result, string(vv))
 		}
 		return result
+
 	default:
 		return nil
 	}

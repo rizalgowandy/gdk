@@ -15,6 +15,27 @@ func TestToArrInt(t *testing.T) {
 		want []int
 	}{
 		{
+			name: "Args that passed is int",
+			args: args{
+				v: []int{1},
+			},
+			want: []int{1},
+		},
+		{
+			name: "Args that passed is int32",
+			args: args{
+				v: []int32{1},
+			},
+			want: []int{1},
+		},
+		{
+			name: "Args that passed is int64",
+			args: args{
+				v: []int64{1},
+			},
+			want: []int{1},
+		},
+		{
 			name: "Args that passed is not string, return nil",
 			args: args{
 				v: 1,
@@ -29,21 +50,21 @@ func TestToArrInt(t *testing.T) {
 			want: nil,
 		},
 		{
-			name: "Args that passed is string valid, return nil",
+			name: "Args that passed is string valid",
 			args: args{
 				v: "[1,2]",
 			},
 			want: []int{1, 2},
 		},
 		{
-			name: "Args that passed is slice string valid, return nil",
+			name: "Args that passed is slice string valid",
 			args: args{
 				v: []string{"1", "2"},
 			},
 			want: []int{1, 2},
 		},
 		{
-			name: "Args that passed is byte array, return nil",
+			name: "Args that passed is byte array",
 			args: args{
 				v: [][]byte{
 					[]byte("1234"),
