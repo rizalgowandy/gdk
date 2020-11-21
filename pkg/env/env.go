@@ -2,6 +2,8 @@ package env
 
 import (
 	"os"
+
+	"github.com/peractio/gdk/pkg/resync"
 )
 
 // List available environments.
@@ -13,15 +15,24 @@ const (
 	Production  = "production"
 )
 
+// Singleton pattern to prevent reading os more than once.
+var (
+	once       resync.Once
+	currentEnv string
+)
+
 // GetCurrent returns the current environment, if available.
 // Otherwise returns environment as development.
 func GetCurrent() string {
-	env := os.Getenv("GDK_ENV")
-	if env != "" {
-		return env
-	}
-
-	return Development
+	once.Do(func() {
+		env := os.Getenv("GDK_ENV")
+		if env == "" {
+			currentEnv = Development // set default as development
+			return
+		}
+		currentEnv = env
+	})
+	return currentEnv
 }
 
 // IsDevelopment return true when current environment is development.
