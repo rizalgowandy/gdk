@@ -15,7 +15,7 @@ command -v mockgen 2>/dev/null || go get -v github.com/golang/mock/mockgen@v1.4.
 echo ""
 
 echo -e "\e[32mInstalling:\e[33m golangci-lint for linter.\e[0m"
-command -v golangci-lint 2>/dev/null || go get -v github.com/golangci/golangci-lint/cmd/golangci-lint@1.30.0
+command -v golangci-lint 2>/dev/null || curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.33.0
 echo ""
 
 echo -e "\e[32mInstalling:\e[33m wire for compile time dependency injection.\e[0m"
