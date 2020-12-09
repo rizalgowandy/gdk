@@ -7,14 +7,6 @@ import (
 // Recreate the errors.New functionality of the standard Go errors package
 // so we can create simple text errors when needed.
 
-// Str returns an error that formats as the given text. It is intended to
-// be used as the error-typed argument to the E function.
-func Str(text string) error {
-	return &errorString{
-		s: text,
-	}
-}
-
 // errorString is a trivial implementation of error.
 type errorString struct {
 	s string
@@ -23,6 +15,14 @@ type errorString struct {
 // Error returns the string representation of the error message.
 func (e *errorString) Error() string {
 	return e.s
+}
+
+// Str returns an error that formats as the given text. It is intended to
+// be used as the error-typed argument to the E function.
+func Str(text string) error {
+	return &errorString{
+		s: text,
+	}
 }
 
 // Errorf is equivalent to fmt.Errorf, but allows clients to import only this

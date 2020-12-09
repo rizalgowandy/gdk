@@ -13,7 +13,7 @@ const (
 	Invalid    Code = "invalid"    // Validation failed.
 	NotFound   Code = "not_found"  // Entity does not exist.
 	Gateway    Code = "gateway"    // Gateway or third party service return error.
-	standard   Code = "standard"   // Flag error as standard error type. Useful for GetJSON to flag error as standard error type.
+	standard   Code = "standard"   // Flag error as standard error type. Useful for GetArrJSON to flag error as standard error type.
 )
 
 // GetCode returns the code of the root error, if available. Otherwise returns Internal.

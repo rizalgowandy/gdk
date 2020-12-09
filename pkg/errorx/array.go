@@ -6,7 +6,25 @@ import (
 
 var json = jsoniter.ConfigFastest
 
-// GetJSON returns the json byte of the converted array of errors.
+// GetArrJSON returns the json byte of the converted array of errors.
+//
+// Example:
+// [{"code":"internal","message":"Internal server error.","op":"userService.FindUserByID"}]
+func GetArrJSON(input error) []byte {
+	all := GetArr(input)
+	if all == nil {
+		return nil
+	}
+
+	res, err := json.Marshal(all)
+	if err != nil {
+		return nil
+	}
+
+	return res
+}
+
+// GetArr returns the error as the converted array of errors.
 //
 // Example:
 // [
@@ -25,21 +43,7 @@ var json = jsoniter.ConfigFastest
 //     "op": "io.Write"
 //   }
 // ]
-func GetJSON(input error) []byte {
-	all := convertAsArr(input)
-	if all == nil {
-		return nil
-	}
-
-	res, err := json.Marshal(all)
-	if err != nil {
-		return nil
-	}
-
-	return res
-}
-
-func convertAsArr(input error) []Error {
+func GetArr(input error) []Error {
 	e, ok := input.(*Error)
 	if !ok {
 		return nil
@@ -71,6 +75,6 @@ func convertAsArr(input error) []Error {
 		return res
 	}
 
-	res = append(res, convertAsArr(subErr)...)
+	res = append(res, GetArr(subErr)...)
 	return res
 }

@@ -6,6 +6,35 @@ import (
 	"testing"
 )
 
+func TestErrorString_Error(t *testing.T) {
+	type fields struct {
+		s string
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		want   string
+	}{
+		{
+			name: "Success",
+			fields: fields{
+				s: "message",
+			},
+			want: "message",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			e := &errorString{
+				s: tt.fields.s,
+			}
+			if got := e.Error(); got != tt.want {
+				t.Errorf("Error() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
 func TestStr(t *testing.T) {
 	tests := []struct {
 		name string
