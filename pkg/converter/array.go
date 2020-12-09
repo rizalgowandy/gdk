@@ -33,18 +33,19 @@ func ToArrInt(v interface{}) []int {
 		return result
 
 	case []string:
-		var result []int
-		for _, vv := range v {
-			result = append(result, ToInt(vv))
+		result := make([]int, len(v))
+		for k, vv := range v {
+			result[k] = ToInt(vv)
 		}
 		return result
 
 	case [][]byte:
-		var result []int
-		for _, vv := range v {
-			result = append(result, ToInt(vv))
+		result := make([]int, len(v))
+		for k, vv := range v {
+			result[k] = ToInt(vv)
 		}
 		return result
+
 	default:
 		return nil
 	}
@@ -62,9 +63,9 @@ func ToArrStr(v interface{}) []string {
 		return result
 
 	case [][]byte:
-		var result []string
-		for _, vv := range v {
-			result = append(result, string(vv))
+		result := make([]string, len(v))
+		for k, vv := range v {
+			result[k] = string(vv)
 		}
 		return result
 
