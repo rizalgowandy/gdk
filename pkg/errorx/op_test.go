@@ -97,7 +97,6 @@ func TestGetOps(t *testing.T) {
 				msg := "\nwant = %#v" + "\ngot  = %#v"
 				t.Errorf(msg, tt.want, got)
 			}
-			t.Log(got)
 		})
 	}
 }

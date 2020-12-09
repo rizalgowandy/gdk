@@ -3,6 +3,7 @@ package errorx
 import (
 	"errors"
 	"reflect"
+	"runtime/debug"
 	"testing"
 )
 
@@ -153,11 +154,14 @@ func TestE(t *testing.T) {
 		},
 	}
 
+	enableLog := false
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			defer func() {
 				if err := recover(); err != nil {
-					t.Logf("recover from %#v", err)
+					if enableLog {
+						t.Logf("\nrecover = %#v \nstack =\n%s", err, string(debug.Stack()))
+					}
 				}
 			}()
 
@@ -166,7 +170,6 @@ func TestE(t *testing.T) {
 				msg := "\nwant = %#v" + "\ngot  = %#v"
 				t.Errorf(msg, tt.want, got)
 			}
-			t.Log(got)
 		})
 	}
 }
@@ -319,7 +322,6 @@ func TestMatch(t *testing.T) {
 				msg := "\nwant = %#v" + "\ngot  = %#v"
 				t.Errorf(msg, tt.want, got)
 			}
-			t.Log(got)
 		})
 	}
 }
@@ -408,7 +410,6 @@ func TestIs(t *testing.T) {
 				msg := "\nwant = %#v" + "\ngot  = %#v"
 				t.Errorf(msg, tt.want, got)
 			}
-			t.Log(got)
 		})
 	}
 }

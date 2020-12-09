@@ -2,6 +2,7 @@ package errorx
 
 import (
 	"errors"
+	"reflect"
 	"testing"
 )
 
@@ -9,10 +10,12 @@ func TestError_Error(t *testing.T) {
 	tests := []struct {
 		name  string
 		input *Error
+		want  string
 	}{
 		{
 			name:  "No error",
 			input: &Error{},
+			want:  "no error",
 		},
 		{
 			name: "1 layer",
@@ -22,6 +25,7 @@ func TestError_Error(t *testing.T) {
 				Op:      "userService.FindUserByID",
 				Err:     nil,
 			},
+			want: "userService.FindUserByID: <internal> Internal server error.",
 		},
 		{
 			name: "2 layer with standard error",
@@ -31,6 +35,7 @@ func TestError_Error(t *testing.T) {
 				Op:      "userService.FindUserByID",
 				Err:     errors.New("standard-error"),
 			},
+			want: "userService.FindUserByID: <internal> Internal server error. => standard-error",
 		},
 		{
 			name: "2 layer",
@@ -45,6 +50,7 @@ func TestError_Error(t *testing.T) {
 					Err:     nil,
 				},
 			},
+			want: "userService.FindUserByID: <internal> Internal server error.:\n\taccountGateway.FindUserByID: <gateway> Gateway server error.",
 		},
 		{
 			name: "3 layer",
@@ -64,6 +70,7 @@ func TestError_Error(t *testing.T) {
 					},
 				},
 			},
+			want: "userService.FindUserByID: <internal> Internal server error.:\n\taccountGateway.FindUserByID: <gateway> Gateway server error.:\n\tio.Write: Unknown error.",
 		},
 		{
 			name: "3 layer with Unknown",
@@ -83,6 +90,7 @@ func TestError_Error(t *testing.T) {
 					},
 				},
 			},
+			want: "userService.FindUserByID: <internal> Internal server error.:\n\tio.Write:\n\taccountGateway.FindUserByID: <gateway> Gateway server error.",
 		},
 		{
 			name: "3 layer with no Op",
@@ -102,6 +110,7 @@ func TestError_Error(t *testing.T) {
 					},
 				},
 			},
+			want: "userService.FindUserByID: <internal> Internal server error.:\n\t<internal>:\n\taccountGateway.FindUserByID: <gateway> Gateway server error.",
 		},
 		{
 			name: "3 layer with no Op and Unknown",
@@ -121,12 +130,17 @@ func TestError_Error(t *testing.T) {
 					},
 				},
 			},
+			want: "userService.FindUserByID: <internal> Internal server error.:\n\tRandom error.:\n\taccountGateway.FindUserByID: <gateway> Gateway server error.",
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			t.Log("\n\n" + tt.input.Error() + "\n")
+			got := tt.input.Error()
+			if !reflect.DeepEqual(tt.want, got) {
+				msg := "\nwant = %#v" + "\ngot  = %#v\n"
+				t.Errorf(msg, tt.want, got)
+			}
 		})
 	}
 }

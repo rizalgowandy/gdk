@@ -60,7 +60,6 @@ func TestStr(t *testing.T) {
 				msg := "\nwant = %#v" + "\ngot  = %#v"
 				t.Errorf(msg, tt.want, got)
 			}
-			t.Log(got)
 		})
 	}
 }
@@ -92,7 +91,6 @@ func TestErrorf(t *testing.T) {
 				msg := "\nwant = %#v" + "\ngot  = %#v"
 				t.Errorf(msg, tt.want, got)
 			}
-			t.Log(got)
 		})
 	}
 }

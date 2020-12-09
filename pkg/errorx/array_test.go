@@ -94,7 +94,6 @@ func TestGetArrJSON(t *testing.T) {
 				msg := "\nwant = %#v" + "\ngot  = %#v"
 				t.Errorf(msg, string(tt.want), string(got))
 			}
-			t.Log(string(got))
 		})
 	}
 }

@@ -51,7 +51,7 @@ func E(args ...interface{}) error {
 		case error:
 			e.Err = arg
 		default:
-			return fmt.Errorf("unknown type %T, value %v in error call", arg, arg)
+			panic(fmt.Sprintf("unknown type %T, value %v in error call", arg, arg))
 		}
 	}
 
