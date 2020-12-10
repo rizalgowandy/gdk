@@ -1,5 +1,5 @@
 # Try
-Try add capability to execute a function for several times until it's no longer return any error or reached max retries allowed.
+Try package adds capability to execute a function for several times until it's no longer return any error or reached max retries allowed.
 
 ### Usage
 Just call `try.Do` with the function you want to retry in the event of an error:

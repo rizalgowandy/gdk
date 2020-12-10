@@ -52,7 +52,6 @@ func Trim(stack []byte) []byte {
 // Example:
 // Input  => /home/peractio/go/src/github.com/peractio/gdk/pkg/stack.go 130
 // Result => gdk/pkg/stack.go 130
-//
 func ToArr(stack []byte) []string {
 	if stack == nil {
 		return nil
