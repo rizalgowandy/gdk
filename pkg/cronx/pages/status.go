@@ -6,6 +6,10 @@ import (
 )
 
 const statusTemplate = `
+<!--
+	This page is only being used for development to restructure the code,
+	the real html page is on status.go.
+-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -45,7 +49,14 @@ const statusTemplate = `
 			Status
 		</a>
 	</div>
-	<div class="ui three steps">
+	<div class="ui four steps">
+		<div class="step">
+			<i class="arrow down icon"></i>
+			<div class="content">
+				<div class="title">Down</div>
+				<div class="description">Job fails to be registered</div>
+			</div>
+		</div>
 		<div class="step">
 			<i class="arrow up icon"></i>
 			<div class="content">
@@ -69,12 +80,12 @@ const statusTemplate = `
 		</div>
 	</div>
 	<div id="table_status">
-		<table class="ui sortable selectable right aligned celled table">
+		<table class="ui sortable selectable center aligned celled table">
 			<thead>
 			<tr>
-				<th class="left aligned">ID</th>
-				<th class="left aligned">Name</th>
-				<th class="center aligned">Status</th>
+				<th>ID</th>
+				<th>Name</th>
+				<th>Status</th>
 				<th>Last run</th>
 				<th class="sorted ascending">Next run</th>
 				<th>Latency</th>
@@ -85,11 +96,12 @@ const statusTemplate = `
 				<tr
                         {{if eq .Job.Status "RUNNING"}} class="warning"
                         {{else if eq .Job.Status "IDLE"}} class="positive"
+                        {{else if eq .Job.Status "DOWN"}} class="error"
                         {{end}}
 				>
-					<td class="left aligned">{{.ID}}</td>
+					<td>{{.ID}}</td>
 					<td class="left aligned">{{.Job.Name}}</td>
-					<td class="center aligned">
+					<td>
                         {{if eq .Job.Status "RUNNING"}}
 							<div class="ui yellow label">
 								<i class="sync icon"></i>
@@ -100,7 +112,11 @@ const statusTemplate = `
 								<i class="play icon"></i>
                                 {{.Job.Status}}
 							</div>
-
+                        {{else if eq .Job.Status "DOWN"}}
+							<div class="ui red label">
+								<i class="arrow down icon"></i>
+                                {{.Job.Status}}
+							</div>
                         {{else}}
 							<div class="ui label">
 								<i class="arrow up icon"></i>
@@ -108,8 +124,20 @@ const statusTemplate = `
 							</div>
                         {{end}}
 					</td>
-					<td>{{if not .Prev.IsZero}}{{.Prev.Format "2006-01-02 15:04:05"}}{{end}}</td>
-					<td>{{if not .Next.IsZero}}{{.Next.Format "2006-01-02 15:04:05"}}{{end}}</td>
+					<td>
+                        {{if not .Prev.IsZero}}
+                            {{.Prev.Format "2006-01-02 15:04:05"}}
+                        {{end}}
+					</td>
+					<td>
+                        {{if eq .Job.Status "DOWN"}}
+                            {{.Job.Error}}
+                        {{else}}
+                            {{if not .Next.IsZero}}
+                                {{.Next.Format "2006-01-02 15:04:05"}}
+                            {{end}}
+                        {{end}}
+					</td>
 					<td>{{.Job.Latency}}</td>
 				</tr>
             {{end}}

@@ -59,23 +59,30 @@ func TestJob_UpdateStatus(t *testing.T) {
 		{
 			name: "StatusCodeUp",
 			fields: fields{
-				status: 0,
+				status: statusUp,
 			},
 			want: StatusCodeUp,
 		},
 		{
 			name: "StatusCodeRunning",
 			fields: fields{
-				status: 1,
+				status: statusRunning,
 			},
 			want: StatusCodeRunning,
 		},
 		{
 			name: "StatusCodeIdle",
 			fields: fields{
-				status: 2,
+				status: statusIdle,
 			},
 			want: StatusCodeIdle,
+		},
+		{
+			name: "StatusCodeDown",
+			fields: fields{
+				status: statusDown,
+			},
+			want: StatusCodeDown,
 		},
 	}
 	for _, tt := range tests {

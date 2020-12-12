@@ -81,10 +81,19 @@ func Schedule(spec string, job cron.Job) error {
 		return errors.New("cronx has not been initialized")
 	}
 
+	// Check if spec is correct.
 	schedule, err := cron.ParseStandard(spec)
 	if err != nil {
+		downJob := NewJob(job)
+		downJob.Status = StatusCodeDown
+		downJob.Error = err.Error()
+		commandController.UnregisteredJobs = append(
+			commandController.UnregisteredJobs,
+			downJob,
+		)
 		return err
 	}
+
 	commandController.Commander.Schedule(schedule, NewJob(job))
 	return nil
 }

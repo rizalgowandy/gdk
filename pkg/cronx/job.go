@@ -13,6 +13,7 @@ type Job struct {
 	Name    string     `json:"name"`
 	Status  StatusCode `json:"status"`
 	Latency string     `json:"latency"`
+	Error   string     `json:"error"`
 
 	inner   cron.Job
 	status  uint32
@@ -26,6 +27,8 @@ func (j *Job) UpdateStatus() StatusCode {
 		j.Status = StatusCodeRunning
 	case statusIdle:
 		j.Status = StatusCodeIdle
+	case statusDown:
+		j.Status = StatusCodeDown
 	default:
 		j.Status = StatusCodeUp
 	}

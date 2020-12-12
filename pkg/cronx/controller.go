@@ -27,6 +27,9 @@ type CommandController struct {
 	// Address determines the address will we serve the json and frontend status.
 	// Empty string meaning we won't serve the current job status.
 	Address string
+
+	// UnregisteredJobs describes the list of jobs that have been failed to be registered.
+	UnregisteredJobs []*Job
 }
 
 // Default starts all the underlying cron jobs.

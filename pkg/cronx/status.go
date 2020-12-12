@@ -16,10 +16,13 @@ const (
 	StatusCodeIdle StatusCode = "IDLE"
 	// StatusCodeRunning describes that current job is currently running.
 	StatusCodeRunning StatusCode = "RUNNING"
+	// StatusCodeDown describes that current job has failed to be registered.
+	StatusCodeDown StatusCode = "DOWN"
 
-	statusUp      uint32 = 0
-	statusRunning uint32 = 1
+	statusDown    uint32 = 0
+	statusUp      uint32 = 1
 	statusIdle    uint32 = 2
+	statusRunning uint32 = 3
 )
 
 // StatusData defines current job status.
@@ -41,13 +44,28 @@ func GetStatusData() []StatusData {
 	}
 
 	entries := commandController.Commander.Entries()
-	listStatus := make([]StatusData, len(entries))
-	for k, v := range entries {
-		listStatus[k].ID = v.ID
-		listStatus[k].Job = v.Job.(*Job)
-		listStatus[k].Next = v.Next
-		listStatus[k].Prev = v.Prev
+	totalEntries := len(entries)
+
+	downs := commandController.UnregisteredJobs
+	totalDowns := len(downs)
+
+	totalJobs := totalEntries + totalDowns
+	listStatus := make([]StatusData, totalJobs)
+
+	// Register down jobs.
+	for k, v := range downs {
+		listStatus[k].Job = v
 	}
+
+	// Register other jobs.
+	for k, v := range entries {
+		idx := totalDowns + k
+		listStatus[idx].ID = v.ID
+		listStatus[idx].Job = v.Job.(*Job)
+		listStatus[idx].Next = v.Next
+		listStatus[idx].Prev = v.Prev
+	}
+
 	return listStatus
 }
 
