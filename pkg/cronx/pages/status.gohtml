@@ -29,7 +29,7 @@
 	<script src="https://cdn.jsdelivr.net/npm/canvas2image@1.0.5/canvas2image.min.js"></script>
 	<script type='text/javascript'>
 		 function screenshot() {
-			 html2canvas(document.querySelector('.content')).then(function(canvas) {
+			 html2canvas(document.querySelector('#table_status')).then(function(canvas) {
 				 Canvas2Image.saveAsPNG(canvas, canvas.width, canvas.height);
 			 });
 		 }
@@ -37,6 +37,7 @@
 	<style type="text/css">
         body > .ui.container {
             margin-top: 3em;
+            padding-bottom: 3em;
         }
 	</style>
 	<title>Cronx</title>
@@ -82,14 +83,14 @@
 			</div>
 		</div>
 		<div class="step">
-			<i class="play icon"></i>
+			<i class="hourglass end icon"></i>
 			<div class="content">
 				<div class="title">Idle</div>
 				<div class="description">Job is waiting for next execution time</div>
 			</div>
 		</div>
 	</div>
-	<div class="content">
+	<div id="table_status">
 		<table class="ui sortable selectable center aligned celled table">
 			<thead>
 			<tr>
@@ -119,7 +120,7 @@
 							</div>
                         {{else if eq .Job.Status "IDLE"}}
 							<div class="ui green label">
-								<i class="play icon"></i>
+								<i class="hourglass end icon"></i>
                                 {{.Job.Status}}
 							</div>
                         {{else if eq .Job.Status "DOWN"}}

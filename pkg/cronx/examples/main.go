@@ -55,7 +55,7 @@ func main() {
 			Err(err).
 			Msg("register sendEmail must success")
 	}
-	for i := 0; i < 5; i++ {
+	for i := 0; i < 15; i++ {
 		spec := "@every " + converter.ToStr(i+1) + "m"
 		if err := cronx.Schedule(spec, payBill{}); err != nil {
 			log.WithLevel(zerolog.ErrorLevel).
@@ -63,8 +63,8 @@ func main() {
 				Msg("register payBill must success")
 		}
 	}
-	for i := 0; i < 5; i++ {
-		spec := "broken spec"
+	for i := 0; i < 3; i++ {
+		spec := "broken spec " + converter.ToStr(i+1)
 		if err := cronx.Schedule(spec, payBill{}); err != nil {
 			log.WithLevel(zerolog.ErrorLevel).
 				Err(err).

@@ -45,6 +45,7 @@ const statusTemplate = `
 	<style type="text/css">
         body > .ui.container {
             margin-top: 3em;
+            padding-bottom: 3em;
         }
 	</style>
 	<title>Cronx</title>
@@ -72,7 +73,7 @@ const statusTemplate = `
 			<i class="arrow down icon"></i>
 			<div class="content">
 				<div class="title">Down</div>
-				<div class="description">Job fails to be registered</div>
+				<div class="description">Job has failed to be created</div>
 			</div>
 		</div>
 		<div class="step">
@@ -90,10 +91,10 @@ const statusTemplate = `
 			</div>
 		</div>
 		<div class="step">
-			<i class="play icon"></i>
+			<i class="hourglass end icon"></i>
 			<div class="content">
 				<div class="title">Idle</div>
-				<div class="description">Job is waiting for next execution time</div>
+				<div class="description">Job is waiting for next execution</div>
 			</div>
 		</div>
 	</div>
@@ -127,7 +128,7 @@ const statusTemplate = `
 							</div>
                         {{else if eq .Job.Status "IDLE"}}
 							<div class="ui green label">
-								<i class="play icon"></i>
+								<i class="hourglass end icon"></i>
                                 {{.Job.Status}}
 							</div>
                         {{else if eq .Job.Status "DOWN"}}
@@ -168,16 +169,16 @@ const statusTemplate = `
 `
 
 var (
-	once       sync.Once
-	statusPage *template.Template
-	err        error
+	statusPageOnce  sync.Once
+	statusPage      *template.Template
+	statusPageError error
 )
 
 func GetStatusTemplate() (*template.Template, error) {
-	once.Do(func() {
+	statusPageOnce.Do(func() {
 		t := template.New(statusTemplateName)
-		statusPage, err = t.Parse(statusTemplate)
+		statusPage, statusPageError = t.Parse(statusTemplate)
 	})
 
-	return statusPage, err
+	return statusPage, statusPageError
 }
