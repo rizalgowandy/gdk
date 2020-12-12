@@ -29,7 +29,7 @@ type CommandController struct {
 	Address string
 }
 
-// Start starts all the underlying cron jobs.
+// Default starts all the underlying cron jobs.
 // If address is not empty, create a server with routes:
 // - /jobs 		=> current jobs as json.
 // - /jobs/html => current jobs as frontend html.

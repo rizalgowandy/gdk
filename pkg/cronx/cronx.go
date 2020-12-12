@@ -44,13 +44,13 @@ var (
 	commandController *CommandController
 )
 
-// Start creates a cron with default config.
-func Start() {
-	StartWithConfig(defaultConfig)
+// Default creates a cron with default config.
+func Default() {
+	New(defaultConfig)
 }
 
-// StartWithConfig creates a cron with custom config.
-func StartWithConfig(config Config) {
+// New creates a cron with custom config.
+func New(config Config) {
 	// If there is invalid config use the default config instead.
 	if config.PoolSize <= 0 {
 		config.PoolSize = defaultConfig.PoolSize

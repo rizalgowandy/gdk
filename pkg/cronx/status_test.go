@@ -14,13 +14,13 @@ func TestGetStatusData(t *testing.T) {
 		{
 			name: "Success without any job",
 			mock: func() {
-				Start()
+				Default()
 			},
 		},
 		{
 			name: "Success",
 			mock: func() {
-				Start()
+				Default()
 				_ = Schedule("@every 5m", Func(func() {}))
 			},
 		},

@@ -27,7 +27,7 @@ func TestEvery(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			Start()
+			Default()
 			Every(tt.args.duration, tt.args.job)
 		})
 	}
@@ -60,7 +60,7 @@ func TestGetEntries(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			Start()
+			Default()
 			assert.NotNil(t, GetEntries())
 		})
 	}
@@ -83,7 +83,7 @@ func TestRemove(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			Start()
+			Default()
 			Remove(tt.args.id)
 		})
 	}
@@ -125,7 +125,7 @@ func TestSchedule(t *testing.T) {
 	}
 }
 
-func TestStart(t *testing.T) {
+func TestDefault(t *testing.T) {
 	tests := []struct {
 		name string
 	}{
@@ -135,12 +135,12 @@ func TestStart(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			Start()
+			Default()
 		})
 	}
 }
 
-func TestStartWithConfig(t *testing.T) {
+func TestNew(t *testing.T) {
 	type args struct {
 		config Config
 	}
@@ -157,7 +157,7 @@ func TestStartWithConfig(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			StartWithConfig(tt.args.config)
+			New(tt.args.config)
 		})
 	}
 }
@@ -172,7 +172,7 @@ func TestStop(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			Start()
+			Default()
 			Stop()
 		})
 	}

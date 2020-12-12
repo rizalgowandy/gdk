@@ -34,7 +34,7 @@ func main() {
 	// - runs on port :8998
 	// - has a max running jobs limit 1000
 	// - with built in panic recovery
-	cronx.Start()
+	cronx.Default()
 	
 	// Register a new cron job.
 	// Struct name will become the name for the current job.
@@ -80,10 +80,10 @@ Browse to
 ### Custom Configuration
 ```go
 // Create a cron with custom config.
-cronx.StartWithConfig(cronx.Config{
+cronx.New(cronx.Config{
     Address:  ":8000", // Determines if we want the library to serve the frontend.
     PoolSize: 1,       // Determines how many jobs can be run at a time.
-    PanicRecover: func(j *cronx.Job) {
+    PanicRecover: func(j *cronx.Job) { // Inject panic middleware with custom logger and alert.
         if err := recover(); err != nil {
             log.WithLevel(zerolog.PanicLevel).
                 Interface("err", err).
@@ -91,7 +91,7 @@ cronx.StartWithConfig(cronx.Config{
                 Interface("job", j).
                 Msg("recovered")
         }
-    }, // Inject panic middleware with custom logger and alert.
+    },
 })
 ```
 
@@ -103,7 +103,7 @@ Please refer to this [link](https://pkg.go.dev/github.com/robfig/cron?readme=exp
 #### A: Yes, you can. This library is very modular.
 ```go
 // Create a custom config and leave the address as empty string.
-cronx.StartWithConfig(cronx.Config{
+cronx.New(cronx.Config{
     Address:  "",
 })
 

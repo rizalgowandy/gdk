@@ -31,10 +31,10 @@ func (p payBill) Run() {
 
 func main() {
 	// Create a cron controller with default config.
-	cronx.Start()
+	cronx.Default()
 
 	// Create a cron with custom config.
-	cronx.StartWithConfig(cronx.Config{
+	cronx.New(cronx.Config{
 		Address:  ":8000", // Determines if we want the library to serve the frontend.
 		PoolSize: 1,       // Determines how many jobs can be run at a time.
 		PanicRecover: func(j *cronx.Job) {
