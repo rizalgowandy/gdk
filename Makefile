@@ -13,4 +13,4 @@ linter: # run linter to keep code clean
 
 .PHONY: build
 build: # ensure all binary can be build.
-	@go build -o bin/go_build_gdk
+	@go build -o bin/go_build_gdk && rm bin/go_build_gdk

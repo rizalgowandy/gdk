@@ -1,6 +1,7 @@
 package cronx
 
 import (
+	"errors"
 	"runtime/debug"
 	"time"
 
@@ -76,6 +77,10 @@ func (r Func) Run() { r() }
 //  @every 5m
 //  0 */10 * * *
 func Schedule(spec string, job cron.Job) error {
+	if commandController == nil || commandController.Commander == nil {
+		return errors.New("cronx has not been initialized")
+	}
+
 	schedule, err := cron.ParseStandard(spec)
 	if err != nil {
 		return err
@@ -88,16 +93,28 @@ func Schedule(spec string, job cron.Job) error {
 // The interval provided is the time between the job ending and the job being run again.
 // The time that the job takes to run is not included in the interval.
 func Every(duration time.Duration, job cron.Job) {
+	if commandController == nil || commandController.Commander == nil {
+		return
+	}
+
 	commandController.Commander.Schedule(cron.Every(duration), NewJob(job))
 }
 
 // Stop stops active jobs from running at the next scheduled time.
 func Stop() {
+	if commandController == nil || commandController.Commander == nil {
+		return
+	}
+
 	commandController.Commander.Stop()
 }
 
 // GetEntries return all the current registered jobs.
 func GetEntries() []cron.Entry {
+	if commandController == nil || commandController.Commander == nil {
+		return nil
+	}
+
 	return commandController.Commander.Entries()
 }
 
@@ -105,5 +122,9 @@ func GetEntries() []cron.Entry {
 // Get EntryID from the list job entries cronx.GetEntries().
 // If job is in the middle of running, once the process is finished it will be removed.
 func Remove(id cron.EntryID) {
+	if commandController == nil || commandController.Commander == nil {
+		return
+	}
+
 	commandController.Commander.Remove(id)
 }

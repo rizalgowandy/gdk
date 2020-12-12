@@ -34,6 +34,10 @@ type CommandController struct {
 // - /jobs 		=> current jobs as json.
 // - /jobs/html => current jobs as frontend html.
 func (c *CommandController) Start() {
+	// Start the commander.
+	if c.Commander == nil {
+		c.Commander = cron.New()
+	}
 	c.Commander.Start()
 
 	// Check if client want to start a server to serve json and frontend.

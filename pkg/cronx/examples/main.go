@@ -2,7 +2,6 @@ package main
 
 import (
 	"runtime/debug"
-	"time"
 
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
@@ -16,7 +15,6 @@ import (
 type sendEmail struct{}
 
 func (e sendEmail) Run() {
-	time.Sleep(time.Second * 3)
 	log.WithLevel(zerolog.InfoLevel).
 		Str("job", "sendEmail").
 		Msg("every 5 sec send reminder emails")
@@ -37,7 +35,7 @@ func main() {
 	// Create a cron with custom config.
 	cronx.New(cronx.Config{
 		Address:  ":8000", // Determines if we want the library to serve the frontend.
-		PoolSize: 1,       // Determines how many jobs can be run at a time.
+		PoolSize: 1000,    // Determines how many jobs can be run at a time.
 		PanicRecover: func(j *cronx.Job) {
 			if err := recover(); err != nil {
 				log.WithLevel(zerolog.PanicLevel).

@@ -21,12 +21,14 @@ type Job struct {
 
 // UpdateStatus updates the current job status to the latest.
 func (j *Job) UpdateStatus() StatusCode {
-	if atomic.LoadUint32(&j.status) > 0 {
+	switch atomic.LoadUint32(&j.status) {
+	case statusRunning:
 		j.Status = StatusCodeRunning
-		return j.Status
+	case statusIdle:
+		j.Status = StatusCodeIdle
+	default:
+		j.Status = StatusCodeUp
 	}
-
-	j.Status = StatusCodeIdle
 	return j.Status
 }
 
@@ -47,7 +49,7 @@ func (j *Job) Run() {
 	j.UpdateStatus()
 
 	defer j.UpdateStatus()
-	defer atomic.StoreUint32(&j.status, 0)
+	defer atomic.StoreUint32(&j.status, 2)
 
 	j.inner.Run()
 
@@ -61,5 +63,6 @@ func NewJob(job cron.Job) *Job {
 		Name:   reflect.TypeOf(job).Name(),
 		Status: StatusCodeUp,
 		inner:  job,
+		status: statusUp,
 	}
 }

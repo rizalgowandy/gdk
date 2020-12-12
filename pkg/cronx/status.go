@@ -16,6 +16,10 @@ const (
 	StatusCodeIdle StatusCode = "IDLE"
 	// StatusCodeRunning describes that current job is currently running.
 	StatusCodeRunning StatusCode = "RUNNING"
+
+	statusUp      uint32 = 0
+	statusRunning uint32 = 1
+	statusIdle    uint32 = 2
 )
 
 // StatusData defines current job status.
@@ -32,6 +36,10 @@ type StatusData struct {
 
 // GetStatusData returns all jobs status.
 func GetStatusData() []StatusData {
+	if commandController == nil || commandController.Commander == nil {
+		return nil
+	}
+
 	entries := commandController.Commander.Entries()
 	listStatus := make([]StatusData, len(entries))
 	for k, v := range entries {

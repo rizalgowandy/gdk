@@ -19,6 +19,10 @@ func TestCommandController_Start(t *testing.T) {
 		fields fields
 	}{
 		{
+			name:   "Success without initialized",
+			fields: fields{},
+		},
+		{
 			name: "Success without server",
 			fields: fields{
 				Commander:    cron.New(),

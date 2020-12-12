@@ -57,6 +57,13 @@ func TestJob_UpdateStatus(t *testing.T) {
 		want   StatusCode
 	}{
 		{
+			name: "StatusCodeUp",
+			fields: fields{
+				status: 0,
+			},
+			want: StatusCodeUp,
+		},
+		{
 			name: "StatusCodeRunning",
 			fields: fields{
 				status: 1,
@@ -66,7 +73,7 @@ func TestJob_UpdateStatus(t *testing.T) {
 		{
 			name: "StatusCodeIdle",
 			fields: fields{
-				status: 0,
+				status: 2,
 			},
 			want: StatusCodeIdle,
 		},
