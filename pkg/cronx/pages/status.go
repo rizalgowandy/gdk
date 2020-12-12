@@ -18,7 +18,7 @@ const statusTemplate = `
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 	<!-- Site Properties -->
-	<title>Cron Status</title>
+	<title>Cronx</title>
 	<link
 	   rel="stylesheet"
 	   type="text/css"
@@ -30,12 +30,24 @@ const statusTemplate = `
 	<script
 	   src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"
 	   crossorigin="anonymous"></script>
+	<script
+	   src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.5.0-beta4/html2canvas.min.js"
+	   integrity="sha512-OqcrADJLG261FZjar4Z6c4CfLqd861A3yPNMb+vRQ2JwzFT49WT4lozrh3bcKxHxtDTgNiqgYbEUStzvZQRfgQ=="
+	   crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/canvas2image@1.0.5/canvas2image.min.js"></script>
+	<script type='text/javascript'>
+		 function screenshot() {
+			 html2canvas(document.querySelector('#table_status')).then(function(canvas) {
+				 Canvas2Image.saveAsPNG(canvas, canvas.width, canvas.height);
+			 });
+		 }
+	</script>
 	<style type="text/css">
         body > .ui.container {
             margin-top: 3em;
         }
 	</style>
-	<title>Cron Status</title>
+	<title>Cronx</title>
 </head>
 <body>
 <div class="ui container">
@@ -48,6 +60,12 @@ const statusTemplate = `
 			<i class="tasks icon"></i>
 			Status
 		</a>
+		<div class="item" onclick="screenshot()">
+			<button class="fluid ui labeled inverted green icon button">
+				<i class="camera icon"></i>
+				<div class="left aligned">Screenshot</div>
+			</button>
+		</div>
 	</div>
 	<div class="ui four steps">
 		<div class="step">
