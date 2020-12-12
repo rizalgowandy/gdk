@@ -1,10 +1,8 @@
 # Cronx
-
 Cronx is a wrapper for _robfig/cron_. It includes a live monitoring of current schedule and state of active jobs that can be outputted as JSON or HTML template.
 
-### Quick Start
-Create _**main.go**_.
-
+## Quick Start
+Create a _**main.go**_ file.
 ```go
 package main
 
@@ -50,6 +48,10 @@ func main() {
 	e.Logger.Fatal(e.Start(":8080"))
 }
 ```
+Get dependencies
+```shell
+$ go mod vendor -v
+```
 
 Start server
 ```shell
@@ -77,7 +79,7 @@ Browse to
 }
 ```
 
-### Custom Configuration
+## Custom Configuration
 ```go
 // Create a cron with custom config.
 cronx.New(cronx.Config{
@@ -95,20 +97,27 @@ cronx.New(cronx.Config{
 })
 ```
 
-### Schedule Specification Format
+## Schedule Specification Format
 Please refer to this [link](https://pkg.go.dev/github.com/robfig/cron?readme=expanded#section-readme/).
 
-### FAQS
-#### Q: I don't want the use the built-in server, but my own!
-#### A: Yes, you can. This library is very modular.
+## FAQ
+
+### Why do we limit the number of jobs that can be run at the same time?
+Program is running on a server with finite amount of resources such as CPU and RAM.
+By limiting the total number of jobs that can be run the same time, we protect the server from overloading.
+**The default number of jobs that can be run at the same time is 1000**.
+
+### Can I use my own router without starting the built-in router?
+Yes, you can. This library is very modular.
 ```go
 // Create a custom config and leave the address as empty string.
+// Empty string meaning the library won't start the built-in server.
 cronx.New(cronx.Config{
     Address:  "",
 })
 
 // GetStatusData will return the []cronx.StatusData.
-// You can use this data like any other Golang array.
+// You can use this data like any other Golang data structure.
 // You can print it, or even serves it using your own router.
 res := cronx.GetStatusData() 
 
@@ -117,6 +126,21 @@ r := gin.Default()
 r.GET("/custom-path", func(c *gin.Context) {
     c.JSON(http.StatusOK, map[string]interface{}{
     	"data": res,
-	})
+    })
+})
+```
+
+### Can I still get the built-in template if I use my own router?
+Yes, you can.
+```go
+// GetStatusTemplate will return the built-in status page template.
+index, _ := pages.GetStatusTemplate()
+
+// An example using echo as the router.
+e := echo.New()
+index, _ := pages.GetStatusTemplate()
+e.GET("jobs/html", func(context echo.Context) error {
+    // Serve the template to the writer and pass the current status data.
+    return index.Execute(context.Response().Writer, cronx.GetStatusData())
 })
 ```

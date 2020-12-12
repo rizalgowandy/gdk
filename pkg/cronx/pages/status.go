@@ -1,12 +1,11 @@
-package cronx
+package pages
 
 import (
 	"html/template"
 	"sync"
 )
 
-const statusPageTemplate = `
-<!-- This page is only being used for development, the real html page is on status_page.go -->
+const statusTemplate = `
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -128,10 +127,10 @@ var (
 	err        error
 )
 
-func GetStatusPageTemplate() (*template.Template, error) {
+func GetStatusTemplate() (*template.Template, error) {
 	once.Do(func() {
-		t := template.New("status_page.html")
-		statusPage, err = t.Parse(statusPageTemplate)
+		t := template.New(statusTemplateName)
+		statusPage, err = t.Parse(statusTemplate)
 	})
 
 	return statusPage, err

@@ -6,6 +6,7 @@ import (
 
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
+	"github.com/peractio/gdk/pkg/cronx/pages"
 	"github.com/robfig/cron/v3"
 )
 
@@ -52,7 +53,7 @@ func (c *CommandController) Start() {
 		e.GET("/jobs", func(context echo.Context) error {
 			return context.JSON(http.StatusOK, GetStatusJSON())
 		})
-		index, _ := GetStatusPageTemplate()
+		index, _ := pages.GetStatusTemplate()
 		e.GET("jobs/html", func(context echo.Context) error {
 			return index.Execute(context.Response().Writer, GetStatusData())
 		})
