@@ -30,10 +30,14 @@ type CommandController struct {
 
 	// UnregisteredJobs describes the list of jobs that have been failed to be registered.
 	UnregisteredJobs []*Job
+
+	// CreatedTime describes when the command controller created.
+	CreatedTime time.Time
 }
 
 // Default starts all the underlying cron jobs.
 // If address is not empty, create a server with routes:
+// - /			=> current server status.
 // - /jobs 		=> current jobs as json.
 // - /jobs/html => current jobs as frontend html.
 func (c *CommandController) Start() {
@@ -57,6 +61,16 @@ func (c *CommandController) Start() {
 		e.Use(middleware.RemoveTrailingSlash())
 
 		// Register routes.
+		e.GET("/", func(context echo.Context) error {
+			return context.JSON(http.StatusOK, map[string]interface{}{
+				"status": http.StatusText(http.StatusOK),
+				"data": map[string]interface{}{
+					"current_time": time.Now().String(),
+					"created_time": c.CreatedTime.String(),
+					"up_time":      time.Since(c.CreatedTime).String(),
+				},
+			})
+		})
 		e.GET("/jobs", func(context echo.Context) error {
 			return context.JSON(http.StatusOK, GetStatusJSON())
 		})
@@ -84,5 +98,6 @@ func NewCommandController(config Config) *CommandController {
 		WorkerPool:   make(chan struct{}, config.PoolSize),
 		PanicRecover: config.PanicRecover,
 		Address:      config.Address,
+		CreatedTime:  time.Now(),
 	}
 }
