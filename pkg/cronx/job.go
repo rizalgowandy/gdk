@@ -40,24 +40,29 @@ func (j *Job) Run() {
 	start := time.Now()
 	defer commandController.PanicRecover(j)
 
+	// Lock current process.
 	j.running.Lock()
 	defer j.running.Unlock()
 
+	// Wait for worker to be available.
 	commandController.WorkerPool <- struct{}{}
 	defer func() {
 		<-commandController.WorkerPool
 	}()
 
+	// Update job status as running.
 	atomic.StoreUint32(&j.status, 1)
 	j.UpdateStatus()
 
+	// Update job status after running.
 	defer j.UpdateStatus()
 	defer atomic.StoreUint32(&j.status, 2)
 
+	// Run the job.
 	j.inner.Run()
 
-	end := time.Now()
-	j.Latency = end.Sub(start).String()
+	// Record time needed to execute the whole process.
+	j.Latency = time.Since(start).String()
 }
 
 // NewJob creates a new job with default status and name.
