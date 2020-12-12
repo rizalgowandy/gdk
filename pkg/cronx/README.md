@@ -58,7 +58,7 @@ $ go run main.go
 
 Browse to
 - http://localhost:8998/jobs/html => see the html page.
-![](https://raw.githubusercontent.com/peractio/gdk/main/pkg/cronx/screenshots/status_page.png?token=ABUOECPMR742WX5EQZAPTVC72OLD2)
+![](https://raw.githubusercontent.com/peractio/gdk/main/pkg/cronx/screenshots/2_status_page.png)
 - http://localhost:8998/jobs => see the json response.
 ```json
 {

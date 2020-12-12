@@ -1,11 +1,3 @@
-package cronx
-
-import (
-	"html/template"
-	"sync"
-)
-
-const statusPageTemplate = `
 <!-- This page is only being used for development, the real html page is on status_page.go -->
 <!DOCTYPE html>
 <html lang="en">
@@ -75,7 +67,7 @@ const statusPageTemplate = `
 			<tr>
 				<th class="left aligned">ID</th>
 				<th class="left aligned">Name</th>
-				<th class="center aligned">Status</th>
+				<th>Status</th>
 				<th>Last run</th>
 				<th class="sorted ascending">Next run</th>
 				<th>Latency</th>
@@ -90,7 +82,7 @@ const statusPageTemplate = `
 				>
 					<td class="left aligned">{{.ID}}</td>
 					<td class="left aligned">{{.Job.Name}}</td>
-					<td class="center aligned">
+					<td>
                         {{if eq .Job.Status "RUNNING"}}
 							<div class="ui yellow label">
 								<i class="sync icon"></i>
@@ -120,19 +112,3 @@ const statusPageTemplate = `
 </div>
 </body>
 </html>
-`
-
-var (
-	once       sync.Once
-	statusPage *template.Template
-	err        error
-)
-
-func GetStatusPageTemplate() (*template.Template, error) {
-	once.Do(func() {
-		t := template.New("status_page.html")
-		statusPage, err = t.Parse(statusPageTemplate)
-	})
-
-	return statusPage, err
-}

@@ -19,3 +19,4 @@ vendor/
 
 # App binary, built with `go build`
 bin/
+tmp/

@@ -6,6 +6,7 @@ import (
 
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
+	"github.com/peractio/gdk/pkg/converter"
 	"github.com/peractio/gdk/pkg/cronx"
 	"github.com/peractio/gdk/pkg/stack"
 	"github.com/rs/zerolog"
@@ -56,10 +57,13 @@ func main() {
 			Err(err).
 			Msg("register sendEmail must success")
 	}
-	if err := cronx.Schedule("0 */1 * * *", payBill{}); err != nil {
-		log.WithLevel(zerolog.ErrorLevel).
-			Err(err).
-			Msg("register payBill must success")
+	for i := 0; i < 50; i++ {
+		spec := "@every " + converter.ToStr(i+1) + "m"
+		if err := cronx.Schedule(spec, payBill{}); err != nil {
+			log.WithLevel(zerolog.ErrorLevel).
+				Err(err).
+				Msg("register payBill must success")
+		}
 	}
 
 	// Get all current registered job.
