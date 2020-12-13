@@ -3,8 +3,8 @@ package main
 import (
 	"runtime/debug"
 
-	"github.com/labstack/echo"
-	"github.com/labstack/echo/middleware"
+	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 	"github.com/peractio/gdk/pkg/converter"
 	"github.com/peractio/gdk/pkg/cronx"
 	"github.com/peractio/gdk/pkg/stack"
