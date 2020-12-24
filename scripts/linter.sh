@@ -2,6 +2,6 @@
 
 echo -e "\e[32mRunning: \e[33mlinter.\e[0m"
 
-golangci-lint run -c "$PWD"/.github/.golangci.yaml || exit 1
+command time -f %E golangci-lint run -c "$PWD"/.github/.golangci.yaml || exit 1
 
 echo -e "\e[32mLinter: \e[33msuccess.\e[0m"
