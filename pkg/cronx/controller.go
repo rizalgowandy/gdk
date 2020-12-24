@@ -71,11 +71,11 @@ func (c *CommandController) Start() {
 				},
 			})
 		})
-		e.GET("/jobs", func(context echo.Context) error {
+		e.GET("/api/jobs", func(context echo.Context) error {
 			return context.JSON(http.StatusOK, GetStatusJSON())
 		})
 		index, _ := pages.GetStatusTemplate()
-		e.GET("jobs/html", func(context echo.Context) error {
+		e.GET("/jobs", func(context echo.Context) error {
 			return index.Execute(context.Response().Writer, GetStatusData())
 		})
 
