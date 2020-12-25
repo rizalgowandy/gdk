@@ -60,7 +60,7 @@
 			</button>
 		</div>
 	</div>
-	<div class="ui four steps">
+	<div class="ui five steps">
 		<div class="step">
 			<i class="arrow down icon"></i>
 			<div class="content">
@@ -89,6 +89,13 @@
 				<div class="description">Job is waiting for next execution time</div>
 			</div>
 		</div>
+		<div class="step">
+			<i class="attention icon"></i>
+			<div class="content">
+				<div class="title">Error</div>
+				<div class="description">Job fails on the last run</div>
+			</div>
+		</div>
 	</div>
 	<div id="table_status">
 		<table class="ui sortable selectable center aligned celled table">
@@ -108,6 +115,7 @@
                         {{if eq .Job.Status "RUNNING"}} class="warning"
                         {{else if eq .Job.Status "IDLE"}} class="positive"
                         {{else if eq .Job.Status "DOWN"}} class="error"
+                        {{else if eq .Job.Status "ERROR"}} class="error"
                         {{end}}
 				>
 					<td>{{.ID}}</td>
@@ -128,6 +136,11 @@
 								<i class="arrow down icon"></i>
                                 {{.Job.Status}}
 							</div>
+                        {{else if eq .Job.Status "ERROR"}}
+							<div class="ui red label">
+								<i class="attention icon"></i>
+                                {{.Job.Status}}
+							</div>
                         {{else}}
 							<div class="ui label">
 								<i class="arrow up icon"></i>
@@ -136,8 +149,16 @@
                         {{end}}
 					</td>
 					<td>
-                        {{if not .Prev.IsZero}}
-                            {{.Prev.Format "2006-01-02 15:04:05"}}
+                        {{if eq .Job.Status "ERROR"}}
+                            {{if not .Prev.IsZero}}
+                                {{.Prev.Format "2006-01-02 15:04:05"}}
+                            {{end}}
+							<br/>
+                            {{.Job.Error}}
+                        {{else}}
+                            {{if not .Prev.IsZero}}
+                                {{.Prev.Format "2006-01-02 15:04:05"}}
+                            {{end}}
                         {{end}}
 					</td>
 					<td>

@@ -30,7 +30,7 @@ func TestGetStatusData(t *testing.T) {
 			name: "Success",
 			mock: func() {
 				Default()
-				_ = Schedule("@every 5m", Func(func() {}))
+				_ = Schedule("@every 5m", Func(func() error { return nil }))
 			},
 			want: true,
 		},

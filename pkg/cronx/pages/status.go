@@ -68,12 +68,12 @@ const statusTemplate = `
 			</button>
 		</div>
 	</div>
-	<div class="ui four steps">
+	<div class="ui five steps">
 		<div class="step">
 			<i class="arrow down icon"></i>
 			<div class="content">
 				<div class="title">Down</div>
-				<div class="description">Job has failed to be created</div>
+				<div class="description">Job fails to be registered</div>
 			</div>
 		</div>
 		<div class="step">
@@ -94,7 +94,14 @@ const statusTemplate = `
 			<i class="hourglass end icon"></i>
 			<div class="content">
 				<div class="title">Idle</div>
-				<div class="description">Job is waiting for next execution</div>
+				<div class="description">Job is waiting for next execution time</div>
+			</div>
+		</div>
+		<div class="step">
+			<i class="attention icon"></i>
+			<div class="content">
+				<div class="title">Error</div>
+				<div class="description">Job fails on the last run</div>
 			</div>
 		</div>
 	</div>
@@ -116,6 +123,7 @@ const statusTemplate = `
                         {{if eq .Job.Status "RUNNING"}} class="warning"
                         {{else if eq .Job.Status "IDLE"}} class="positive"
                         {{else if eq .Job.Status "DOWN"}} class="error"
+                        {{else if eq .Job.Status "ERROR"}} class="error"
                         {{end}}
 				>
 					<td>{{.ID}}</td>
@@ -136,6 +144,11 @@ const statusTemplate = `
 								<i class="arrow down icon"></i>
                                 {{.Job.Status}}
 							</div>
+                        {{else if eq .Job.Status "ERROR"}}
+							<div class="ui red label">
+								<i class="attention icon"></i>
+                                {{.Job.Status}}
+							</div>
                         {{else}}
 							<div class="ui label">
 								<i class="arrow up icon"></i>
@@ -144,8 +157,16 @@ const statusTemplate = `
                         {{end}}
 					</td>
 					<td>
-                        {{if not .Prev.IsZero}}
-                            {{.Prev.Format "2006-01-02 15:04:05"}}
+                        {{if eq .Job.Status "ERROR"}}
+                            {{if not .Prev.IsZero}}
+                                {{.Prev.Format "2006-01-02 15:04:05"}}
+                            {{end}}
+							<br/>
+                            {{.Job.Error}}
+                        {{else}}
+                            {{if not .Prev.IsZero}}
+                                {{.Prev.Format "2006-01-02 15:04:05"}}
+                            {{end}}
                         {{end}}
 					</td>
 					<td>

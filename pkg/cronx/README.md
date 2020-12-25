@@ -1,5 +1,13 @@
 # Cronx
-Cronx is a wrapper for _robfig/cron_. It includes a live monitoring of current schedule and state of active jobs that can be outputted as JSON or HTML template.
+Cronx is a wrapper for _robfig/cron_.
+It includes a live monitoring of current schedule and state of active jobs that can be outputted as JSON or HTML template.
+
+## Available Status
+* **Down** => Job fails to be registered.
+* **Up** => Job has just been created.
+* **Running** => Job is currently running.
+* **Idle** => Job is waiting for next execution time.
+* **Error** => Job fails on the last run.
 
 ## Quick Start
 Create a _**main.go**_ file.
@@ -20,11 +28,11 @@ import (
 // In order to create a job you need to create a struct that has Run() method.
 type sendEmail struct{}
 
-func (e sendEmail) Run() {
-	time.Sleep(time.Second * 3)
+func (e sendEmail) Run() error {
 	log.WithLevel(zerolog.InfoLevel).
 		Str("job", "sendEmail").
 		Msg("every 5 sec send reminder emails")
+	return nil
 }
 
 func main() {
@@ -59,9 +67,9 @@ $ go run main.go
 ```
 
 Browse to
-- http://localhost:8998/jobs/html => see the html page.
+- http://localhost:8998/jobs => see the html page.
 ![](https://raw.githubusercontent.com/peractio/gdk/main/pkg/cronx/screenshots/3_status_page.png)
-- http://localhost:8998/jobs => see the json response.
+- http://localhost:8998/api/jobs => see the json response.
 ```json
 {
   "data": [
@@ -70,7 +78,8 @@ Browse to
       "job": {
         "name": "sendEmail",
         "status": "RUNNING",
-        "latency": "3.000299794s"
+        "latency": "3.000299794s",
+        "error": ""
       },
       "next_run": "2020-12-11T22:36:35+07:00",
       "prev_run": "2020-12-11T22:36:30+07:00"
@@ -83,9 +92,9 @@ Browse to
 ```go
 // Create a cron with custom config.
 cronx.New(cronx.Config{
-    Address:  ":8000", // Determines if we want the library to serve the frontend.
-    PoolSize: 1,       // Determines how many jobs can be run at a time.
-    PanicRecover: func(j *cronx.Job) { // Inject panic middleware with custom logger and alert.
+    Address:  ":8998", // Determines if we want the library to serve the frontend.
+    PoolSize: 1000,    // Determines how many jobs can be run at a time.
+    PanicRecover: func(j *cronx.Job) { // Add panic middleware.
         if err := recover(); err != nil {
             log.WithLevel(zerolog.PanicLevel).
                 Interface("err", err).
@@ -94,18 +103,52 @@ cronx.New(cronx.Config{
                 Msg("recovered")
         }
     },
+    Location: func() *time.Location { // Change timezone to Jakarta.
+        jakarta, err := time.LoadLocation("Asia/Jakarta")
+        if err != nil {
+            secondsEastOfUTC := int((7 * time.Hour).Seconds())
+            jakarta = time.FixedZone("WIB", secondsEastOfUTC)
+        }
+        return jakarta
+    }(),
 })
 ```
 
 ## Schedule Specification Format
-Please refer to this [link](https://pkg.go.dev/github.com/robfig/cron?readme=expanded#section-readme/).
+
+### Schedule
+Field name   | Mandatory? | Allowed values  | Allowed special characters
+----------   | ---------- | --------------  | --------------------------
+Seconds      | Optional   | 0-59            | * / , -
+Minutes      | Yes        | 0-59            | * / , -
+Hours        | Yes        | 0-23            | * / , -
+Day of month | Yes        | 1-31            | * / , - ?
+Month        | Yes        | 1-12 or JAN-DEC | * / , -
+Day of week  | Yes        | 0-6 or SUN-SAT  | * / , - ?
+
+### Predefined schedules
+Entry                  | Description                                | Equivalent
+-----                  | -----------                                | -------------
+@yearly (or @annually) | Run once a year, midnight, Jan. 1st        | 0 0 0 1 1 *
+@monthly               | Run once a month, midnight, first of month | 0 0 0 1 * *
+@weekly                | Run once a week, midnight between Sat/Sun  | 0 0 0 * * 0
+@daily (or @midnight)  | Run once a day, midnight                   | 0 0 0 * * *
+@hourly                | Run once an hour, beginning of hour        | 0 0 * * * *
+
+### Intervals
+```
+@every <duration>
+```
+For example, "@every 1h30m10s" would indicate a schedule that activates after 1 hour, 30 minutes, 10 seconds, and then every interval after that.
+
+Please refer to this [link](https://pkg.go.dev/github.com/robfig/cron?readme=expanded#section-readme/) for more detail.
 
 ## FAQ
 
 ### Why do we limit the number of jobs that can be run at the same time?
 Program is running on a server with finite amount of resources such as CPU and RAM.
 By limiting the total number of jobs that can be run the same time, we protect the server from overloading.
-**The default number of jobs that can be run at the same time is 1000**.
+_**The default number of jobs that can be run at the same time is 1000**_.
 
 ### Can I use my own router without starting the built-in router?
 Yes, you can. This library is very modular.
@@ -142,5 +185,26 @@ index, _ := pages.GetStatusTemplate()
 e.GET("jobs/html", func(context echo.Context) error {
     // Serve the template to the writer and pass the current status data.
     return index.Execute(context.Response().Writer, cronx.GetStatusData())
+})
+```
+
+### Server is located in the US, but my consumer is in Jakarta, can I change the cron timezone?
+Yes, you can.
+By default, the cron timezone will follow the server location timezone.
+If you placed the server in the US, it will use the US timezone.
+If you placed the server in the SG, it will use the SG timezone.
+```go
+// Create a custom config and leave the address as empty string.
+// Empty string meaning the library won't start the built-in server.
+cronx.New(cronx.Config{
+    Address:  ":8998", // Determines if we want the library to serve the frontend.
+    Location: func() *time.Location { // Change timezone to Jakarta.
+        jakarta, err := time.LoadLocation("Asia/Jakarta")
+        if err != nil {
+            secondsEastOfUTC := int((7 * time.Hour).Seconds())
+            jakarta = time.FixedZone("WIB", secondsEastOfUTC)
+        }
+        return jakarta
+    }(),
 })
 ```

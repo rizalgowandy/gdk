@@ -11,7 +11,7 @@ import (
 func TestEvery(t *testing.T) {
 	type args struct {
 		duration time.Duration
-		job      cron.Job
+		job      JobItf
 		mock     func()
 	}
 	tests := []struct {
@@ -33,7 +33,7 @@ func TestEvery(t *testing.T) {
 			name: "Success",
 			args: args{
 				duration: 5 * time.Minute,
-				job:      Func(func() {}),
+				job:      Func(func() error { return nil }),
 				mock: func() {
 					Default()
 				},
@@ -55,12 +55,12 @@ func TestFunc_Run(t *testing.T) {
 	}{
 		{
 			name: "Success",
-			r:    Func(func() {}),
+			r:    Func(func() error { return nil }),
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			tt.r.Run()
+			_ = tt.r.Run()
 		})
 	}
 }
@@ -139,7 +139,7 @@ func TestRemove(t *testing.T) {
 func TestSchedule(t *testing.T) {
 	type args struct {
 		spec string
-		job  cron.Job
+		job  JobItf
 		mock func()
 	}
 	tests := []struct {
@@ -151,7 +151,7 @@ func TestSchedule(t *testing.T) {
 			name: "Uninitialized",
 			args: args{
 				spec: "@every 5m",
-				job:  Func(func() {}),
+				job:  Func(func() error { return nil }),
 				mock: func() {
 					Default()
 					commandController.Commander = nil
@@ -163,7 +163,7 @@ func TestSchedule(t *testing.T) {
 			name: "Broken spec",
 			args: args{
 				spec: "this is clearly not a spec",
-				job:  Func(func() {}),
+				job:  Func(func() error { return nil }),
 				mock: func() {
 					Default()
 				},
@@ -171,10 +171,32 @@ func TestSchedule(t *testing.T) {
 			wantErr: true,
 		},
 		{
-			name: "Success",
+			name: "Success with descriptor",
 			args: args{
 				spec: "@every 5m",
-				job:  Func(func() {}),
+				job:  Func(func() error { return nil }),
+				mock: func() {
+					Default()
+				},
+			},
+			wantErr: false,
+		},
+		{
+			name: "Success with v1",
+			args: args{
+				spec: "0 */30 * * * *",
+				job:  Func(func() error { return nil }),
+				mock: func() {
+					Default()
+				},
+			},
+			wantErr: false,
+		},
+		{
+			name: "Success with v3",
+			args: args{
+				spec: "*/30 * * * *",
+				job:  Func(func() error { return nil }),
 				mock: func() {
 					Default()
 				},

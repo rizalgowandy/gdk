@@ -18,11 +18,14 @@ const (
 	StatusCodeRunning StatusCode = "RUNNING"
 	// StatusCodeDown describes that current job has failed to be registered.
 	StatusCodeDown StatusCode = "DOWN"
+	// StatusCodeError describes that last run has failed.
+	StatusCodeError StatusCode = "ERROR"
 
 	statusDown    uint32 = 0
 	statusUp      uint32 = 1
 	statusIdle    uint32 = 2
 	statusRunning uint32 = 3
+	statusError   uint32 = 4
 )
 
 // StatusData defines current job status.

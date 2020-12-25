@@ -25,6 +25,10 @@ type Config struct {
 	// PanicRecover is deferred function that will be executed before executing each job.
 	// Prevent the cron from shutting down because of panic occurrence when running one of the job.
 	PanicRecover func(j *Job)
+
+	// Location describes the timezone current cron is running.
+	// By default the timezone will be the same timezone as the server.
+	Location *time.Location
 }
 
 var (
@@ -40,6 +44,7 @@ var (
 					Msg("recovered")
 			}
 		},
+		Location: time.Local,
 	}
 
 	commandController *CommandController
@@ -59,6 +64,9 @@ func New(config Config) {
 	if config.PanicRecover == nil {
 		config.PanicRecover = defaultConfig.PanicRecover
 	}
+	if config.Location == nil {
+		config.Location = time.Local
+	}
 
 	// Create new command controller and start the underlying jobs.
 	commandController = NewCommandController(config)
@@ -68,21 +76,23 @@ func New(config Config) {
 // Func is a type to allow callers to wrap a raw func.
 // Example:
 //	cronx.Schedule("@every 5m", cronx.Func(myFunc))
-type Func func()
+type Func func() error
 
-func (r Func) Run() { r() }
+func (r Func) Run() error {
+	return r()
+}
 
 // Schedule sets a job to run at specific time.
 // Example:
 //  @every 5m
-//  0 */10 * * *
-func Schedule(spec string, job cron.Job) error {
+//  0 */10 * * * * => every 10m
+func Schedule(spec string, job JobItf) error {
 	if commandController == nil || commandController.Commander == nil {
 		return errors.New("cronx has not been initialized")
 	}
 
 	// Check if spec is correct.
-	schedule, err := cron.ParseStandard(spec)
+	schedule, err := commandController.Parser.Parse(spec)
 	if err != nil {
 		downJob := NewJob(job)
 		downJob.Status = StatusCodeDown
@@ -101,7 +111,8 @@ func Schedule(spec string, job cron.Job) error {
 // Every executes the given job at a fixed interval.
 // The interval provided is the time between the job ending and the job being run again.
 // The time that the job takes to run is not included in the interval.
-func Every(duration time.Duration, job cron.Job) {
+// Minimal time is 1 sec.
+func Every(duration time.Duration, job JobItf) {
 	if commandController == nil || commandController.Commander == nil {
 		return
 	}

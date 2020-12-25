@@ -1,9 +1,9 @@
 package cronx
 
 import (
+	"errors"
 	"testing"
 
-	"github.com/robfig/cron/v3"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -12,7 +12,7 @@ func TestJob_Run(t *testing.T) {
 		Name    string
 		Status  StatusCode
 		Latency string
-		inner   cron.Job
+		inner   JobItf
 		status  uint32
 	}
 	tests := []struct {
@@ -20,11 +20,19 @@ func TestJob_Run(t *testing.T) {
 		fields fields
 	}{
 		{
+			name: "Success with run resulting error",
+			fields: fields{
+				Name:   "Func",
+				Status: StatusCodeIdle,
+				inner:  Func(func() error { return errors.New("error") }),
+			},
+		},
+		{
 			name: "Success",
 			fields: fields{
 				Name:   "Func",
 				Status: StatusCodeIdle,
-				inner:  Func(func() {}),
+				inner:  Func(func() error { return nil }),
 			},
 		},
 	}
@@ -48,7 +56,7 @@ func TestJob_UpdateStatus(t *testing.T) {
 		Name    string
 		Status  StatusCode
 		Latency string
-		inner   cron.Job
+		inner   JobItf
 		status  uint32
 	}
 	tests := []struct {
@@ -84,6 +92,13 @@ func TestJob_UpdateStatus(t *testing.T) {
 			},
 			want: StatusCodeDown,
 		},
+		{
+			name: "StatusCodeError",
+			fields: fields{
+				status: statusError,
+			},
+			want: StatusCodeError,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -103,7 +118,7 @@ func TestJob_UpdateStatus(t *testing.T) {
 
 func TestNewJob(t *testing.T) {
 	type args struct {
-		job cron.Job
+		job JobItf
 	}
 	tests := []struct {
 		name string
@@ -112,7 +127,7 @@ func TestNewJob(t *testing.T) {
 		{
 			name: "Success",
 			args: args{
-				job: Func(func() {}),
+				job: Func(func() error { return nil }),
 			},
 		},
 	}

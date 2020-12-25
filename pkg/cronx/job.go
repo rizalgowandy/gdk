@@ -5,9 +5,11 @@ import (
 	"sync"
 	"sync/atomic"
 	"time"
-
-	"github.com/robfig/cron/v3"
 )
+
+type JobItf interface {
+	Run() error
+}
 
 type Job struct {
 	Name    string     `json:"name"`
@@ -15,7 +17,7 @@ type Job struct {
 	Latency string     `json:"latency"`
 	Error   string     `json:"error"`
 
-	inner   cron.Job
+	inner   JobItf
 	status  uint32
 	running sync.Mutex
 }
@@ -29,6 +31,8 @@ func (j *Job) UpdateStatus() StatusCode {
 		j.Status = StatusCodeIdle
 	case statusDown:
 		j.Status = StatusCodeDown
+	case statusError:
+		j.Status = StatusCodeError
 	default:
 		j.Status = StatusCodeUp
 	}
@@ -51,24 +55,33 @@ func (j *Job) Run() {
 	}()
 
 	// Update job status as running.
-	atomic.StoreUint32(&j.status, 1)
+	atomic.StoreUint32(&j.status, statusRunning)
 	j.UpdateStatus()
 
 	// Update job status after running.
 	defer j.UpdateStatus()
-	defer atomic.StoreUint32(&j.status, 2)
 
 	// Run the job.
-	j.inner.Run()
+	if err := j.inner.Run(); err != nil {
+		j.Error = err.Error()
+		atomic.StoreUint32(&j.status, statusError)
+	} else {
+		atomic.StoreUint32(&j.status, statusIdle)
+	}
 
 	// Record time needed to execute the whole process.
 	j.Latency = time.Since(start).String()
 }
 
 // NewJob creates a new job with default status and name.
-func NewJob(job cron.Job) *Job {
+func NewJob(job JobItf) *Job {
+	name := reflect.TypeOf(job).Name()
+	if name == "Func" {
+		name = "(nameless)"
+	}
+
 	return &Job{
-		Name:   reflect.TypeOf(job).Name(),
+		Name:   name,
 		Status: StatusCodeUp,
 		inner:  job,
 		status: statusUp,

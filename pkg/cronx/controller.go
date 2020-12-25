@@ -28,11 +28,18 @@ type CommandController struct {
 	// Empty string meaning we won't serve the current job status.
 	Address string
 
-	// UnregisteredJobs describes the list of jobs that have been failed to be registered.
-	UnregisteredJobs []*Job
+	// Location describes the timezone current cron is running.
+	// By default the timezone will be the same timezone as the server.
+	Location *time.Location
 
 	// CreatedTime describes when the command controller created.
 	CreatedTime time.Time
+
+	// Parser is a custom parser to support v1 that contains second as first parameter.
+	Parser cron.Parser
+
+	// UnregisteredJobs describes the list of jobs that have been failed to be registered.
+	UnregisteredJobs []*Job
 }
 
 // Default starts all the underlying cron jobs.
@@ -42,9 +49,6 @@ type CommandController struct {
 // - /jobs/html => current jobs as frontend html.
 func (c *CommandController) Start() {
 	// Start the commander.
-	if c.Commander == nil {
-		c.Commander = cron.New()
-	}
 	c.Commander.Start()
 
 	// Check if client want to start a server to serve json and frontend.
@@ -93,11 +97,22 @@ func (c *CommandController) Start() {
 
 // NewCommandController create a command controller with a specific config.
 func NewCommandController(config Config) *CommandController {
+	// Support the v1 where the first parameter is second.
+	parser := cron.NewParser(
+		cron.SecondOptional | cron.Minute | cron.Hour | cron.Dom | cron.Month | cron.Dow | cron.Descriptor,
+	)
+
 	return &CommandController{
-		Commander:    cron.New(),
-		WorkerPool:   make(chan struct{}, config.PoolSize),
-		PanicRecover: config.PanicRecover,
-		Address:      config.Address,
-		CreatedTime:  time.Now(),
+		Commander: cron.New(
+			cron.WithParser(parser),
+			cron.WithLocation(config.Location),
+		),
+		WorkerPool:       make(chan struct{}, config.PoolSize),
+		PanicRecover:     config.PanicRecover,
+		Address:          config.Address,
+		UnregisteredJobs: nil,
+		CreatedTime:      time.Now(),
+		Parser:           parser,
+		Location:         config.Location,
 	}
 }
