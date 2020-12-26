@@ -21,7 +21,7 @@ var conversions = []romanConversion{
 	{1, "I"},
 }
 
-// ToRoman will convert your integer to roman format.
+// ToRoman converts your integer to roman format.
 func ToRoman(number int) string {
 	roman := ""
 	for _, conversion := range conversions {
