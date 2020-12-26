@@ -45,8 +45,8 @@ type CommandController struct {
 // Default starts all the underlying cron jobs.
 // If address is not empty, create a server with routes:
 // - /			=> current server status.
-// - /jobs 		=> current jobs as json.
-// - /jobs/html => current jobs as frontend html.
+// - /jobs		=> current jobs as frontend html.
+// - /api/jobs	=> current jobs as json.
 func (c *CommandController) Start() {
 	// Start the commander.
 	c.Commander.Start()
