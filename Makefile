@@ -8,8 +8,12 @@ setup: # install configuration and dependencies for development.
 	@./scripts/setup.sh
 
 .PHONY: linter
-linter: # run linter to keep code clean
+linter: # run linter to keep code clean.
 	@./scripts/linter.sh
+
+.PHONY: test
+test: # run all tests.
+	@./scripts/test.sh
 
 .PHONY: build
 build: # ensure all binary can be build.

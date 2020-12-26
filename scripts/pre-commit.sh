@@ -40,6 +40,9 @@ make linter || exit 1
 # Build binaries to ensure program can be built
 make build || exit 1
 
+# Run test.
+make test || exit 1
+
 # Clean up unused dependency.
 go mod tidy
 git add go.mod
