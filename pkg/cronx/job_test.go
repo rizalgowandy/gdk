@@ -33,7 +33,7 @@ func TestJob_Run(t *testing.T) {
 			fields: fields{
 				Name:   "Func",
 				Status: StatusCodeIdle,
-				inner:  Func(func(ctx context.Context) error { return errors.New("error") }),
+				inner:  Func(func(ctx context.Context) error { return nil }),
 			},
 		},
 	}

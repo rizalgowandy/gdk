@@ -119,10 +119,13 @@ func Schedule(spec string, job JobItf) error {
 //	Separator	: "#"
 //	This input schedules the job to run 3 times.
 func Schedules(spec, separator string, job JobItf) error {
-	schedules := strings.Split(spec, separator)
-	if len(schedules) == 0 {
-		return errors.New("separating specification resulting no schedule")
+	if spec == "" {
+		return errors.New("invalid specification")
 	}
+	if separator == "" {
+		return errors.New("invalid separator")
+	}
+	schedules := strings.Split(spec, separator)
 	for _, v := range schedules {
 		if err := Schedule(v, job); err != nil {
 			return err

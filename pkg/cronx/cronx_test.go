@@ -300,6 +300,15 @@ func TestSchedules(t *testing.T) {
 			wantErr: true,
 		},
 		{
+			name: "Empty separator",
+			args: args{
+				spec:      "* 1 * * *",
+				separator: "",
+				job:       Func(func(ctx context.Context) error { return nil }),
+			},
+			wantErr: true,
+		},
+		{
 			name: "Broken specification",
 			args: args{
 				spec:      "this is not specification#this is broken",
