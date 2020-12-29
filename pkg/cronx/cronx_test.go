@@ -278,3 +278,69 @@ func TestStop(t *testing.T) {
 		})
 	}
 }
+
+func TestSchedules(t *testing.T) {
+	type args struct {
+		spec      string
+		separator string
+		job       JobItf
+	}
+	tests := []struct {
+		name    string
+		args    args
+		wantErr bool
+	}{
+		{
+			name: "Empty specification",
+			args: args{
+				spec:      "",
+				separator: "#",
+				job:       Func(func(ctx context.Context) error { return nil }),
+			},
+			wantErr: true,
+		},
+		{
+			name: "Broken specification",
+			args: args{
+				spec:      "this is not specification#this is broken",
+				separator: "#",
+				job:       Func(func(ctx context.Context) error { return nil }),
+			},
+			wantErr: true,
+		},
+		{
+			name: "Partial broken specification",
+			args: args{
+				spec:      "0 57 0 * * *#this is broken",
+				separator: "#",
+				job:       Func(func(ctx context.Context) error { return nil }),
+			},
+			wantErr: true,
+		},
+		{
+			name: "Success with 1 waves",
+			args: args{
+				spec:      "0 57 0 * * *",
+				separator: "#",
+				job:       Func(func(ctx context.Context) error { return nil }),
+			},
+			wantErr: false,
+		},
+		{
+			name: "Success with 3 waves",
+			args: args{
+				spec:      "0 57 0 * * *#0 18 16 * * *#0 7 1 * * *",
+				separator: "#",
+				job:       Func(func(ctx context.Context) error { return nil }),
+			},
+			wantErr: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if err := Schedules(tt.args.spec, tt.args.separator, tt.args.job); (err != nil) != tt.wantErr {
+				t.Errorf("Schedules() error = %v, wantErr %v", err, tt.wantErr)
+			}
+		})
+	}
+}

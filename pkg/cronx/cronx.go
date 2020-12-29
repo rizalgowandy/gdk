@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"runtime/debug"
+	"strings"
 	"time"
 
 	"github.com/peractio/gdk/pkg/stack"
@@ -106,6 +107,27 @@ func Schedule(spec string, job JobItf) error {
 	}
 
 	commandController.Commander.Schedule(schedule, NewJob(job))
+	return nil
+}
+
+// Schedules sets a job to run multiple times at specific time.
+// Symbol */,-? should never be used as separator character.
+// These symbols are reserved for cron specification.
+//
+// Example:
+//  Spec		: "0 0 1 * * *#0 0 2 * * *#0 0 3 * * *
+//	Separator	: "#"
+//	This input schedules the job to run 3 times.
+func Schedules(spec, separator string, job JobItf) error {
+	schedules := strings.Split(spec, separator)
+	if len(schedules) == 0 {
+		return errors.New("separating specification resulting no schedule")
+	}
+	for _, v := range schedules {
+		if err := Schedule(v, job); err != nil {
+			return err
+		}
+	}
 	return nil
 }
 

@@ -96,7 +96,7 @@ func main() {
 			Err(err).
 			Msg("register sendEmail must success")
 	}
-	// Example of registering job with the same struct.
+	// Create some jobs with the same struct.
 	// Duplication is okay.
 	for i := 0; i < 3; i++ {
 		spec := "@every " + converter.ToStr(i+1) + "m"
@@ -106,7 +106,7 @@ func main() {
 				Msg("register payBill must success")
 		}
 	}
-	// Example jobs with broken spec.
+	// Create some jobs with broken spec.
 	for i := 0; i < 3; i++ {
 		spec := "broken spec " + converter.ToStr(i+1)
 		if err := cronx.Schedule(spec, payBill{}); err != nil {
@@ -115,13 +115,13 @@ func main() {
 				Msg("register payBill must success")
 		}
 	}
-	// Example of job with run that will always be error.
+	// Create a job with run that will always be error.
 	if err := cronx.Schedule("@every 30s", alwaysError{}); err != nil {
 		log.WithLevel(zerolog.ErrorLevel).
 			Err(err).
 			Msg("register alwaysError must success")
 	}
-	// Custom job with missing name.
+	// Create a custom job with missing name.
 	if err := cronx.Schedule("0 */1 * * *", cronx.Func(func(context.Context) error {
 		log.WithLevel(zerolog.InfoLevel).
 			Str("job", "nameless job").
@@ -130,13 +130,19 @@ func main() {
 	})); err != nil {
 		log.WithLevel(zerolog.ErrorLevel).
 			Err(err).
-			Msg("register alwaysError must success")
+			Msg("register job must success")
 	}
-	// Job with v1 specification that includes seconds.
+	// Create a job with v1 specification that includes seconds.
 	if err := cronx.Schedule("0 0 4 * * *", subscription{}); err != nil {
 		log.WithLevel(zerolog.ErrorLevel).
 			Err(err).
-			Msg("register alwaysError must success")
+			Msg("register subscription must success")
+	}
+	// Create a job with multiple schedules
+	if err := cronx.Schedules("0 0 4 * * *#0 0 7 * * *#0 0 11 * * *", "#", subscription{}); err != nil {
+		log.WithLevel(zerolog.ErrorLevel).
+			Err(err).
+			Msg("register subscription must success")
 	}
 	// Create a job that run every 20 sec.
 	cronx.Every(20*time.Second, everyJob{})
