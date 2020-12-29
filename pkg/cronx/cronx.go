@@ -3,14 +3,10 @@ package cronx
 import (
 	"context"
 	"errors"
-	"runtime/debug"
 	"strings"
 	"time"
 
-	"github.com/peractio/gdk/pkg/stack"
 	"github.com/robfig/cron/v3"
-	"github.com/rs/zerolog"
-	"github.com/rs/zerolog/log"
 )
 
 // Config defines the config for the command controller.
@@ -20,14 +16,6 @@ type Config struct {
 	// Default ":8998".
 	Address string
 
-	// PoolSize determines the maximum job that can run at the same time.
-	// When you have a small size server with limited CPU and RAM use smaller value.
-	PoolSize int
-
-	// PanicRecover is deferred function that will be executed before executing each job.
-	// Prevent the cron from shutting down because of panic occurrence when running one of the job.
-	PanicRecover func(ctx context.Context, j *Job)
-
 	// Location describes the timezone current cron is running.
 	// By default the timezone will be the same timezone as the server.
 	Location *time.Location
@@ -36,16 +24,6 @@ type Config struct {
 var (
 	defaultConfig = Config{
 		Address:  ":8998",
-		PoolSize: 1000,
-		PanicRecover: func(ctx context.Context, j *Job) {
-			if err := recover(); err != nil {
-				log.WithLevel(zerolog.PanicLevel).
-					Interface("err", err).
-					Interface("stack", stack.ToArr(stack.Trim(debug.Stack()))).
-					Interface("job", j).
-					Msg("recovered")
-			}
-		},
 		Location: time.Local,
 	}
 
@@ -53,25 +31,19 @@ var (
 )
 
 // Default creates a cron with default config.
-func Default() {
-	New(defaultConfig)
+func Default(interceptors ...Interceptor) {
+	New(defaultConfig, interceptors...)
 }
 
 // New creates a cron with custom config.
-func New(config Config) {
+func New(config Config, interceptors ...Interceptor) {
 	// If there is invalid config use the default config instead.
-	if config.PoolSize <= 0 {
-		config.PoolSize = defaultConfig.PoolSize
-	}
-	if config.PanicRecover == nil {
-		config.PanicRecover = defaultConfig.PanicRecover
-	}
 	if config.Location == nil {
 		config.Location = time.Local
 	}
 
 	// Create new command controller and start the underlying jobs.
-	commandController = NewCommandController(config)
+	commandController = NewCommandController(config, interceptors...)
 	commandController.Start()
 }
 

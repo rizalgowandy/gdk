@@ -112,6 +112,37 @@ cronx.New(cronx.Config{
 })
 ```
 
+## Interceptor / Middleware
+Interceptor or commonly known as middleware is an operation that commonly executed before any of other operation. 
+This library has the capability to add multiple middlewares that will be executed before or after the real job.
+It means you can log the running job, send telemetry, or protect the application from going down because of panic by adding middlewares.
+
+### Adding Interceptor / Middleware
+```go
+// Create cron middleware.
+// The order is important.
+// The first one will be executed first.
+middleware := cronx.Chain(
+    interceptors.Recover(), // Auto recover from panic.
+    interceptors.Logger(), // Log start and finish process.
+    interceptors.DefaultWorkerPool(), // Limit concurrent running job.
+)
+
+cronx.Default(middleware)
+```
+
+### Custom Interceptor / Middleware
+```go
+// Sleep is a middleware that sleep a few second after job has been executed.
+func Sleep() cronx.Interceptor {
+	return func(ctx context.Context, job *cronx.Job, handler cronx.Handler) error {
+		err := handler(ctx, job)
+		time.Sleep(10 * time.Second)
+		return err
+	}
+}
+```
+
 ## Schedule Specification Format
 
 ### Schedule
@@ -143,10 +174,35 @@ Please refer to this [link](https://pkg.go.dev/github.com/robfig/cron?readme=exp
 
 ## FAQ
 
-### Why do we limit the number of jobs that can be run at the same time?
-Program is running on a server with finite amount of resources such as CPU and RAM.
-By limiting the total number of jobs that can be run the same time, we protect the server from overloading.
-_**The default number of jobs that can be run at the same time is 1000**_.
+### What are the available commands?
+Here the list of commonly used commands.
+```go
+// Schedule sets a job to run at specific time.
+// Example:
+//  @every 5m
+//  0 */10 * * * * => every 10m
+Schedule(spec string, job JobItf) error
+
+// Schedules sets a job to run multiple times at specific time.
+// Symbol */,-? should never be used as separator character.
+// These symbols are reserved for cron specification.
+//
+// Example:
+//  Spec		: "0 0 1 * * *#0 0 2 * * *#0 0 3 * * *
+//	Separator	: "#"
+//	This input schedules the job to run 3 times.
+Schedules(spec, separator string, job JobItf) error
+
+// Every executes the given job at a fixed interval.
+// The interval provided is the time between the job ending and the job being run again.
+// The time that the job takes to run is not included in the interval.
+// Minimal time is 1 sec.
+Every(duration time.Duration, job JobItf)
+```
+Go to `cronx/cronx.go` to see the list of available commands.
+
+### What are the available interceptors?
+Go to `cronx/interceptors` to see the available interceptors.
 
 ### Can I use my own router without starting the built-in router?
 Yes, you can. This library is very modular.
@@ -186,7 +242,7 @@ e.GET("jobs/html", func(context echo.Context) error {
 })
 ```
 
-### Server is located in the US, but my consumer is in Jakarta, can I change the cron timezone?
+### Server is located in the US, but my user is in Jakarta, can I change the cron timezone?
 Yes, you can.
 By default, the cron timezone will follow the server location timezone using `time.Local`.
 If you placed the server in the US, it will use the US timezone.
@@ -205,3 +261,7 @@ cronx.New(cronx.Config{
     }(),
 })
 ```
+
+### PIC
+Software Engineer Team:
+* Rizal Widyarta Gowandy (@rizalgowandy)

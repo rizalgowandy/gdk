@@ -1,7 +1,6 @@
 package cronx
 
 import (
-	"context"
 	"net/http"
 	"time"
 
@@ -19,11 +18,8 @@ type CommandController struct {
 	// Commander holds all the underlying cron jobs.
 	Commander *cron.Cron
 
-	// WorkerPool determine the limit of the number of jobs allowed to run concurrently.
-	WorkerPool chan struct{}
-
-	// PanicRecover is deferred function that will be executed before executing each job.
-	PanicRecover func(ctx context.Context, j *Job)
+	// Interceptor holds middleware that will be executed before current job operation.
+	Interceptor Interceptor
 
 	// Address determines the address will we serve the json and frontend status.
 	// Empty string meaning we won't serve the current job status.
@@ -97,7 +93,7 @@ func (c *CommandController) Start() {
 }
 
 // NewCommandController create a command controller with a specific config.
-func NewCommandController(config Config) *CommandController {
+func NewCommandController(config Config, interceptors ...Interceptor) *CommandController {
 	// Support the v1 where the first parameter is second.
 	parser := cron.NewParser(
 		cron.SecondOptional | cron.Minute | cron.Hour | cron.Dom | cron.Month | cron.Dow | cron.Descriptor,
@@ -108,12 +104,11 @@ func NewCommandController(config Config) *CommandController {
 			cron.WithParser(parser),
 			cron.WithLocation(config.Location),
 		),
-		WorkerPool:       make(chan struct{}, config.PoolSize),
-		PanicRecover:     config.PanicRecover,
+		Interceptor:      Chain(interceptors...),
 		Address:          config.Address,
-		UnregisteredJobs: nil,
+		Location:         config.Location,
 		CreatedTime:      time.Now(),
 		Parser:           parser,
-		Location:         config.Location,
+		UnregisteredJobs: nil,
 	}
 }

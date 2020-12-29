@@ -3,14 +3,13 @@ package main
 import (
 	"context"
 	"errors"
-	"runtime/debug"
 	"time"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/peractio/gdk/pkg/converter"
 	"github.com/peractio/gdk/pkg/cronx"
-	"github.com/peractio/gdk/pkg/stack"
+	"github.com/peractio/gdk/pkg/cronx/interceptors"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 )
@@ -63,21 +62,23 @@ func (subscription) Run(context.Context) error {
 
 func main() {
 	// Create a cron controller with default config.
+	// - running on port :8998
+	// - location is time.Local
+	// - without any middleware
 	cronx.Default()
 
-	// Create a cron with custom config.
+	// Create cron middleware.
+	// The order is important.
+	// The first one will be executed first.
+	cronMiddleware := cronx.Chain(
+		interceptors.Recover(),
+		interceptors.Logger(),
+		interceptors.DefaultWorkerPool(),
+	)
+
+	// Create a cron with custom config and middleware.
 	cronx.New(cronx.Config{
-		Address:  ":8000", // Determines if we want the library to serve the frontend.
-		PoolSize: 1000,    // Determines how many jobs can be run at a time.
-		PanicRecover: func(ctx context.Context, j *cronx.Job) { // Add panic middleware.
-			if err := recover(); err != nil {
-				log.WithLevel(zerolog.PanicLevel).
-					Interface("err", err).
-					Interface("stack", stack.ToArr(stack.Trim(debug.Stack()))).
-					Interface("job", j).
-					Msg("recovered")
-			}
-		},
+		Address: ":8000", // Determines if we want the library to serve the frontend.
 		Location: func() *time.Location { // Change timezone to Jakarta.
 			jakarta, err := time.LoadLocation("Asia/Jakarta")
 			if err != nil {
@@ -86,7 +87,7 @@ func main() {
 			}
 			return jakarta
 		}(),
-	})
+	}, cronMiddleware)
 
 	// Register a new cron job.
 	// Struct name will become the name for the current job.

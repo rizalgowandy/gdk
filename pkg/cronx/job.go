@@ -44,27 +44,19 @@ func (j *Job) UpdateStatus() StatusCode {
 func (j *Job) Run() {
 	start := time.Now()
 	ctx := context.Background()
-	defer commandController.PanicRecover(ctx, j)
 
 	// Lock current process.
 	j.running.Lock()
 	defer j.running.Unlock()
 
-	// Wait for worker to be available.
-	commandController.WorkerPool <- struct{}{}
-	defer func() {
-		<-commandController.WorkerPool
-	}()
-
 	// Update job status as running.
 	atomic.StoreUint32(&j.status, statusRunning)
 	j.UpdateStatus()
 
-	// Update job status after running.
-	defer j.UpdateStatus()
-
 	// Run the job.
-	if err := j.inner.Run(ctx); err != nil {
+	if err := commandController.Interceptor(ctx, j, func(ctx context.Context, job *Job) error {
+		return job.inner.Run(ctx)
+	}); err != nil {
 		j.Error = err.Error()
 		atomic.StoreUint32(&j.status, statusError)
 	} else {
@@ -73,6 +65,9 @@ func (j *Job) Run() {
 
 	// Record time needed to execute the whole process.
 	j.Latency = time.Since(start).String()
+
+	// Update job status after running.
+	j.UpdateStatus()
 }
 
 // NewJob creates a new job with default status and name.
