@@ -40,7 +40,7 @@ func main() {
 	// - has a max running jobs limit 1000
 	// - with built in panic recovery
 	cronx.Default()
-	
+
 	// Register a new cron job.
 	// Struct name will become the name for the current job.
 	if err := cronx.Schedule("@every 5s", sendEmail{}); err != nil {
