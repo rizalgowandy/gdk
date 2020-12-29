@@ -181,8 +181,8 @@ Schedule(spec string, job JobItf) error
 //
 // Example:
 //  Spec		: "0 0 1 * * *#0 0 2 * * *#0 0 3 * * *
-//	Separator	: "#"
-//	This input schedules the job to run 3 times.
+//  Separator	: "#"
+//  This input schedules the job to run 3 times.
 Schedules(spec, separator string, job JobItf) error
 
 // Every executes the given job at a fixed interval.

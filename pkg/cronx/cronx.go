@@ -87,7 +87,7 @@ func Schedule(spec string, job JobItf) error {
 // These symbols are reserved for cron specification.
 //
 // Example:
-//  Spec		: "0 0 1 * * *#0 0 2 * * *#0 0 3 * * *
+//	Spec		: "0 0 1 * * *#0 0 2 * * *#0 0 3 * * *
 //	Separator	: "#"
 //	This input schedules the job to run 3 times.
 func Schedules(spec, separator string, job JobItf) error {
