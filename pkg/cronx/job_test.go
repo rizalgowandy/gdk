@@ -1,6 +1,7 @@
 package cronx
 
 import (
+	"context"
 	"errors"
 	"testing"
 
@@ -24,7 +25,7 @@ func TestJob_Run(t *testing.T) {
 			fields: fields{
 				Name:   "Func",
 				Status: StatusCodeIdle,
-				inner:  Func(func() error { return errors.New("error") }),
+				inner:  Func(func(ctx context.Context) error { return errors.New("error") }),
 			},
 		},
 		{
@@ -32,7 +33,7 @@ func TestJob_Run(t *testing.T) {
 			fields: fields{
 				Name:   "Func",
 				Status: StatusCodeIdle,
-				inner:  Func(func() error { return nil }),
+				inner:  Func(func(ctx context.Context) error { return errors.New("error") }),
 			},
 		},
 	}
@@ -127,7 +128,7 @@ func TestNewJob(t *testing.T) {
 		{
 			name: "Success",
 			args: args{
-				job: Func(func() error { return nil }),
+				job: Func(func(ctx context.Context) error { return nil }),
 			},
 		},
 	}

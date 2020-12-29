@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"errors"
 	"runtime/debug"
 	"time"
@@ -16,7 +17,7 @@ import (
 
 type sendEmail struct{}
 
-func (e sendEmail) Run() error {
+func (s sendEmail) Run(context.Context) error {
 	log.WithLevel(zerolog.InfoLevel).
 		Str("job", "sendEmail").
 		Msg("every 5 sec send reminder emails")
@@ -25,7 +26,7 @@ func (e sendEmail) Run() error {
 
 type payBill struct{}
 
-func (p payBill) Run() error {
+func (p payBill) Run(context.Context) error {
 	log.WithLevel(zerolog.InfoLevel).
 		Str("job", "payBill").
 		Msg("every 1 min pay bill")
@@ -34,7 +35,7 @@ func (p payBill) Run() error {
 
 type alwaysError struct{}
 
-func (a alwaysError) Run() error {
+func (a alwaysError) Run(context.Context) error {
 	log.WithLevel(zerolog.InfoLevel).
 		Str("job", "alwaysError").
 		Msg("every 30 sec error")
@@ -44,13 +45,19 @@ func (a alwaysError) Run() error {
 
 type everyJob struct{}
 
-func (everyJob) Run() error {
+func (everyJob) Run(context.Context) error {
+	log.WithLevel(zerolog.InfoLevel).
+		Str("job", "everyJob").
+		Msg("is running")
 	return nil
 }
 
 type subscription struct{}
 
-func (subscription) Run() error {
+func (subscription) Run(context.Context) error {
+	log.WithLevel(zerolog.InfoLevel).
+		Str("job", "subscription").
+		Msg("is running")
 	return nil
 }
 
@@ -62,7 +69,7 @@ func main() {
 	cronx.New(cronx.Config{
 		Address:  ":8000", // Determines if we want the library to serve the frontend.
 		PoolSize: 1000,    // Determines how many jobs can be run at a time.
-		PanicRecover: func(j *cronx.Job) { // Add panic middleware.
+		PanicRecover: func(ctx context.Context, j *cronx.Job) { // Add panic middleware.
 			if err := recover(); err != nil {
 				log.WithLevel(zerolog.PanicLevel).
 					Interface("err", err).
@@ -115,7 +122,7 @@ func main() {
 			Msg("register alwaysError must success")
 	}
 	// Custom job with missing name.
-	if err := cronx.Schedule("0 */1 * * *", cronx.Func(func() error {
+	if err := cronx.Schedule("0 */1 * * *", cronx.Func(func(context.Context) error {
 		log.WithLevel(zerolog.InfoLevel).
 			Str("job", "nameless job").
 			Msg("every 1h will be run")

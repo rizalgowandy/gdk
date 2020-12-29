@@ -1,6 +1,7 @@
 package cronx
 
 import (
+	"context"
 	"net/http"
 	"time"
 
@@ -22,7 +23,7 @@ type CommandController struct {
 	WorkerPool chan struct{}
 
 	// PanicRecover is deferred function that will be executed before executing each job.
-	PanicRecover func(j *Job)
+	PanicRecover func(ctx context.Context, j *Job)
 
 	// Address determines the address will we serve the json and frontend status.
 	// Empty string meaning we won't serve the current job status.

@@ -15,12 +15,11 @@ Create a _**main.go**_ file.
 package main
 
 import (
-	"time"
+	"context"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/peractio/gdk/pkg/cronx"
-	"github.com/peractio/gdk/pkg/stack"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 )
@@ -28,7 +27,7 @@ import (
 // In order to create a job you need to create a struct that has Run() method.
 type sendEmail struct{}
 
-func (e sendEmail) Run() error {
+func (s sendEmail) Run(ctx context.Context) error {
 	log.WithLevel(zerolog.InfoLevel).
 		Str("job", "sendEmail").
 		Msg("every 5 sec send reminder emails")
@@ -93,7 +92,7 @@ Browse to
 cronx.New(cronx.Config{
     Address:  ":8998", // Determines if we want the library to serve the frontend.
     PoolSize: 1000,    // Determines how many jobs can be run at a time.
-    PanicRecover: func(j *cronx.Job) { // Add panic middleware.
+    PanicRecover: func(ctx context.Context, j *cronx.Job) { // Add panic middleware.
         if err := recover(); err != nil {
             log.WithLevel(zerolog.PanicLevel).
                 Interface("err", err).
@@ -189,14 +188,13 @@ e.GET("jobs/html", func(context echo.Context) error {
 
 ### Server is located in the US, but my consumer is in Jakarta, can I change the cron timezone?
 Yes, you can.
-By default, the cron timezone will follow the server location timezone.
+By default, the cron timezone will follow the server location timezone using `time.Local`.
 If you placed the server in the US, it will use the US timezone.
 If you placed the server in the SG, it will use the SG timezone.
 ```go
-// Create a custom config and leave the address as empty string.
-// Empty string meaning the library won't start the built-in server.
+// Create a custom config.
 cronx.New(cronx.Config{
-    Address:  ":8998", // Determines if we want the library to serve the frontend.
+    Address:  ":8998",
     Location: func() *time.Location { // Change timezone to Jakarta.
         jakarta, err := time.LoadLocation("Asia/Jakarta")
         if err != nil {

@@ -1,6 +1,7 @@
 package cronx
 
 import (
+	"context"
 	"errors"
 	"runtime/debug"
 	"time"
@@ -24,7 +25,7 @@ type Config struct {
 
 	// PanicRecover is deferred function that will be executed before executing each job.
 	// Prevent the cron from shutting down because of panic occurrence when running one of the job.
-	PanicRecover func(j *Job)
+	PanicRecover func(ctx context.Context, j *Job)
 
 	// Location describes the timezone current cron is running.
 	// By default the timezone will be the same timezone as the server.
@@ -35,7 +36,7 @@ var (
 	defaultConfig = Config{
 		Address:  ":8998",
 		PoolSize: 1000,
-		PanicRecover: func(j *Job) {
+		PanicRecover: func(ctx context.Context, j *Job) {
 			if err := recover(); err != nil {
 				log.WithLevel(zerolog.PanicLevel).
 					Interface("err", err).
@@ -76,10 +77,10 @@ func New(config Config) {
 // Func is a type to allow callers to wrap a raw func.
 // Example:
 //	cronx.Schedule("@every 5m", cronx.Func(myFunc))
-type Func func() error
+type Func func(ctx context.Context) error
 
-func (r Func) Run() error {
-	return r()
+func (r Func) Run(ctx context.Context) error {
+	return r(ctx)
 }
 
 // Schedule sets a job to run at specific time.

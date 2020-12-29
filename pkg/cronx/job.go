@@ -1,6 +1,7 @@
 package cronx
 
 import (
+	"context"
 	"reflect"
 	"sync"
 	"sync/atomic"
@@ -8,7 +9,7 @@ import (
 )
 
 type JobItf interface {
-	Run() error
+	Run(ctx context.Context) error
 }
 
 type Job struct {
@@ -42,7 +43,8 @@ func (j *Job) UpdateStatus() StatusCode {
 // Run executes the current job operation.
 func (j *Job) Run() {
 	start := time.Now()
-	defer commandController.PanicRecover(j)
+	ctx := context.Background()
+	defer commandController.PanicRecover(ctx, j)
 
 	// Lock current process.
 	j.running.Lock()
@@ -62,7 +64,7 @@ func (j *Job) Run() {
 	defer j.UpdateStatus()
 
 	// Run the job.
-	if err := j.inner.Run(); err != nil {
+	if err := j.inner.Run(ctx); err != nil {
 		j.Error = err.Error()
 		atomic.StoreUint32(&j.status, statusError)
 	} else {

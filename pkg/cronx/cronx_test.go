@@ -1,6 +1,7 @@
 package cronx
 
 import (
+	"context"
 	"testing"
 	"time"
 
@@ -33,7 +34,7 @@ func TestEvery(t *testing.T) {
 			name: "Success",
 			args: args{
 				duration: 5 * time.Minute,
-				job:      Func(func() error { return nil }),
+				job:      Func(func(ctx context.Context) error { return nil }),
 				mock: func() {
 					Default()
 				},
@@ -55,12 +56,12 @@ func TestFunc_Run(t *testing.T) {
 	}{
 		{
 			name: "Success",
-			r:    Func(func() error { return nil }),
+			r:    Func(func(ctx context.Context) error { return nil }),
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			_ = tt.r.Run()
+			_ = tt.r.Run(context.Background())
 		})
 	}
 }
@@ -151,7 +152,7 @@ func TestSchedule(t *testing.T) {
 			name: "Uninitialized",
 			args: args{
 				spec: "@every 5m",
-				job:  Func(func() error { return nil }),
+				job:  Func(func(ctx context.Context) error { return nil }),
 				mock: func() {
 					Default()
 					commandController.Commander = nil
@@ -163,7 +164,7 @@ func TestSchedule(t *testing.T) {
 			name: "Broken spec",
 			args: args{
 				spec: "this is clearly not a spec",
-				job:  Func(func() error { return nil }),
+				job:  Func(func(ctx context.Context) error { return nil }),
 				mock: func() {
 					Default()
 				},
@@ -174,7 +175,7 @@ func TestSchedule(t *testing.T) {
 			name: "Success with descriptor",
 			args: args{
 				spec: "@every 5m",
-				job:  Func(func() error { return nil }),
+				job:  Func(func(ctx context.Context) error { return nil }),
 				mock: func() {
 					Default()
 				},
@@ -185,7 +186,7 @@ func TestSchedule(t *testing.T) {
 			name: "Success with v1",
 			args: args{
 				spec: "0 */30 * * * *",
-				job:  Func(func() error { return nil }),
+				job:  Func(func(ctx context.Context) error { return nil }),
 				mock: func() {
 					Default()
 				},
@@ -196,7 +197,7 @@ func TestSchedule(t *testing.T) {
 			name: "Success with v3",
 			args: args{
 				spec: "*/30 * * * *",
-				job:  Func(func() error { return nil }),
+				job:  Func(func(ctx context.Context) error { return nil }),
 				mock: func() {
 					Default()
 				},

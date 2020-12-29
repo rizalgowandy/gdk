@@ -1,6 +1,7 @@
 package cronx
 
 import (
+	"context"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -30,7 +31,7 @@ func TestGetStatusData(t *testing.T) {
 			name: "Success",
 			mock: func() {
 				Default()
-				_ = Schedule("@every 5m", Func(func() error { return nil }))
+				_ = Schedule("@every 5m", Func(func(ctx context.Context) error { return nil }))
 			},
 			want: true,
 		},

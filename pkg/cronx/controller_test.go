@@ -1,6 +1,7 @@
 package cronx
 
 import (
+	"context"
 	"testing"
 
 	"github.com/robfig/cron/v3"
@@ -11,7 +12,7 @@ func TestCommandController_Start(t *testing.T) {
 	type fields struct {
 		Commander    *cron.Cron
 		WorkerPool   chan struct{}
-		PanicRecover func(j *Job)
+		PanicRecover func(ctx context.Context, j *Job)
 		Address      string
 	}
 	tests := []struct {
