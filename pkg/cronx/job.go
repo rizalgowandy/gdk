@@ -78,6 +78,12 @@ func (j *Job) Run() {
 // NewJob creates a new job with default status and name.
 func NewJob(job JobItf) *Job {
 	name := reflect.TypeOf(job).Name()
+	if name == "" {
+		name = reflect.TypeOf(job).Elem().Name()
+	}
+	if name == "" {
+		name = reflect.TypeOf(job).String()
+	}
 	if name == "Func" {
 		name = "(nameless)"
 	}
