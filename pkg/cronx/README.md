@@ -36,9 +36,9 @@ func (s sendEmail) Run(ctx context.Context) error {
 
 func main() {
 	// Create a cron controller with default config that:
-	// - runs on port :8998
-	// - has a max running jobs limit 1000
-	// - with built in panic recovery
+	// - running on port :8998
+	// - location is time.Local
+	// - without any middleware
 	cronx.Default()
 
 	// Register a new cron job.
@@ -91,16 +91,6 @@ Browse to
 // Create a cron with custom config.
 cronx.New(cronx.Config{
     Address:  ":8998", // Determines if we want the library to serve the frontend.
-    PoolSize: 1000,    // Determines how many jobs can be run at a time.
-    PanicRecover: func(ctx context.Context, j *cronx.Job) { // Add panic middleware.
-        if err := recover(); err != nil {
-            log.WithLevel(zerolog.PanicLevel).
-                Interface("err", err).
-                Interface("stack", stack.ToArr(stack.Trim(debug.Stack()))).
-                Interface("job", j).
-                Msg("recovered")
-        }
-    },
     Location: func() *time.Location { // Change timezone to Jakarta.
         jakarta, err := time.LoadLocation("Asia/Jakarta")
         if err != nil {
@@ -116,6 +106,8 @@ cronx.New(cronx.Config{
 Interceptor or commonly known as middleware is an operation that commonly executed before any of other operation. 
 This library has the capability to add multiple middlewares that will be executed before or after the real job.
 It means you can log the running job, send telemetry, or protect the application from going down because of panic by adding middlewares.
+The idea of middleware is to declared once, and be executed on all registered jobs.
+Hence, reduce the code duplication on each job implementation.
 
 ### Adding Interceptor / Middleware
 ```go
