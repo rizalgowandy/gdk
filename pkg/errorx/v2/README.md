@@ -4,7 +4,7 @@ Error package ideas comes and is a subset copy from [Upspin project](https://git
 
 ## Error
 
-Error is value in Go, and because error is a value, we need to check them. Don't only check them, handle them gracefully as Go proverbs said:
+Error is value in Go, and because error is a value, we need to check them. Go proverbs said:
 
 > Don't just check errorx, handle them gracefully
 
@@ -20,10 +20,10 @@ In order to do that, we need a modified implementation of error. Put more contex
 
 ### errorx function
 
-To create a meaningful error from this package, we need to use `errorx.E(args...)` function. Why `errorx.E()` instead of `errorx.New()`like `errorx` package from Go itself?
+In order to create a meaningful error from this package, we need to use `errorx.E(args...)` function. Why `errorx.E()` instead of `errorx.New()`like `errorx` package from Go itself?
 
-1. Following `upspin` convention to create the error
-2. Let the standard be a standard(`errorx.New`) and the new one should have a new convention.
+1. Following `upspin` convention to create the error.
+2. Let the standard be a standard (`errors.New`), and the new one should have a new convention.
 
 ## Example
 
@@ -33,7 +33,7 @@ To create a meaningful error from this package, we need to use `errorx.E(args...
 import "github.com/peractio/gdk/pkg/errorx/v2"
 
 func main() {
-    err := errorx.E("this is error from somewhere")
+    err := errorx.E("this is error from library")
     // do something with the error
 }
 
@@ -47,7 +47,7 @@ Error with fields is useful to give context to error. For example `user_id` of u
 import "github.com/peractio/gdk/pkg/errorx/v2"
 
 func main() {
-    err := errorx.E("this is error from somewhere", errorx.Fields{"user_id": 1234})
+    err := errorx.E("this is error from library", errorx.Fields{"user_id": 1234})
     // do something with the error
 }
 ```
@@ -66,7 +66,7 @@ func main() {
 
 func SomeFunction() error {
     const op errorx.Op = "userService.FindUser"
-    return errorx.E(op, "this is error from somewhere")
+    return errorx.E(op, "this is error from library")
 }
 ```
 
