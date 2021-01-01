@@ -1,15 +1,5 @@
 package errorx
 
-// MetricStatus defines the kind of error should be tracked or not.
-// Useful for alerting system.
-type MetricStatus string
-
-const (
-	MetricSuccess       MetricStatus = "success"
-	MetricError         MetricStatus = "error"
-	MetricExpectedError MetricStatus = "expected_error"
-)
-
 // Code defines the kind of error this is, mostly for use by systems
 // that must act differently depending on the error.
 type Code string

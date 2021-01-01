@@ -17,9 +17,9 @@ func (e *errorString) Error() string {
 	return e.s
 }
 
-// Str returns an error that formats as the given text. It is intended to
+// New returns an error that formats as the given text. It is intended to
 // be used as the error-typed argument to the E function.
-func Str(text string) error {
+func New(text string) error {
 	return &errorString{
 		s: text,
 	}

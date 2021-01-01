@@ -17,7 +17,6 @@ func TestError_Error(t *testing.T) {
 			input: &Error{
 				Code:    CodeInternal,
 				Message: "Internal server error.",
-				Op:      "userService.FindUserByID",
 				Err:     errors.New("standard-error"),
 			},
 			want: "standard-error",
@@ -40,7 +39,6 @@ func TestError_GetFields(t *testing.T) {
 		Err          error
 		Code         Code
 		Fields       Fields
-		Op           Op
 		OpTraces     []Op
 		Message      Message
 		Line         Line
@@ -60,7 +58,6 @@ func TestError_GetFields(t *testing.T) {
 					"K":  "V",
 					"K2": "V2",
 				},
-				Op:           "",
 				OpTraces:     nil,
 				Message:      "",
 				Line:         "",
@@ -78,7 +75,6 @@ func TestError_GetFields(t *testing.T) {
 				Err:          tt.fields.Err,
 				Code:         tt.fields.Code,
 				Fields:       tt.fields.Fields,
-				Op:           tt.fields.Op,
 				OpTraces:     tt.fields.OpTraces,
 				Message:      tt.fields.Message,
 				Line:         tt.fields.Line,

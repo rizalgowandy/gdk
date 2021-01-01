@@ -27,7 +27,6 @@ func TestGetCode(t *testing.T) {
 			input: &Error{
 				Code:    CodeInternal,
 				Message: "Internal server error.",
-				Op:      "userService.FindUserByID",
 				Err:     nil,
 			},
 			want: CodeInternal,
@@ -37,7 +36,6 @@ func TestGetCode(t *testing.T) {
 			input: &Error{
 				Code:    CodeInternal,
 				Message: "Internal server error.",
-				Op:      "userService.FindUserByID",
 				Err:     errors.New("standard-error"),
 			},
 			want: CodeInternal,
@@ -47,11 +45,9 @@ func TestGetCode(t *testing.T) {
 			input: &Error{
 				Code:    CodeUnknown,
 				Message: "Unknown server error.",
-				Op:      "userService.FindUserByID",
 				Err: &Error{
 					Code:    CodePermission,
 					Message: "Permission error.",
-					Op:      "accountGateway.FindUserByID",
 					Err:     nil,
 				},
 			},
@@ -62,15 +58,12 @@ func TestGetCode(t *testing.T) {
 			input: &Error{
 				Code:    CodeInternal,
 				Message: "Internal server error.",
-				Op:      "userService.FindUserByID",
 				Err: &Error{
 					Code:    CodeGateway,
 					Message: "Gateway server error.",
-					Op:      "accountGateway.FindUserByID",
 					Err: &Error{
 						Code:    CodeUnknown,
 						Message: "Unknown error.",
-						Op:      "io.Write",
 						Err:     nil,
 					},
 				},

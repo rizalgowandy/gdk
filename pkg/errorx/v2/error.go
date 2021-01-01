@@ -1,22 +1,33 @@
 package errorx
 
+type (
+	// Op is operation of error.
+	Op string
+
+	// Line describes the original err line.
+	Line string
+
+	// Fields of error
+	Fields map[string]interface{}
+
+	// Message is a human-readable message.
+	Message string
+)
+
 // Error defines a standard application error.
 type Error struct {
 	// Underlying error.
 	Err error
 
-	// Codes used for Errs to identify known errors in the application
-	// If the error is expected by Errs object, the errors will be shown as listed in Codes
+	// Codes used for Errs to identify known errors in the application.
+	// If the error is expected by Errs object, the errors will be shown as listed in Codes.
 	Code Code
 
-	// Fields is a fields context similar to logrus.Fields
-	// Can be used for adding more context to the errors
+	// Fields is a fields context similar to logrus.Fields.
+	// Can be used for adding more context to the errors.
 	Fields Fields
 
-	// Op is operation of error
-	Op Op
-
-	// OpTraces is a trace of operations
+	// OpTraces is a trace of operations.
 	OpTraces []Op
 
 	// Message is a human-readable message.

@@ -72,7 +72,6 @@ func TestE(t *testing.T) {
 				&Error{
 					Code:     CodeGateway,
 					Message:  "gateway-message",
-					Op:       "userGateway.FindUser",
 					OpTraces: []Op{"userGateway.FindUser"},
 					Err:      errors.New("standard-error"),
 				},
@@ -93,7 +92,6 @@ func TestE(t *testing.T) {
 				&Error{
 					Code:     CodeConflict,
 					Message:  "gateway-message",
-					Op:       "userGateway.FindUser",
 					OpTraces: []Op{"userGateway.FindUser"},
 					Err:      errors.New("standard-error"),
 				},
@@ -108,7 +106,6 @@ func TestE(t *testing.T) {
 				&Error{
 					Code:    CodeConflict,
 					Message: "gateway-message",
-					Op:      "userGateway.FindUser",
 					Err:     errors.New("standard-error"),
 				},
 				Message("message"),
@@ -169,7 +166,6 @@ func TestIs(t *testing.T) {
 				err: &Error{
 					Code:    CodeGateway,
 					Message: "",
-					Op:      "",
 					Err:     nil,
 				},
 			},
@@ -182,11 +178,9 @@ func TestIs(t *testing.T) {
 				err: &Error{
 					Code:    CodeUnknown,
 					Message: "",
-					Op:      "",
 					Err: &Error{
 						Code:    CodeGateway,
 						Message: "",
-						Op:      "",
 						Err:     nil,
 					},
 				},
@@ -200,11 +194,9 @@ func TestIs(t *testing.T) {
 				err: &Error{
 					Code:    CodeUnknown,
 					Message: "",
-					Op:      "",
 					Err: &Error{
 						Code:    CodeUnknown,
 						Message: "",
-						Op:      "",
 						Err:     nil,
 					},
 				},

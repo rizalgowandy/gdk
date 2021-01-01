@@ -42,11 +42,6 @@ func E(args ...interface{}) error {
 			e.Fields = arg
 
 		case Op:
-			// Check whether current error operations is empty,
-			// But always pre-append the traces.
-			if e.Op == "" {
-				e.Op = arg
-			}
 			e.OpTraces = append([]Op{arg}, e.OpTraces...)
 
 		case Message:

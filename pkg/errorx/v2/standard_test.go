@@ -35,7 +35,7 @@ func TestErrorString_Error(t *testing.T) {
 	}
 }
 
-func TestStr(t *testing.T) {
+func TestNew(t *testing.T) {
 	tests := []struct {
 		name string
 		args string
@@ -50,7 +50,7 @@ func TestStr(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := Str(tt.args)
+			got := New(tt.args)
 			if got == nil {
 				t.Error("result should not be nil")
 				return
