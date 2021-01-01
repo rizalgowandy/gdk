@@ -50,7 +50,7 @@ func TestE(t *testing.T) {
 			args: []interface{}{
 				Message("message"),
 				CodeConflict,
-				MetricSuccess,
+				MetricStatusSuccess,
 				Fields{
 					"K": "V",
 				},
