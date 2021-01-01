@@ -9,6 +9,9 @@ import (
 	"github.com/peractio/gdk/pkg/cronx/pages"
 )
 
+// SleepDuration defines the duration to sleep the server if the defined address is busy.
+const SleepDuration = time.Second * 10
+
 // NewServer creates a new http server.
 // - /			=> current server status.
 // - /jobs		=> current jobs as frontend html.

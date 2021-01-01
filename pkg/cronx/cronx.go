@@ -13,10 +13,8 @@ import (
 type Config struct {
 	// Address determines the address will we serve the json and frontend status.
 	// Empty string meaning we won't serve the current job status.
-	// Default ":8998".
 	Address string
 	// Location describes the timezone current cron is running.
-	// Default: time.Local.
 	Location *time.Location
 }
 
@@ -43,6 +41,11 @@ func New(config Config, interceptors ...Interceptor) {
 
 	// Create new command controller and start the underlying jobs.
 	commandController = NewCommandController(config, interceptors...)
+
+	// Check if client want to start a server to serve json and frontend.
+	if config.Address != "" {
+		go NewServer(commandController)
+	}
 }
 
 // Schedule sets a job to run at specific time.

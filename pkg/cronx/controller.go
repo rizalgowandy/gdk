@@ -6,9 +6,6 @@ import (
 	"github.com/robfig/cron/v3"
 )
 
-// SleepDuration defines the duration to sleep the server if the defined address is busy.
-const SleepDuration = time.Second * 10
-
 // CommandController controls all the underlying job.
 type CommandController struct {
 	// Commander holds all the underlying cron jobs.
@@ -48,7 +45,7 @@ func NewCommandController(config Config, interceptors ...Interceptor) *CommandCo
 	commander.Start()
 
 	// Create command controller.
-	c := &CommandController{
+	return &CommandController{
 		Commander:        commander,
 		Interceptor:      Chain(interceptors...),
 		Parser:           parser,
@@ -57,13 +54,6 @@ func NewCommandController(config Config, interceptors ...Interceptor) *CommandCo
 		Location:         config.Location,
 		CreatedTime:      time.Now().In(config.Location),
 	}
-
-	// Check if client want to start a server to serve json and frontend.
-	if config.Address != "" {
-		go NewServer(c)
-	}
-
-	return c
 }
 
 // Info returns command controller basic information.
