@@ -15,7 +15,6 @@ type Config struct {
 	// Empty string meaning we won't serve the current job status.
 	// Default ":8998".
 	Address string
-
 	// Location describes the timezone current cron is running.
 	// By default the timezone will be the same timezone as the server.
 	Location *time.Location
@@ -39,21 +38,16 @@ func Default(interceptors ...Interceptor) {
 func New(config Config, interceptors ...Interceptor) {
 	// If there is invalid config use the default config instead.
 	if config.Location == nil {
-		config.Location = time.Local
+		config.Location = defaultConfig.Location
 	}
 
 	// Create new command controller and start the underlying jobs.
 	commandController = NewCommandController(config, interceptors...)
-	commandController.Start()
-}
 
-// Func is a type to allow callers to wrap a raw func.
-// Example:
-//	cronx.Schedule("@every 5m", cronx.Func(myFunc))
-type Func func(ctx context.Context) error
-
-func (r Func) Run(ctx context.Context) error {
-	return r(ctx)
+	// Check if client want to start a server to serve json and frontend.
+	if config.Address != "" {
+		go NewServer(config, commandController)
+	}
 }
 
 // Schedule sets a job to run at specific time.
@@ -145,4 +139,13 @@ func Remove(id cron.EntryID) {
 	}
 
 	commandController.Commander.Remove(id)
+}
+
+// Func is a type to allow callers to wrap a raw func.
+// Example:
+//	cronx.Schedule("@every 5m", cronx.Func(myFunc))
+type Func func(ctx context.Context) error
+
+func (r Func) Run(ctx context.Context) error {
+	return r(ctx)
 }

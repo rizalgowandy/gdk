@@ -3,6 +3,8 @@ package main
 import (
 	"context"
 	"testing"
+
+	"github.com/peractio/gdk/pkg/cronx"
 )
 
 func Test_alwaysError_Run(t *testing.T) {
@@ -126,6 +128,22 @@ func Test_payBill_Run(t *testing.T) {
 			if err := p.Run(tt.args.in0); (err != nil) != tt.wantErr {
 				t.Errorf("Run() error = %v, wantErr %v", err, tt.wantErr)
 			}
+		})
+	}
+}
+
+func TestRegisterJobs(t *testing.T) {
+	tests := []struct {
+		name string
+	}{
+		{
+			name: "Success",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			cronx.Default()
+			RegisterJobs()
 		})
 	}
 }

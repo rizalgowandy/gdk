@@ -38,7 +38,6 @@ func (a alwaysError) Run(context.Context) error {
 	log.WithLevel(zerolog.InfoLevel).
 		Str("job", "alwaysError").
 		Msg("every 30 sec error")
-	time.Sleep(5 * time.Second)
 	return errors.New("some super long error message that come from executing the process")
 }
 
@@ -61,12 +60,21 @@ func (subscription) Run(context.Context) error {
 }
 
 func main() {
+	// ===========================
+	// With Default Configuration
+	// ===========================
 	// Create a cron controller with default config.
 	// - running on port :8998
 	// - location is time.Local
 	// - without any middleware
 	cronx.Default()
 
+	// Register jobs.
+	RegisterJobs()
+
+	// ===========================
+	// With Custom Configuration
+	// ===========================
 	// Create cron middleware.
 	// The order is important.
 	// The first one will be executed first.
@@ -89,7 +97,18 @@ func main() {
 		}(),
 	}, cronMiddleware)
 
-	// Register a new cron job.
+	// Register jobs.
+	RegisterJobs()
+
+	// ===========================
+	// Start Main Server
+	// ===========================
+	e := echo.New()
+	e.Use(middleware.Recover())
+	e.Logger.Fatal(e.Start(":8080"))
+}
+
+func RegisterJobs() {
 	// Struct name will become the name for the current job.
 	if err := cronx.Schedule("@every 5s", sendEmail{}); err != nil {
 		// create log and send alert we fail to register job.
@@ -97,6 +116,7 @@ func main() {
 			Err(err).
 			Msg("register sendEmail must success")
 	}
+
 	// Create some jobs with the same struct.
 	// Duplication is okay.
 	for i := 0; i < 3; i++ {
@@ -107,6 +127,7 @@ func main() {
 				Msg("register payBill must success")
 		}
 	}
+
 	// Create some jobs with broken spec.
 	for i := 0; i < 3; i++ {
 		spec := "broken spec " + converter.ToStr(i+1)
@@ -116,12 +137,14 @@ func main() {
 				Msg("register payBill must success")
 		}
 	}
+
 	// Create a job with run that will always be error.
 	if err := cronx.Schedule("@every 30s", alwaysError{}); err != nil {
 		log.WithLevel(zerolog.ErrorLevel).
 			Err(err).
 			Msg("register alwaysError must success")
 	}
+
 	// Create a custom job with missing name.
 	if err := cronx.Schedule("0 */1 * * *", cronx.Func(func(context.Context) error {
 		log.WithLevel(zerolog.InfoLevel).
@@ -133,18 +156,21 @@ func main() {
 			Err(err).
 			Msg("register job must success")
 	}
+
 	// Create a job with v1 specification that includes seconds.
 	if err := cronx.Schedule("0 0 4 * * *", subscription{}); err != nil {
 		log.WithLevel(zerolog.ErrorLevel).
 			Err(err).
 			Msg("register subscription must success")
 	}
+
 	// Create a job with multiple schedules
 	if err := cronx.Schedules("0 0 4 * * *#0 0 7 * * *#0 0 11 * * *", "#", subscription{}); err != nil {
 		log.WithLevel(zerolog.ErrorLevel).
 			Err(err).
 			Msg("register subscription must success")
 	}
+
 	// Create a job that run every 20 sec.
 	cronx.Every(20*time.Second, everyJob{})
 
@@ -155,8 +181,4 @@ func main() {
 	log.WithLevel(zerolog.InfoLevel).
 		Interface("entries", cronx.GetEntries()).
 		Msg("current jobs")
-
-	e := echo.New()
-	e.Use(middleware.Recover())
-	e.Logger.Fatal(e.Start(":8080"))
 }

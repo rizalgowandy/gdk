@@ -16,8 +16,7 @@ func TestGetStatusData(t *testing.T) {
 		{
 			name: "Uninitialized",
 			mock: func() {
-				Default()
-				commandController.Commander = nil
+				commandController = nil
 			},
 		},
 		{
@@ -53,14 +52,32 @@ func TestGetStatusData(t *testing.T) {
 func TestGetStatusJSON(t *testing.T) {
 	tests := []struct {
 		name string
+		mock func()
+		want bool
 	}{
 		{
-			name: "Success",
+			name: "Uninitialized",
+			mock: func() {
+				commandController = nil
+			},
+		},
+		{
+			name: "Success without any job",
+			mock: func() {
+				Default()
+			},
+			want: true,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			assert.NotNil(t, GetStatusJSON())
+			tt.mock()
+			got := GetStatusJSON()
+			if tt.want {
+				assert.NotNil(t, got)
+			} else {
+				assert.Nil(t, got)
+			}
 		})
 	}
 }

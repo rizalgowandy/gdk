@@ -42,39 +42,18 @@ type StatusData struct {
 
 // GetStatusData returns all jobs status.
 func GetStatusData() []StatusData {
-	if commandController == nil || commandController.Commander == nil {
+	if commandController == nil {
 		return nil
 	}
 
-	entries := commandController.Commander.Entries()
-	totalEntries := len(entries)
-
-	downs := commandController.UnregisteredJobs
-	totalDowns := len(downs)
-
-	totalJobs := totalEntries + totalDowns
-	listStatus := make([]StatusData, totalJobs)
-
-	// Register down jobs.
-	for k, v := range downs {
-		listStatus[k].Job = v
-	}
-
-	// Register other jobs.
-	for k, v := range entries {
-		idx := totalDowns + k
-		listStatus[idx].ID = v.ID
-		listStatus[idx].Job = v.Job.(*Job)
-		listStatus[idx].Next = v.Next
-		listStatus[idx].Prev = v.Prev
-	}
-
-	return listStatus
+	return commandController.GetStatusData()
 }
 
 // GetStatusJSON returns all jobs status as map[string]interface.
 func GetStatusJSON() map[string]interface{} {
-	return map[string]interface{}{
-		"data": GetStatusData(),
+	if commandController == nil {
+		return nil
 	}
+
+	return commandController.GetStatusJSON()
 }
