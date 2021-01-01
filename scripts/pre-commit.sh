@@ -49,8 +49,4 @@ git add go.mod
 git add go.sum
 
 echo ""
-if [[ "$OSTYPE" == "linux-gnu"* ]]; then
-  echo -e "\e[32mCommitting...\e[0m"
-else
-  echo -e "Committing..."
-fi
+echo -e "\e[32mCommitting...\e[0m"
