@@ -32,7 +32,7 @@ func TestNewCommandController(t *testing.T) {
 	}
 }
 
-func TestCommandController_GetStatusData(t *testing.T) {
+func TestCommandController_StatusData(t *testing.T) {
 	type fields struct {
 		Commander        *cron.Cron
 		Interceptor      Interceptor
@@ -93,14 +93,14 @@ func TestCommandController_GetStatusData(t *testing.T) {
 				Parser:           tt.fields.Parser,
 				UnregisteredJobs: tt.fields.UnregisteredJobs,
 			}
-			if got := c.GetStatusData(); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("GetStatusData() = %v, want %v", got, tt.want)
+			if got := c.StatusData(); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("StatusData() = %v, want %v", got, tt.want)
 			}
 		})
 	}
 }
 
-func TestCommandController_GetStatusJSON(t *testing.T) {
+func TestCommandController_StatusJSON(t *testing.T) {
 	type fields struct {
 		Commander        *cron.Cron
 		Interceptor      Interceptor
@@ -143,7 +143,43 @@ func TestCommandController_GetStatusJSON(t *testing.T) {
 				Parser:           tt.fields.Parser,
 				UnregisteredJobs: tt.fields.UnregisteredJobs,
 			}
-			got := c.GetStatusJSON()
+			got := c.StatusJSON()
+			assert.NotNil(t, got)
+		})
+	}
+}
+
+func TestCommandController_Info(t *testing.T) {
+	type fields struct {
+		Commander        *cron.Cron
+		Interceptor      Interceptor
+		Parser           cron.Parser
+		UnregisteredJobs []*Job
+		Address          string
+		Location         *time.Location
+		CreatedTime      time.Time
+	}
+	tests := []struct {
+		name   string
+		fields fields
+	}{
+		{
+			name:   "Success",
+			fields: fields{},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			c := &CommandController{
+				Commander:        tt.fields.Commander,
+				Interceptor:      tt.fields.Interceptor,
+				Parser:           tt.fields.Parser,
+				UnregisteredJobs: tt.fields.UnregisteredJobs,
+				Address:          tt.fields.Address,
+				Location:         tt.fields.Location,
+				CreatedTime:      tt.fields.CreatedTime,
+			}
+			got := c.Info()
 			assert.NotNil(t, got)
 		})
 	}

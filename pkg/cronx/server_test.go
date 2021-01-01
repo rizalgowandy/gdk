@@ -10,11 +10,9 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestController_APIJobs(t *testing.T) {
+func TestServerController_APIJobs(t *testing.T) {
 	type fields struct {
 		CommandController *CommandController
-		CreatedTime       time.Time
-		Location          *time.Location
 	}
 	tests := []struct {
 		name    string
@@ -27,9 +25,10 @@ func TestController_APIJobs(t *testing.T) {
 			name:   "Success",
 			target: "/api/jobs",
 			fields: fields{
-				CommandController: &CommandController{},
-				CreatedTime:       time.Now(),
-				Location:          time.Local,
+				CommandController: &CommandController{
+					CreatedTime: time.Now(),
+					Location:    time.Local,
+				},
 			},
 			expect:  http.StatusOK,
 			wantErr: false,
@@ -42,10 +41,8 @@ func TestController_APIJobs(t *testing.T) {
 			rec := httptest.NewRecorder()
 			c := e.NewContext(req, rec)
 
-			ctrl := &Controller{
+			ctrl := &ServerController{
 				CommandController: tt.fields.CommandController,
-				CreatedTime:       tt.fields.CreatedTime,
-				Location:          tt.fields.Location,
 			}
 			if assert.NoError(t, ctrl.APIJobs(c)) {
 				assert.Equal(t, tt.expect, rec.Code)
@@ -54,11 +51,9 @@ func TestController_APIJobs(t *testing.T) {
 	}
 }
 
-func TestController_HealthCheck(t *testing.T) {
+func TestServerController_HealthCheck(t *testing.T) {
 	type fields struct {
 		CommandController *CommandController
-		CreatedTime       time.Time
-		Location          *time.Location
 	}
 	tests := []struct {
 		name    string
@@ -71,9 +66,10 @@ func TestController_HealthCheck(t *testing.T) {
 			name:   "Success",
 			target: "/",
 			fields: fields{
-				CommandController: &CommandController{},
-				CreatedTime:       time.Now(),
-				Location:          time.Local,
+				CommandController: &CommandController{
+					CreatedTime: time.Now(),
+					Location:    time.Local,
+				},
 			},
 			expect:  http.StatusOK,
 			wantErr: false,
@@ -86,10 +82,8 @@ func TestController_HealthCheck(t *testing.T) {
 			rec := httptest.NewRecorder()
 			c := e.NewContext(req, rec)
 
-			ctrl := &Controller{
+			ctrl := &ServerController{
 				CommandController: tt.fields.CommandController,
-				CreatedTime:       tt.fields.CreatedTime,
-				Location:          tt.fields.Location,
 			}
 			if assert.NoError(t, ctrl.HealthCheck(c)) {
 				assert.Equal(t, tt.expect, rec.Code)
@@ -98,11 +92,9 @@ func TestController_HealthCheck(t *testing.T) {
 	}
 }
 
-func TestController_Jobs(t *testing.T) {
+func TestServerController_Jobs(t *testing.T) {
 	type fields struct {
 		CommandController *CommandController
-		CreatedTime       time.Time
-		Location          *time.Location
 	}
 	tests := []struct {
 		name    string
@@ -115,9 +107,10 @@ func TestController_Jobs(t *testing.T) {
 			name:   "Success",
 			target: "/jobs",
 			fields: fields{
-				CommandController: &CommandController{},
-				CreatedTime:       time.Now(),
-				Location:          time.Local,
+				CommandController: &CommandController{
+					CreatedTime: time.Now(),
+					Location:    time.Local,
+				},
 			},
 			expect:  http.StatusOK,
 			wantErr: false,
@@ -130,10 +123,8 @@ func TestController_Jobs(t *testing.T) {
 			rec := httptest.NewRecorder()
 			c := e.NewContext(req, rec)
 
-			ctrl := &Controller{
+			ctrl := &ServerController{
 				CommandController: tt.fields.CommandController,
-				CreatedTime:       tt.fields.CreatedTime,
-				Location:          tt.fields.Location,
 			}
 			if assert.NoError(t, ctrl.Jobs(c)) {
 				assert.Equal(t, tt.expect, rec.Code)

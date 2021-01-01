@@ -43,11 +43,6 @@ func New(config Config, interceptors ...Interceptor) {
 
 	// Create new command controller and start the underlying jobs.
 	commandController = NewCommandController(config, interceptors...)
-
-	// Check if client want to start a server to serve json and frontend.
-	if config.Address != "" {
-		go NewServer(config, commandController)
-	}
 }
 
 // Schedule sets a job to run at specific time.
@@ -139,6 +134,24 @@ func Remove(id cron.EntryID) {
 	}
 
 	commandController.Commander.Remove(id)
+}
+
+// GetStatusData returns all jobs status.
+func GetStatusData() []StatusData {
+	if commandController == nil {
+		return nil
+	}
+
+	return commandController.StatusData()
+}
+
+// GetStatusJSON returns all jobs status as map[string]interface.
+func GetStatusJSON() map[string]interface{} {
+	if commandController == nil {
+		return nil
+	}
+
+	return commandController.StatusJSON()
 }
 
 // Func is a type to allow callers to wrap a raw func.

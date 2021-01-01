@@ -66,6 +66,7 @@ $ go run main.go
 ```
 
 Browse to
+- http://localhost:8998 => see server health status.
 - http://localhost:8998/jobs => see the html page.
 - http://localhost:8998/api/jobs => see the json response.
 ```json

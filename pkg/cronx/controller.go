@@ -19,6 +19,14 @@ type CommandController struct {
 	Parser cron.Parser
 	// UnregisteredJobs describes the list of jobs that have been failed to be registered.
 	UnregisteredJobs []*Job
+	// Address determines the address will we serve the json and frontend status.
+	// Empty string meaning we won't serve the current job status.
+	Address string
+	// Location describes the timezone current cron is running.
+	// By default the timezone will be the same timezone as the server.
+	Location *time.Location
+	// CreatedTime describes when the command controller created.
+	CreatedTime time.Time
 }
 
 // NewCommandController create a command controller with a specific config.
@@ -40,16 +48,44 @@ func NewCommandController(config Config, interceptors ...Interceptor) *CommandCo
 	commander.Start()
 
 	// Create command controller.
-	return &CommandController{
+	c := &CommandController{
 		Commander:        commander,
 		Interceptor:      Chain(interceptors...),
 		Parser:           parser,
 		UnregisteredJobs: nil,
+		Address:          config.Address,
+		Location:         config.Location,
+		CreatedTime:      time.Now().In(config.Location),
+	}
+
+	// Check if client want to start a server to serve json and frontend.
+	if config.Address != "" {
+		go NewServer(c)
+	}
+
+	return c
+}
+
+// Info returns command controller basic information.
+func (c *CommandController) Info() map[string]interface{} {
+	if c.Location == nil {
+		c.Location = defaultConfig.Location
+	}
+
+	currentTime := time.Now().In(c.Location)
+
+	return map[string]interface{}{
+		"data": map[string]interface{}{
+			"location":     c.Location.String(),
+			"created_time": c.CreatedTime.String(),
+			"current_time": currentTime.String(),
+			"up_time":      currentTime.Sub(c.CreatedTime).String(),
+		},
 	}
 }
 
-// GetStatusData returns all jobs status.
-func (c *CommandController) GetStatusData() []StatusData {
+// StatusData returns all jobs status.
+func (c *CommandController) StatusData() []StatusData {
 	if c.Commander == nil {
 		return nil
 	}
@@ -80,9 +116,9 @@ func (c *CommandController) GetStatusData() []StatusData {
 	return listStatus
 }
 
-// GetStatusJSON returns all jobs status as map[string]interface.
-func (c *CommandController) GetStatusJSON() map[string]interface{} {
+// StatusJSON returns all jobs status as map[string]interface.
+func (c *CommandController) StatusJSON() map[string]interface{} {
 	return map[string]interface{}{
-		"data": c.GetStatusData(),
+		"data": c.StatusData(),
 	}
 }

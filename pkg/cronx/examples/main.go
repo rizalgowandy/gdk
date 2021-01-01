@@ -158,7 +158,7 @@ func RegisterJobs() {
 	}
 
 	// Create a job with v1 specification that includes seconds.
-	if err := cronx.Schedule("0 0 4 * * *", subscription{}); err != nil {
+	if err := cronx.Schedule("0 0 1 * * *", subscription{}); err != nil {
 		log.WithLevel(zerolog.ErrorLevel).
 			Err(err).
 			Msg("register subscription must success")

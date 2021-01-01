@@ -39,21 +39,3 @@ type StatusData struct {
 	// Prev defines the last run of the current job.
 	Prev time.Time `json:"prev_run,omitempty"`
 }
-
-// GetStatusData returns all jobs status.
-func GetStatusData() []StatusData {
-	if commandController == nil {
-		return nil
-	}
-
-	return commandController.GetStatusData()
-}
-
-// GetStatusJSON returns all jobs status as map[string]interface.
-func GetStatusJSON() map[string]interface{} {
-	if commandController == nil {
-		return nil
-	}
-
-	return commandController.GetStatusJSON()
-}
