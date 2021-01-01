@@ -16,7 +16,7 @@ type Config struct {
 	// Default ":8998".
 	Address string
 	// Location describes the timezone current cron is running.
-	// By default the timezone will be the same timezone as the server.
+	// Default: time.Local.
 	Location *time.Location
 }
 
