@@ -107,7 +107,7 @@ cronx.New(cronx.Config{
 Interceptor or commonly known as middleware is an operation that commonly executed before any of other operation. 
 This library has the capability to add multiple middlewares that will be executed before or after the real job.
 It means you can log the running job, send telemetry, or protect the application from going down because of panic by adding middlewares.
-The idea of middleware is to declared once, and be executed on all registered jobs.
+The idea of a middleware is to be declared once, and be executed on all registered jobs.
 Hence, reduce the code duplication on each job implementation.
 
 ### Adding Interceptor / Middleware
@@ -254,7 +254,3 @@ cronx.New(cronx.Config{
     }(),
 })
 ```
-
-### PIC
-Software Engineer Team:
-* Rizal Widyarta Gowandy (@rizalgowandy)
