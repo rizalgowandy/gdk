@@ -6,7 +6,7 @@ import (
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
-	"github.com/peractio/gdk/pkg/cronx/pages"
+	"github.com/peractio/gdk/pkg/cronx/page"
 )
 
 // SleepDuration defines the duration to sleep the server if the defined address is busy.
@@ -60,7 +60,7 @@ func (c *ServerController) HealthCheck(context echo.Context) error {
 
 // Jobs return job status as frontend template.
 func (c *ServerController) Jobs(context echo.Context) error {
-	index, _ := pages.GetStatusTemplate()
+	index, _ := page.GetStatusTemplate()
 	return index.Execute(context.Response().Writer, c.CommandController.StatusData())
 }
 

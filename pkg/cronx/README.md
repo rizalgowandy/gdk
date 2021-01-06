@@ -116,9 +116,9 @@ Hence, reduce the code duplication on each job implementation.
 // The order is important.
 // The first one will be executed first.
 middleware := cronx.Chain(
-    interceptors.Recover(), // Auto recover from panic.
-    interceptors.Logger(), // Log start and finish process.
-    interceptors.DefaultWorkerPool(), // Limit concurrent running job.
+    interceptor.Recover(), // Auto recover from panic.
+    interceptor.Logger(), // Log start and finish process.
+    interceptor.DefaultWorkerPool(), // Limit concurrent running job.
 )
 
 cronx.Default(middleware)
@@ -224,11 +224,11 @@ r.GET("/custom-path", func(c *gin.Context) {
 Yes, you can.
 ```go
 // GetStatusTemplate will return the built-in status page template.
-index, _ := pages.GetStatusTemplate()
+index, _ := page.GetStatusTemplate()
 
 // An example using echo as the router.
 e := echo.New()
-index, _ := pages.GetStatusTemplate()
+index, _ := page.GetStatusTemplate()
 e.GET("jobs/html", func(context echo.Context) error {
     // Serve the template to the writer and pass the current status data.
     return index.Execute(context.Response().Writer, cronx.GetStatusData())

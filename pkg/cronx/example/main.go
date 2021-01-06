@@ -9,7 +9,7 @@ import (
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/peractio/gdk/pkg/converter"
 	"github.com/peractio/gdk/pkg/cronx"
-	"github.com/peractio/gdk/pkg/cronx/interceptors"
+	"github.com/peractio/gdk/pkg/cronx/interceptor"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 )
@@ -79,9 +79,9 @@ func main() {
 	// The order is important.
 	// The first one will be executed first.
 	cronMiddleware := cronx.Chain(
-		interceptors.Recover(),
-		interceptors.Logger(),
-		interceptors.DefaultWorkerPool(),
+		interceptor.Recover(),
+		interceptor.Logger(),
+		interceptor.DefaultWorkerPool(),
 	)
 
 	// Create a cron with custom config and middleware.
@@ -171,11 +171,16 @@ func RegisterJobs() {
 			Msg("register subscription must success")
 	}
 
+	const (
+		everyInterval    = 20
+		jobIDToBeRemoved = 2
+	)
+
 	// Create a job that run every 20 sec.
-	cronx.Every(20*time.Second, everyJob{})
+	cronx.Every(everyInterval*time.Second, everyJob{})
 
 	// Remove a job.
-	cronx.Remove(2)
+	cronx.Remove(jobIDToBeRemoved)
 
 	// Get all current registered job.
 	log.WithLevel(zerolog.InfoLevel).
