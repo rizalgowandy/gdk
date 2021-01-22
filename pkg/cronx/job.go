@@ -6,6 +6,8 @@ import (
 	"sync"
 	"sync/atomic"
 	"time"
+
+	"github.com/robfig/cron/v3"
 )
 
 type JobItf interface {
@@ -13,10 +15,11 @@ type JobItf interface {
 }
 
 type Job struct {
-	Name    string     `json:"name"`
-	Status  StatusCode `json:"status"`
-	Latency string     `json:"latency"`
-	Error   string     `json:"error"`
+	Name    string       `json:"name"`
+	Status  StatusCode   `json:"status"`
+	Latency string       `json:"latency"`
+	Error   string       `json:"error"`
+	EntryID cron.EntryID `json:"entry_id"`
 
 	inner   JobItf
 	status  uint32

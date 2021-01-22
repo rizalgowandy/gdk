@@ -70,7 +70,8 @@ func Schedule(spec string, job JobItf) error {
 		return err
 	}
 
-	commandController.Commander.Schedule(schedule, NewJob(job))
+	j := NewJob(job)
+	j.EntryID = commandController.Commander.Schedule(schedule, j)
 	return nil
 }
 
@@ -107,7 +108,8 @@ func Every(duration time.Duration, job JobItf) {
 		return
 	}
 
-	commandController.Commander.Schedule(cron.Every(duration), NewJob(job))
+	j := NewJob(job)
+	j.EntryID = commandController.Commander.Schedule(cron.Every(duration), j)
 }
 
 // Stop stops active jobs from running at the next scheduled time.
@@ -119,13 +121,23 @@ func Stop() {
 	commandController.Commander.Stop()
 }
 
-// GetEntries return all the current registered jobs.
+// GetEntries returns all the current registered jobs.
 func GetEntries() []cron.Entry {
 	if commandController == nil || commandController.Commander == nil {
 		return nil
 	}
 
 	return commandController.Commander.Entries()
+}
+
+// GetEntry returns a snapshot of the given entry, or nil if it couldn't be found.
+func GetEntry(id cron.EntryID) *cron.Entry {
+	if commandController == nil || commandController.Commander == nil {
+		return nil
+	}
+
+	entry := commandController.Commander.Entry(id)
+	return &entry
 }
 
 // Remove removes a specific job from running.

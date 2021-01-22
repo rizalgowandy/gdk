@@ -428,3 +428,44 @@ func TestGetStatusJSON(t *testing.T) {
 		})
 	}
 }
+
+func TestGetEntry(t *testing.T) {
+	type args struct {
+		id cron.EntryID
+	}
+	tests := []struct {
+		name string
+		args args
+		mock func()
+		want bool
+	}{
+		{
+			name: "Uninitialized",
+			mock: func() {
+				Default()
+				commandController.Commander = nil
+			},
+		},
+		{
+			name: "Success",
+			mock: func() {
+				Default()
+				Every(time.Hour, Func(func(ctx context.Context) error {
+					return nil
+				}))
+			},
+			want: true,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			tt.mock()
+			got := GetEntry(tt.args.id)
+			if tt.want {
+				assert.NotNil(t, got)
+			} else {
+				assert.Nil(t, got)
+			}
+		})
+	}
+}
