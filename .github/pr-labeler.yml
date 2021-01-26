@@ -1,0 +1,3 @@
+enhancement: [ 'feature/*', 'feat/*', 'f_*', '*_f_*', 'i_*', '*_i_*' ]
+bug: [ 'fix/*', 'bug/*', 'b_*', '*_b_*' ]
+chore: [ 'chore/*', '*_c_*', 'c_*' ]

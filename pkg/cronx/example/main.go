@@ -67,10 +67,8 @@ func main() {
 	// - running on port :8998
 	// - location is time.Local
 	// - without any middleware
-	cronx.Default()
-
-	// Register jobs.
-	RegisterJobs()
+	// cronx.Default()
+	// RegisterJobs()
 
 	// ===========================
 	// With Custom Configuration
@@ -96,6 +94,7 @@ func main() {
 			return jakarta
 		}(),
 	}, cronMiddleware)
+	defer cronx.Stop()
 
 	// Register jobs.
 	RegisterJobs()
