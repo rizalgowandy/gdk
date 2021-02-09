@@ -254,3 +254,22 @@ cronx.New(cronx.Config{
     }(),
 })
 ```
+
+### My job requires certain information like current wave number, how can I get this information?
+This kind of information is stored inside metadata, which stored automatically inside `context`. 
+```go
+type subscription struct{}
+
+func (subscription) Run(ctx context.Context) error {
+	md, ok := cronx.GetJobMetadata(ctx)
+	if !ok {
+		return errors.New("cannot job metadata")
+	}
+
+	log.WithLevel(zerolog.InfoLevel).
+		Str("job", "subscription").
+		Interface("metadata", md).
+		Msg("is running")
+	return nil
+}
+```

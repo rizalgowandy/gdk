@@ -15,15 +15,23 @@ type JobItf interface {
 }
 
 type Job struct {
-	Name    string       `json:"name"`
-	Status  StatusCode   `json:"status"`
-	Latency string       `json:"latency"`
-	Error   string       `json:"error"`
-	EntryID cron.EntryID `json:"entry_id"`
+	JobMetadata
+
+	Name    string     `json:"name"`
+	Status  StatusCode `json:"status"`
+	Latency string     `json:"latency"`
+	Error   string     `json:"error"`
 
 	inner   JobItf
 	status  uint32
 	running sync.Mutex
+}
+
+type JobMetadata struct {
+	EntryID    cron.EntryID `json:"entry_id"`
+	Wave       int64        `json:"wave"`
+	TotalWave  int64        `json:"total_wave"`
+	IsLastWave bool         `json:"is_last_wave"`
 }
 
 // UpdateStatus updates the current job status to the latest.
@@ -52,6 +60,9 @@ func (j *Job) Run() {
 	j.running.Lock()
 	defer j.running.Unlock()
 
+	// Set job metadata.
+	ctx = SetJobMetadata(ctx, j.JobMetadata)
+
 	// Update job status as running.
 	atomic.StoreUint32(&j.status, statusRunning)
 	j.UpdateStatus()
@@ -74,7 +85,7 @@ func (j *Job) Run() {
 }
 
 // NewJob creates a new job with default status and name.
-func NewJob(job JobItf) *Job {
+func NewJob(job JobItf, waveNumber, totalWave int64) *Job {
 	name := reflect.TypeOf(job).Name()
 	if name == "" {
 		name = reflect.TypeOf(job).Elem().Name()
@@ -87,9 +98,18 @@ func NewJob(job JobItf) *Job {
 	}
 
 	return &Job{
-		Name:   name,
-		Status: StatusCodeUp,
-		inner:  job,
-		status: statusUp,
+		JobMetadata: JobMetadata{
+			EntryID:    0,
+			Wave:       waveNumber,
+			TotalWave:  totalWave,
+			IsLastWave: waveNumber == totalWave,
+		},
+		Name:    name,
+		Status:  StatusCodeUp,
+		Latency: "",
+		Error:   "",
+		inner:   job,
+		status:  statusUp,
+		running: sync.Mutex{},
 	}
 }

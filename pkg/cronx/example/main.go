@@ -52,9 +52,15 @@ func (everyJob) Run(context.Context) error {
 
 type subscription struct{}
 
-func (subscription) Run(context.Context) error {
+func (subscription) Run(ctx context.Context) error {
+	md, ok := cronx.GetJobMetadata(ctx)
+	if !ok {
+		return errors.New("cannot job metadata")
+	}
+
 	log.WithLevel(zerolog.InfoLevel).
 		Str("job", "subscription").
+		Interface("metadata", md).
 		Msg("is running")
 	return nil
 }
@@ -68,7 +74,7 @@ func main() {
 	// - location is time.Local
 	// - without any middleware
 	// cronx.Default()
-	// RegisterJobs()
+	// defer cronx.Stop()
 
 	// ===========================
 	// With Custom Configuration

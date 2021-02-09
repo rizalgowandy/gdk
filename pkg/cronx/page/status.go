@@ -43,10 +43,10 @@ const statusTemplate = `
 		 }
 	</script>
 	<style type="text/css">
-        body > .ui.container {
-            margin-top: 3em;
-            padding-bottom: 3em;
-        }
+		 body > .ui.container {
+			 margin-top: 3em;
+			 padding-bottom: 3em;
+		 }
 	</style>
 	<title>Cronx</title>
 </head>
@@ -127,7 +127,13 @@ const statusTemplate = `
                         {{end}}
 				>
 					<td>{{.ID}}</td>
-					<td class="left aligned">{{.Job.Name}}</td>
+					<td class="left aligned">
+                        {{if gt .Job.TotalWave 1 }}
+                            {{.Job.Name}} ({{.Job.Wave}}/{{.Job.TotalWave}})
+                        {{else}}
+                            {{.Job.Name}}
+                        {{end}}
+					</td>
 					<td>
                         {{if eq .Job.Status "RUNNING"}}
 							<div class="ui yellow label">
