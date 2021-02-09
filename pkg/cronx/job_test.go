@@ -119,7 +119,9 @@ func TestJob_UpdateStatus(t *testing.T) {
 
 func TestNewJob(t *testing.T) {
 	type args struct {
-		job JobItf
+		job        JobItf
+		waveNumber int64
+		totalWave  int64
 	}
 	tests := []struct {
 		name string
@@ -128,13 +130,17 @@ func TestNewJob(t *testing.T) {
 		{
 			name: "Success",
 			args: args{
-				job: Func(func(ctx context.Context) error { return nil }),
+				job:        Func(func(ctx context.Context) error { return nil }),
+				waveNumber: 1,
+				totalWave:  1,
 			},
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			assert.NotNil(t, NewJob(tt.args.job))
+			got := NewJob(tt.args.job, tt.args.waveNumber, tt.args.totalWave)
+			t.Log(got)
+			assert.NotNil(t, got)
 		})
 	}
 }

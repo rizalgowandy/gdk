@@ -67,8 +67,15 @@ func Test_subscription_Run(t *testing.T) {
 		wantErr bool
 	}{
 		{
-			name:    "Success",
-			args:    args{},
+			name: "Success",
+			args: args{
+				in0: cronx.SetJobMetadata(context.Background(), cronx.JobMetadata{
+					EntryID:    1,
+					Wave:       2,
+					TotalWave:  3,
+					IsLastWave: true,
+				}),
+			},
 			wantErr: false,
 		},
 	}

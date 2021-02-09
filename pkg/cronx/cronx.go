@@ -53,6 +53,10 @@ func New(config Config, interceptors ...Interceptor) {
 //  @every 5m
 //  0 */10 * * * * => every 10m
 func Schedule(spec string, job JobItf) error {
+	return schedule(spec, job, 1, 1)
+}
+
+func schedule(spec string, job JobItf, waveNumber, totalWave int64) error {
 	if commandController == nil || commandController.Commander == nil {
 		return errors.New("cronx has not been initialized")
 	}
@@ -60,7 +64,7 @@ func Schedule(spec string, job JobItf) error {
 	// Check if spec is correct.
 	schedule, err := commandController.Parser.Parse(spec)
 	if err != nil {
-		downJob := NewJob(job)
+		downJob := NewJob(job, waveNumber, totalWave)
 		downJob.Status = StatusCodeDown
 		downJob.Error = err.Error()
 		commandController.UnregisteredJobs = append(
@@ -70,7 +74,7 @@ func Schedule(spec string, job JobItf) error {
 		return err
 	}
 
-	j := NewJob(job)
+	j := NewJob(job, waveNumber, totalWave)
 	j.EntryID = commandController.Commander.Schedule(schedule, j)
 	return nil
 }
@@ -91,8 +95,8 @@ func Schedules(spec, separator string, job JobItf) error {
 		return errors.New("invalid separator")
 	}
 	schedules := strings.Split(spec, separator)
-	for _, v := range schedules {
-		if err := Schedule(v, job); err != nil {
+	for k, v := range schedules {
+		if err := schedule(v, job, int64(k+1), int64(len(schedules))); err != nil {
 			return err
 		}
 	}
@@ -108,7 +112,7 @@ func Every(duration time.Duration, job JobItf) {
 		return
 	}
 
-	j := NewJob(job)
+	j := NewJob(job, 1, 1)
 	j.EntryID = commandController.Commander.Schedule(cron.Every(duration), j)
 }
 
