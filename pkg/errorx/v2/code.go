@@ -6,13 +6,16 @@ type Code string
 
 // Application error codes.
 const (
-	CodeUnknown    Code = ""           // Unclassified or unknown error.
-	CodePermission Code = "permission" // Permission denied.
-	CodeInternal   Code = "internal"   // Internal error or inconsistency.
-	CodeConflict   Code = "conflict"   // Action cannot be performed.
-	CodeInvalid    Code = "invalid"    // Validation failed.
-	CodeNotFound   Code = "not_found"  // Entity does not exist.
-	CodeGateway    Code = "gateway"    // Gateway or third party service return error.
+	CodeUnknown        Code = ""                // Unclassified or unknown error.
+	CodePermission     Code = "permission"      // Permission denied.
+	CodeInternal       Code = "internal"        // Internal error or inconsistency.
+	CodeConflict       Code = "conflict"        // Action cannot be performed.
+	CodeInvalid        Code = "invalid"         // Validation failed.
+	CodeNotFound       Code = "not_found"       // Entity does not exist.
+	CodeGateway        Code = "gateway"         // Gateway or third party service return error.
+	CodeConfig         Code = "config"          // Wrong configuration.
+	CodeDB             Code = "db"              // Database operation error.
+	CodeCircuitBreaker Code = "circuit_breaker" // Circuit breaker error.
 )
 
 // GetCode returns the code of the root error, if available. Otherwise returns CodeInternal.
