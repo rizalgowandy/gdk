@@ -40,6 +40,7 @@ func main() {
 	// - location is time.Local
 	// - without any middleware
 	cronx.Default()
+	defer cronx.Stop()
 
 	// Register a new cron job.
 	// Struct name will become the name for the current job.
