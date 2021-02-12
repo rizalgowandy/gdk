@@ -25,8 +25,8 @@ func NewServer(commandCtrl *CommandController) {
 	e := echo.New()
 	e.HideBanner = true
 	e.HidePort = true
-	e.Use(middleware.CORS())
 	e.Use(middleware.Recover())
+	e.Use(middleware.CORS())
 	e.Use(middleware.RemoveTrailingSlash())
 
 	// Create server controller.
