@@ -50,7 +50,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           result-encoding: string
           script: |
-            const go_coverage = require(`${process.env.GITHUB_WORKSPACE}/.github/scripts/go_coverage.js`)
+            const go_coverage = require(`.github/scripts/go_coverage.js`)
             return await go_coverage({file: "../main.out"})
 
       - name: Checkout PR Branch
@@ -67,7 +67,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           result-encoding: string
           script: |
-            const go_coverage = require(`${process.env.GITHUB_WORKSPACE}/.github/scripts/go_coverage.js`)
+            const go_coverage = require(`.github/scripts/go_coverage.js`)
             return await go_coverage({file: "../pr.out"})
 
       - name: Create Comment
