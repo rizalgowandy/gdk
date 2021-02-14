@@ -10,62 +10,61 @@ import (
 	"github.com/peractio/gdk/pkg/converter"
 	"github.com/peractio/gdk/pkg/cronx"
 	"github.com/peractio/gdk/pkg/cronx/interceptor"
-	"github.com/rs/zerolog"
-	"github.com/rs/zerolog/log"
+	"github.com/peractio/gdk/pkg/errorx/v2"
+	"github.com/peractio/gdk/pkg/logx"
 )
 
-type sendEmail struct{}
+type SendEmail struct{}
 
-func (s sendEmail) Run(context.Context) error {
-	log.WithLevel(zerolog.InfoLevel).
-		Str("job", "sendEmail").
-		Msg("every 5 sec send reminder emails")
+func (s SendEmail) Run(ctx context.Context) error {
+	logx.INF(ctx, nil, "send email is running")
 	return nil
 }
 
-type payBill struct{}
+type PayBill struct{}
 
-func (p payBill) Run(context.Context) error {
-	log.WithLevel(zerolog.InfoLevel).
-		Str("job", "payBill").
-		Msg("every 1 min pay bill")
+func (p PayBill) Run(ctx context.Context) error {
+	logx.INF(ctx, nil, "pay bill is running")
 	return nil
 }
 
-type alwaysError struct{}
+type AlwaysError struct{}
 
-func (a alwaysError) Run(context.Context) error {
-	log.WithLevel(zerolog.InfoLevel).
-		Str("job", "alwaysError").
-		Msg("every 30 sec error")
-	return errors.New("some super long error message that come from executing the process")
+func (a AlwaysError) Run(ctx context.Context) error {
+	err := errorx.E("some super long error message that come from executing the process")
+	logx.ERR(ctx, err, "always error is running")
+	return err
 }
 
-type everyJob struct{}
+type EveryJob struct{}
 
-func (everyJob) Run(context.Context) error {
-	log.WithLevel(zerolog.InfoLevel).
-		Str("job", "everyJob").
-		Msg("is running")
+func (EveryJob) Run(ctx context.Context) error {
+	logx.INF(ctx, nil, "every job is running")
 	return nil
 }
 
-type subscription struct{}
+type Subscription struct{}
 
-func (subscription) Run(ctx context.Context) error {
+func (Subscription) Run(ctx context.Context) error {
 	md, ok := cronx.GetJobMetadata(ctx)
 	if !ok {
 		return errors.New("cannot job metadata")
 	}
 
-	log.WithLevel(zerolog.InfoLevel).
-		Str("job", "subscription").
-		Interface("metadata", md).
-		Msg("is running")
+	logx.INF(ctx, md, "Subscription is running")
 	return nil
 }
 
 func main() {
+	// Setup errorx and logx.
+	const serviceName = "example"
+	errorx.ServiceName = serviceName
+	_, _ = logx.New(&logx.Config{
+		Debug:    true,
+		AppName:  serviceName,
+		Filename: "",
+	})
+
 	// ===========================
 	// With Default Configuration
 	// ===========================
@@ -83,6 +82,7 @@ func main() {
 	// The order is important.
 	// The first one will be executed first.
 	cronMiddleware := cronx.Chain(
+		interceptor.RequestID,
 		interceptor.Recover(),
 		interceptor.Logger(),
 		interceptor.DefaultWorkerPool(),
@@ -114,66 +114,52 @@ func main() {
 }
 
 func RegisterJobs() {
+	ctx := logx.NewContext()
+
 	// Struct name will become the name for the current job.
-	if err := cronx.Schedule("@every 5s", sendEmail{}); err != nil {
+	if err := cronx.Schedule("@every 5s", SendEmail{}); err != nil {
 		// create log and send alert we fail to register job.
-		log.WithLevel(zerolog.ErrorLevel).
-			Err(err).
-			Msg("register sendEmail must success")
+		logx.ERR(ctx, err, "register send email must success")
 	}
 
 	// Create some jobs with the same struct.
 	// Duplication is okay.
 	for i := 0; i < 3; i++ {
 		spec := "@every " + converter.ToStr(i+1) + "m"
-		if err := cronx.Schedule(spec, payBill{}); err != nil {
-			log.WithLevel(zerolog.ErrorLevel).
-				Err(err).
-				Msg("register payBill must success")
+		if err := cronx.Schedule(spec, PayBill{}); err != nil {
+			logx.ERR(ctx, err, "register pay bill must success")
 		}
 	}
 
 	// Create some jobs with broken spec.
 	for i := 0; i < 3; i++ {
 		spec := "broken spec " + converter.ToStr(i+1)
-		if err := cronx.Schedule(spec, payBill{}); err != nil {
-			log.WithLevel(zerolog.ErrorLevel).
-				Err(err).
-				Msg("register payBill must success")
+		if err := cronx.Schedule(spec, PayBill{}); err != nil {
+			logx.ERR(ctx, err, "register pay bill must success")
 		}
 	}
 
 	// Create a job with run that will always be error.
-	if err := cronx.Schedule("@every 30s", alwaysError{}); err != nil {
-		log.WithLevel(zerolog.ErrorLevel).
-			Err(err).
-			Msg("register alwaysError must success")
+	if err := cronx.Schedule("@every 30s", AlwaysError{}); err != nil {
+		logx.ERR(ctx, err, "register always error must success")
 	}
 
 	// Create a custom job with missing name.
 	if err := cronx.Schedule("0 */1 * * *", cronx.Func(func(context.Context) error {
-		log.WithLevel(zerolog.InfoLevel).
-			Str("job", "nameless job").
-			Msg("every 1h will be run")
+		logx.INF(ctx, nil, "nameless job is running")
 		return nil
 	})); err != nil {
-		log.WithLevel(zerolog.ErrorLevel).
-			Err(err).
-			Msg("register job must success")
+		logx.ERR(ctx, err, "register nameless job must success")
 	}
 
 	// Create a job with v1 specification that includes seconds.
-	if err := cronx.Schedule("0 0 1 * * *", subscription{}); err != nil {
-		log.WithLevel(zerolog.ErrorLevel).
-			Err(err).
-			Msg("register subscription must success")
+	if err := cronx.Schedule("0 0 1 * * *", Subscription{}); err != nil {
+		logx.ERR(ctx, err, "register subscription must success")
 	}
 
 	// Create a job with multiple schedules
-	if err := cronx.Schedules("0 0 4 * * *#0 0 7 * * *#0 0 11 * * *", "#", subscription{}); err != nil {
-		log.WithLevel(zerolog.ErrorLevel).
-			Err(err).
-			Msg("register subscription must success")
+	if err := cronx.Schedules("0 0 4 * * *#0 0 7 * * *#0 0 11 * * *", "#", Subscription{}); err != nil {
+		logx.ERR(ctx, err, "register subscription must success")
 	}
 
 	const (
@@ -182,13 +168,11 @@ func RegisterJobs() {
 	)
 
 	// Create a job that run every 20 sec.
-	cronx.Every(everyInterval*time.Second, everyJob{})
+	cronx.Every(everyInterval*time.Second, EveryJob{})
 
 	// Remove a job.
 	cronx.Remove(jobIDToBeRemoved)
 
 	// Get all current registered job.
-	log.WithLevel(zerolog.InfoLevel).
-		Interface("entries", cronx.GetEntries()).
-		Msg("current jobs")
+	logx.INF(ctx, cronx.GetEntries(), "current jobs")
 }

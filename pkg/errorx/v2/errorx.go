@@ -7,14 +7,14 @@ import (
 	"strings"
 )
 
-const COMPANY = "peractio"
+var ServiceName = "peractio"
 
 // E for creating new error.
 // error should always be the first param.
 func E(args ...interface{}) error {
 	if len(args) == 0 {
 		_, file, line, _ := runtime.Caller(1)
-		file = file[strings.Index(file, COMPANY)+len(COMPANY):]
+		file = file[strings.Index(file, ServiceName)+len(ServiceName):]
 		return Errorf("errorx.E: bad call without args from file=%s:%d", file, line)
 	}
 
@@ -29,13 +29,13 @@ func E(args ...interface{}) error {
 		case error:
 			e.Err = arg
 			_, file, line, _ := runtime.Caller(1)
-			file = file[strings.Index(file, COMPANY)+len(COMPANY):]
+			file = file[strings.Index(file, ServiceName)+len(ServiceName):]
 			e.Line = Line(fmt.Sprintf("%s:%d", file, line))
 
 		case string:
 			e.Err = Errorf(arg)
 			_, file, line, _ := runtime.Caller(1)
-			file = file[strings.Index(file, COMPANY)+len(COMPANY):]
+			file = file[strings.Index(file, ServiceName)+len(ServiceName):]
 			e.Line = Line(fmt.Sprintf("%s:%d", file, line))
 
 		case Code:
@@ -59,7 +59,7 @@ func E(args ...interface{}) error {
 		default:
 			// The default error is unknown.
 			_, file, line, _ := runtime.Caller(1)
-			file = file[strings.Index(file, COMPANY)+len(COMPANY):]
+			file = file[strings.Index(file, ServiceName)+len(ServiceName):]
 			msg := fmt.Sprintf("errorx.E: bad call from file=%s:%d args=%v", file, line, args)
 			return Errorf(msg+"; unknown_type=%T value=%v", arg, arg)
 		}
