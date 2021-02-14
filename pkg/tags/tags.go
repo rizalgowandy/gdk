@@ -3,6 +3,8 @@ package tags
 // List all available tags.
 // Listing all available tags makes it easier to create a standardized tag list.
 const (
+	// App describes application name.
+	App = "app"
 	// Env describes current application environment.
 	Env = "env"
 	// Time describes a timestamp.
