@@ -56,8 +56,8 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           result-encoding: string
           script: |
-            const go_coverage = require(`${process.env.GITHUB_WORKSPACE}/.github/scripts/go_coverage.js`)
-            return await go_coverage({file: "../main.out"})
+            const gotool = require(`${process.env.GITHUB_WORKSPACE}/.github/scripts/gotool.js`)
+            return await gotool({file: "../main.out"})
 
       - name: Checkout PR Branch
         uses: actions/checkout@v2
@@ -73,8 +73,8 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           result-encoding: string
           script: |
-            const go_coverage = require(`${process.env.GITHUB_WORKSPACE}/.github/scripts/go_coverage.js`)
-            return await go_coverage({file: "../pr.out"})
+            const gotool = require(`${process.env.GITHUB_WORKSPACE}/.github/scripts/gotool.js`)
+            return await gotool({file: "../pr.out"})
 
       - name: Create Comment
         uses: actions/github-script@v3
