@@ -6,6 +6,12 @@ on:
   pull_request:
     branches: [ main ]
 
+env:
+  HOME: "/home/runner/gdk/_work/"
+  GOPRIVATE: "github.com/peractio/*"
+  GOPATH: "/home/runner/gdk/_work/gdk/go"
+  GO111MODULE: on
+
 jobs:
   build:
     name: Build
