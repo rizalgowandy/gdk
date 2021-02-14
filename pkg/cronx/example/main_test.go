@@ -2,12 +2,28 @@ package main
 
 import (
 	"context"
+	"os"
 	"testing"
 
 	"github.com/peractio/gdk/pkg/cronx"
+	"github.com/peractio/gdk/pkg/errorx/v2"
+	"github.com/peractio/gdk/pkg/logx"
 )
 
-func Test_alwaysError_Run(t *testing.T) {
+func TestMain(m *testing.M) {
+	// Setup errorx and logx.
+	const serviceName = "example"
+	errorx.ServiceName = serviceName
+	_, _ = logx.New(&logx.Config{
+		Debug:    true,
+		AppName:  serviceName,
+		Filename: "",
+	})
+
+	os.Exit(m.Run())
+}
+
+func TestAlwaysError_Run(t *testing.T) {
 	type args struct {
 		in context.Context
 	}
@@ -24,7 +40,7 @@ func Test_alwaysError_Run(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			a := alwaysError{}
+			a := AlwaysError{}
 			if err := a.Run(tt.args.in); (err != nil) != tt.wantErr {
 				t.Errorf("Run() error = %v, wantErr %v", err, tt.wantErr)
 			}
@@ -32,7 +48,7 @@ func Test_alwaysError_Run(t *testing.T) {
 	}
 }
 
-func Test_everyJob_Run(t *testing.T) {
+func TestEveryJob_Run(t *testing.T) {
 	type args struct {
 		in0 context.Context
 	}
@@ -49,7 +65,7 @@ func Test_everyJob_Run(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			ev := everyJob{}
+			ev := EveryJob{}
 			if err := ev.Run(tt.args.in0); (err != nil) != tt.wantErr {
 				t.Errorf("Run() error = %v, wantErr %v", err, tt.wantErr)
 			}
@@ -57,7 +73,7 @@ func Test_everyJob_Run(t *testing.T) {
 	}
 }
 
-func Test_subscription_Run(t *testing.T) {
+func TestSubscription_Run(t *testing.T) {
 	type args struct {
 		in0 context.Context
 	}
@@ -81,7 +97,7 @@ func Test_subscription_Run(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			su := subscription{}
+			su := Subscription{}
 			if err := su.Run(tt.args.in0); (err != nil) != tt.wantErr {
 				t.Errorf("Run() error = %v, wantErr %v", err, tt.wantErr)
 			}
@@ -89,7 +105,7 @@ func Test_subscription_Run(t *testing.T) {
 	}
 }
 
-func Test_sendEmail_Run(t *testing.T) {
+func TestSendEmail_Run(t *testing.T) {
 	type args struct {
 		in0 context.Context
 	}
@@ -106,7 +122,7 @@ func Test_sendEmail_Run(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			e := sendEmail{}
+			e := SendEmail{}
 			if err := e.Run(tt.args.in0); (err != nil) != tt.wantErr {
 				t.Errorf("Run() error = %v, wantErr %v", err, tt.wantErr)
 			}
@@ -114,7 +130,7 @@ func Test_sendEmail_Run(t *testing.T) {
 	}
 }
 
-func Test_payBill_Run(t *testing.T) {
+func TestPayBill_Run(t *testing.T) {
 	type args struct {
 		in0 context.Context
 	}
@@ -131,7 +147,7 @@ func Test_payBill_Run(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			p := payBill{}
+			p := PayBill{}
 			if err := p.Run(tt.args.in0); (err != nil) != tt.wantErr {
 				t.Errorf("Run() error = %v, wantErr %v", err, tt.wantErr)
 			}
