@@ -18,7 +18,7 @@ const (
 type contextKey string
 
 const (
-	contextKeyRequestID = contextKey(RequestID)
+	CtxKeyRequestID = contextKey(RequestID)
 )
 
 // GenRequestID returns a unique request id.
@@ -65,7 +65,7 @@ func SetRequestID(ctx context.Context, id string) context.Context {
 	if ctx == nil {
 		return SetRequestID(context.Background(), id)
 	}
-	return context.WithValue(ctx, contextKeyRequestID, id)
+	return context.WithValue(ctx, CtxKeyRequestID, id)
 }
 
 // GetContextID returns a request id assigned inside a context.
@@ -74,7 +74,7 @@ func GetRequestID(ctx context.Context) string {
 		return ""
 	}
 
-	id, ok := ctx.Value(contextKeyRequestID).(string)
+	id, ok := ctx.Value(CtxKeyRequestID).(string)
 	if !ok {
 		return ""
 	}

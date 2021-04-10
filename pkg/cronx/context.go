@@ -6,6 +6,7 @@ type contextKey string
 
 // Context key for standardized context value.
 const (
+	// CtxKeyJobMetadata is context for cron job metadata.
 	CtxKeyJobMetadata = contextKey("cron-job-metadata")
 )
 
