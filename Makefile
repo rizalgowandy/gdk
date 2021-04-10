@@ -18,3 +18,7 @@ test: # run all tests.
 .PHONY: build
 build: # ensure all binary can be build.
 	@go build -o bin/go_build_gdk && rm bin/go_build_gdk
+
+.PHONY: generate
+generate: # generate all go generate command inside internal package.
+	@go generate -v ./...
