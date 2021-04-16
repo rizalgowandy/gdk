@@ -7,6 +7,7 @@ import (
 	_ "github.com/peractio/gdk/pkg/env"
 	_ "github.com/peractio/gdk/pkg/errorx/v1"
 	_ "github.com/peractio/gdk/pkg/errorx/v2"
+	_ "github.com/peractio/gdk/pkg/httpx/echo"
 	_ "github.com/peractio/gdk/pkg/httpx/echo/middleware"
 	_ "github.com/peractio/gdk/pkg/httpx/mux"
 	_ "github.com/peractio/gdk/pkg/httpx/mux/middleware"
