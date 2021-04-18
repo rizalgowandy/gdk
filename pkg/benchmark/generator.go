@@ -1,4 +1,4 @@
-package generator
+package benchmark
 
 type NewGeneratorFunc = func(int) Generator
 
