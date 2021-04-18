@@ -16,6 +16,7 @@ import (
 	_ "github.com/peractio/gdk/pkg/regex"
 	_ "github.com/peractio/gdk/pkg/resync"
 	_ "github.com/peractio/gdk/pkg/stack"
+	_ "github.com/peractio/gdk/pkg/storage/cache"
 	_ "github.com/peractio/gdk/pkg/tags"
 	_ "github.com/peractio/gdk/pkg/ternary"
 	_ "github.com/peractio/gdk/pkg/try"
