@@ -10,21 +10,21 @@ import (
 )
 
 var (
-	onceNewRistrettoClient    resync.Once
-	onceNewRistrettoClientRes *RistrettoClient
-	onceNewRistrettoClientErr error
-	onceRistrettoClientClose  resync.Once
+	onceNewRistretto    resync.Once
+	onceNewRistrettoRes *Ristretto
+	onceNewRistrettoErr error
+	onceRistrettoClose  resync.Once
 )
 
-// RistrettoClient returns a in-process storage client using ristretto library.
-type RistrettoClient struct {
+// Ristretto returns a in-process storage client using ristretto library.
+type Ristretto struct {
 	cache *ristretto.Cache
 }
 
-// NewRistrettoClient return a redis client.
-func NewRistrettoClient(config *RistrettoConfiguration) (*RistrettoClient, error) {
-	onceNewRistrettoClient.Do(func() {
-		const op errorx.Op = "cache.NewRistrettoClient"
+// NewRistretto return a redis client.
+func NewRistretto(config *RistrettoConfiguration) (*Ristretto, error) {
+	onceNewRistretto.Do(func() {
+		const op errorx.Op = "cache.NewRistretto"
 
 		cache, err := ristretto.NewCache(&ristretto.Config{
 			NumCounters: config.NumCounters,
@@ -33,20 +33,20 @@ func NewRistrettoClient(config *RistrettoConfiguration) (*RistrettoClient, error
 			Metrics:     config.Metrics,
 		})
 		if err != nil {
-			onceNewRedigoClientErr = errorx.E(err, op)
+			onceNewRedigoErr = errorx.E(err, op)
 			return
 		}
 
-		onceNewRistrettoClientRes = &RistrettoClient{
+		onceNewRistrettoRes = &Ristretto{
 			cache: cache,
 		}
 	})
 
-	return onceNewRistrettoClientRes, onceNewRistrettoClientErr
+	return onceNewRistrettoRes, onceNewRistrettoErr
 }
 
 // Get returns the value (if any) and a boolean representing whether the value was found or not.
-func (r *RistrettoClient) Get(_ context.Context, key string) (res interface{}, exists bool) {
+func (r *Ristretto) Get(_ context.Context, key string) (res interface{}, exists bool) {
 	res, exist := r.cache.Get(key)
 	if !exist || res == nil {
 		return nil, false
@@ -60,7 +60,7 @@ func (r *RistrettoClient) Get(_ context.Context, key string) (res interface{}, e
 // If it returns true, there's still a chance it could be dropped by the policy
 // if its determined that the key-value item isn't worth keeping,
 // but otherwise the item will be added and other items will be evicted in order to make room.
-func (r *RistrettoClient) Set(_ context.Context, key string, value interface{}) bool {
+func (r *Ristretto) Set(_ context.Context, key string, value interface{}) bool {
 	return r.cache.Set(key, value, 1)
 }
 
@@ -68,7 +68,7 @@ func (r *RistrettoClient) Set(_ context.Context, key string, value interface{}) 
 // that will expire after the specified TTL (time to live) has passed.
 // A zero value means the value never expires, which is identical to calling Set.
 // A negative value is a no-op and the value is discarded.
-func (r *RistrettoClient) SetEX(
+func (r *Ristretto) SetEX(
 	_ context.Context,
 	key string,
 	value interface{},
@@ -78,18 +78,18 @@ func (r *RistrettoClient) SetEX(
 }
 
 // Del deletes the key-value item from the cache if it exists.
-func (r *RistrettoClient) Del(_ context.Context, key string) {
+func (r *Ristretto) Del(_ context.Context, key string) {
 	r.cache.Del(key)
 }
 
 // Clear empties the cache store and zeroes all policy counters.
-func (r *RistrettoClient) Clear(_ context.Context) {
+func (r *Ristretto) Clear(_ context.Context) {
 	r.cache.Clear()
 }
 
 // Close stops all goroutines and closes all channels.
-func (r *RistrettoClient) Close() {
-	onceRistrettoClientClose.Do(func() {
+func (r *Ristretto) Close() {
+	onceRistrettoClose.Do(func() {
 		r.cache.Clear()
 		r.cache.Close()
 	})

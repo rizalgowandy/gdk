@@ -7,8 +7,8 @@ import (
 
 //go:generate mockgen -destination=cache_mock.go -package=cache -source=cache.go
 
-// RedisClientItf is a client to interact with Redis.
-type RedisClientItf interface {
+// RedisItf is a client to interact with Redis.
+type RedisItf interface {
 	// Get gets the value from redis in []byte form.
 	Get(ctx context.Context, key string) ([]byte, error)
 	// SetEX sets the value to a key with timeout in seconds.
@@ -27,10 +27,12 @@ type RedisClientItf interface {
 	HSet(ctx context.Context, key, field, value string) (bool, error)
 	// Del deletes a key.
 	Del(ctx context.Context, key ...interface{}) (int64, error)
+	// Close closes the client, releasing any open resources.
+	Close()
 }
 
-// RistrettoClientItf is a in-process or local cache storage client.
-type RistrettoClientItf interface {
+// RistrettoItf is a in-process or local cache storage client.
+type RistrettoItf interface {
 	// Get returns the value (if any) and a boolean representing whether the value was found or not.
 	Get(ctx context.Context, key string) (res interface{}, exists bool)
 	// Set attempts to add the key-value item to the cache.
