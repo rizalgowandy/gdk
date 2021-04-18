@@ -118,4 +118,8 @@ const (
 	MaxLifetimeClosed = "max_lifetime_closed"
 	// Metadata
 	Metadata = "metadata"
+	// Cache
+	Cache = "cache"
+	// Client
+	Client = "client"
 )

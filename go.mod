@@ -3,7 +3,10 @@ module github.com/peractio/gdk
 go 1.15
 
 require (
+	github.com/dgraph-io/ristretto v0.0.3
+	github.com/go-redis/redis/v8 v8.8.2
 	github.com/golang/mock v1.4.4
+	github.com/gomodule/redigo v1.8.4
 	github.com/gorilla/mux v1.8.0
 	github.com/json-iterator/go v1.1.10
 	github.com/kr/pretty v0.1.0 // indirect

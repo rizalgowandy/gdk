@@ -5,6 +5,9 @@ import (
 	"errors"
 )
 
+// KV is wrapper for map[string]interface{}.
+type KV map[string]interface{}
+
 var (
 	l *ZeroLogger
 )
