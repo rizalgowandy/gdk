@@ -77,11 +77,10 @@ func CORS(next http.Handler) http.Handler {
 	// for [staging,beta,uat,production] enforce domain.
 	return CORSWithConfig(next, &CORSConfig{
 		Skipper: func(res http.ResponseWriter, req *http.Request) bool {
-			// Ensure this cors only appended to request to intools sub routing.
-			return !strings.Contains(req.RequestURI, "intools")
+			return false
 		},
 		AllowOrigins: []string{
-			"*.tokopedia.com",
+			"*.peract.io",
 		},
 		AllowMethods: []string{
 			http.MethodGet,
