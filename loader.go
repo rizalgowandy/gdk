@@ -1,6 +1,7 @@
 package main
 
 import (
+	_ "github.com/peractio/gdk/pkg/benchmark"
 	_ "github.com/peractio/gdk/pkg/build"
 	_ "github.com/peractio/gdk/pkg/converter"
 	_ "github.com/peractio/gdk/pkg/cronx"
