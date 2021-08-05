@@ -1,7 +1,7 @@
 package converter
 
 import (
-	"encoding/json"
+	"github.com/peractio/gdk/pkg/jsonx"
 )
 
 // ToArrInt convert any value to []int.
@@ -26,7 +26,7 @@ func ToArrInt(v interface{}) []int {
 
 	case string:
 		var result []int
-		err := json.Unmarshal([]byte(v), &result)
+		err := jsonx.Unmarshal([]byte(v), &result)
 		if err != nil {
 			return nil
 		}
@@ -56,7 +56,7 @@ func ToArrStr(v interface{}) []string {
 	switch v := v.(type) {
 	case string:
 		var result []string
-		err := json.Unmarshal([]byte(v), &result)
+		err := jsonx.Unmarshal([]byte(v), &result)
 		if err != nil {
 			return nil
 		}
@@ -96,7 +96,7 @@ func ToArrInt64(v interface{}) []int64 {
 
 	case string:
 		var result []int64
-		err := json.Unmarshal([]byte(v), &result)
+		err := jsonx.Unmarshal([]byte(v), &result)
 		if err != nil {
 			return nil
 		}

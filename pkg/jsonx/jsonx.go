@@ -2,6 +2,7 @@ package jsonx
 
 import (
 	"bytes"
+	"io"
 
 	"github.com/peractio/gdk/pkg/resync"
 )
@@ -12,7 +13,18 @@ import (
 type OperatorItf interface {
 	Unmarshal(data []byte, v interface{}) error
 	Marshal(v interface{}) ([]byte, error)
-	Encode(buffer *bytes.Buffer, data interface{}) error
+	NewEncoder(buffer *bytes.Buffer) EncoderItf
+	NewDecoder(r io.Reader) DecoderItf
+}
+
+// EncoderItf interface for json library encoder.
+type EncoderItf interface {
+	Encode(v interface{}) error
+}
+
+// DecoderItf interface for json library decoder.
+type DecoderItf interface {
+	Decode(v interface{}) error
 }
 
 var (
@@ -27,4 +39,24 @@ func New() OperatorItf {
 	})
 
 	return onceNewRes
+}
+
+// Unmarshal copy input data to interface.
+func Marshal(v interface{}) ([]byte, error) {
+	return New().Marshal(v)
+}
+
+// Marshal returns bytes of interface.
+func Unmarshal(data []byte, v interface{}) error {
+	return New().Unmarshal(data, v)
+}
+
+// NewEncoder returns encoder to encode data to buffer.
+func NewEncoder(buffer *bytes.Buffer) EncoderItf {
+	return New().NewEncoder(buffer)
+}
+
+// NewDecoder returns decoder to decode data to buffer.
+func NewDecoder(r io.Reader) DecoderItf {
+	return New().NewDecoder(r)
 }

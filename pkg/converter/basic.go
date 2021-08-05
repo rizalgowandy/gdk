@@ -1,9 +1,10 @@
 package converter
 
 import (
-	"encoding/json"
 	"strconv"
 	"strings"
+
+	"github.com/peractio/gdk/pkg/jsonx"
 )
 
 // ToStr converts any value to string.
@@ -29,7 +30,7 @@ func ToStr(v interface{}) string {
 	case []uint8:
 		return string(v)
 	default:
-		resultJSON, err := json.Marshal(v)
+		resultJSON, err := jsonx.Marshal(v)
 		if err != nil {
 			return ""
 		}

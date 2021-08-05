@@ -1,7 +1,6 @@
 package middleware
 
 import (
-	"encoding/json"
 	"fmt"
 	"net"
 	"net/http"
@@ -85,29 +84,6 @@ func realIP(req *http.Request) string {
 	return ra
 }
 
-type loggingResponseWriter struct {
-	http.ResponseWriter
-	statusCode int
-	response   map[string]interface{}
-}
-
-func newLoggingResponseWriter(w http.ResponseWriter) *loggingResponseWriter {
-	return &loggingResponseWriter{w, http.StatusOK, map[string]interface{}{}}
-}
-
-func (lw *loggingResponseWriter) WriteHeader(code int) {
-	lw.statusCode = code
-	lw.ResponseWriter.WriteHeader(code)
-}
-
-func (lw *loggingResponseWriter) Write(b []byte) (int, error) {
-	if !env.IsProduction() {
-		_ = json.Unmarshal(b, &lw.response)
-	}
-
-	return lw.ResponseWriter.Write(b)
-}
-
 // Middleware implement mux middleware interface
 func (m *LoggingMiddleware) Middleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -129,16 +105,16 @@ func (m *LoggingMiddleware) Middleware(next http.Handler) http.Handler {
 			}).Info(fmt.Sprintf("Operation %s starting", r.URL.Path))
 		}
 
-		lw := newLoggingResponseWriter(w)
+		lw := mux.NewWriter(w)
 		next.ServeHTTP(lw, r)
 
 		if !env.IsProduction() {
-			entry = entry.WithField("response", lw.response)
+			entry = entry.WithField("response", lw.Response)
 		}
 
 		entry.WithFields(logrus.Fields{
 			"request_uri": r.RequestURI,
-			"status_code": lw.statusCode,
+			"status_code": lw.StatusCode,
 			"took":        m.clock.Since(start).String(),
 		}).Info(fmt.Sprintf("Operation %s result", r.URL.Path))
 	})
