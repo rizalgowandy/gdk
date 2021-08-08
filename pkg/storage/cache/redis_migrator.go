@@ -15,16 +15,6 @@ var (
 	onceNewRedisMigratorErr error
 )
 
-// RedisMigrator is a redis client to migrate from one instance to another.
-// All the create commands will be executed to the new instance.
-// All the update and delete commands will be executed on both instances.
-// While the read commands will read from the new instance first,
-// and if the result is not found, it will attempt to read from the old one.
-type RedisMigrator struct {
-	origin      RedisItf
-	destination RedisItf
-}
-
 // NewRedisMigrator return a redis migrator client.
 func NewRedisMigrator(origin, destination RedisItf) (*RedisMigrator, error) {
 	onceNewRedisMigrator.Do(func() {
@@ -35,6 +25,16 @@ func NewRedisMigrator(origin, destination RedisItf) (*RedisMigrator, error) {
 	})
 
 	return onceNewRedisMigratorRes, onceNewRedisMigratorErr
+}
+
+// RedisMigrator is a redis client to migrate from one instance to another.
+// All the create commands will be executed to the new instance.
+// All the update and delete commands will be executed on both instances.
+// While the read commands will read from the new instance first,
+// and if the result is not found, it will attempt to read from the old one.
+type RedisMigrator struct {
+	origin      RedisItf
+	destination RedisItf
 }
 
 // Get gets the value from redis in []byte form.

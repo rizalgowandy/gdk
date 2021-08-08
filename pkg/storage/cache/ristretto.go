@@ -16,11 +16,6 @@ var (
 	onceRistrettoClose  resync.Once
 )
 
-// Ristretto returns a in-process storage client using ristretto library.
-type Ristretto struct {
-	cache *ristretto.Cache
-}
-
 // NewRistretto return a redis client.
 func NewRistretto(config *RistrettoConfiguration) (*Ristretto, error) {
 	onceNewRistretto.Do(func() {
@@ -43,6 +38,11 @@ func NewRistretto(config *RistrettoConfiguration) (*Ristretto, error) {
 	})
 
 	return onceNewRistrettoRes, onceNewRistrettoErr
+}
+
+// Ristretto returns a in-process storage client using ristretto library.
+type Ristretto struct {
+	cache *ristretto.Cache
 }
 
 // Get returns the value (if any) and a boolean representing whether the value was found or not.

@@ -16,11 +16,6 @@ var (
 	onceNewRedigoErr error
 )
 
-// Redigo returns a redis client using redigo library.
-type Redigo struct {
-	client *redis.Pool
-}
-
 // NewRedigo return a redis client.
 func NewRedigo(config *RedisConfiguration) (*Redigo, error) {
 	onceNewRedigo.Do(func() {
@@ -72,6 +67,11 @@ func NewRedigo(config *RedisConfiguration) (*Redigo, error) {
 	})
 
 	return onceNewRedigoRes, onceNewRedigoErr
+}
+
+// Redigo returns a redis client using redigo library.
+type Redigo struct {
+	client *redis.Pool
 }
 
 // Get gets the value from redis in []byte form.
