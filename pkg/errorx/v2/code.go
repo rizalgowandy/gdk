@@ -14,19 +14,19 @@ const (
 	CodeNotFound       Code = "not_found"       // Entity does not exist.
 	CodeGateway        Code = "gateway"         // Gateway or third party service return error.
 	CodeConfig         Code = "config"          // Wrong configuration.
-	CodeDB             Code = "db"              // Database operation error.
 	CodeCircuitBreaker Code = "circuit_breaker" // Circuit breaker error.
-	CodeMarshal        Code = "marshal"
-	CodeUnmarshal      Code = "unmarshal"
-	CodeConversion     Code = "conversion"
-	CodeEncryption     Code = "encryption"
-	CodeDecryption     Code = "decryption"
-	CodeDBScan         Code = "db_scan"
-	CodeDBExec         Code = "db_exec"
-	CodeDBQuery        Code = "db_query"
-	CodeDBBegin        Code = "db_begin"
-	CodeDBCommit       Code = "db_commit"
-	CodeDBRollback     Code = "db_rollback"
+	CodeMarshal        Code = "marshal"         // JSON marshal error.
+	CodeUnmarshal      Code = "unmarshal"       // JSON unmarshal error.
+	CodeConversion     Code = "conversion"      // Conversion error, e.g. string to time conversion.
+	CodeEncryption     Code = "encryption"      // Encryption error.
+	CodeDecryption     Code = "decryption"      // Decryption error.
+	CodeDB             Code = "db"              // Database operation error.
+	CodeDBScan         Code = "db_scan"         // Database scan error.
+	CodeDBExec         Code = "db_exec"         // Database exec error.
+	CodeDBQuery        Code = "db_query"        // Database query error.
+	CodeDBBegin        Code = "db_begin"        // Database begin transaction error.
+	CodeDBCommit       Code = "db_commit"       // Database commit error.
+	CodeDBRollback     Code = "db_rollback"     // Database rollback error.
 )
 
 // GetCode returns the code of the root error, if available. Otherwise returns CodeInternal.

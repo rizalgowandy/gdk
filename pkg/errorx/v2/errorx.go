@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"runtime"
 	"strings"
+
+	"github.com/imdario/mergo"
 )
 
 var ServiceName = "peractio"
@@ -43,9 +45,19 @@ func E(args ...interface{}) error {
 			e.Code = arg
 
 		case Fields:
-			// Fields cannot be appended.
-			// New fields will always replace the old fields.
-			e.Fields = arg
+			// Previous fields is empty.
+			// Replace with arg directly.
+			if e.Fields == nil {
+				e.Fields = arg
+				continue
+			}
+
+			// Merge fields.
+			// If there is duplicate fields,
+			// The e.Fields has higher priority and won't be replaced with arg.
+			if err := mergo.Merge(&e.Fields, arg); err != nil {
+				e.Fields = arg
+			}
 
 		case Op:
 			e.OpTraces = append([]Op{arg}, e.OpTraces...)
