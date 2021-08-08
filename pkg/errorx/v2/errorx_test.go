@@ -143,7 +143,7 @@ func TestE(t *testing.T) {
 		},
 	}
 
-	enableLog := true
+	enableLog := false
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got := E(tt.args...)
