@@ -41,7 +41,7 @@ func NewGoRedisCluster(config *RedisConfiguration) (*GoRedisCluster, error) {
 			ReadTimeout:        0,
 			WriteTimeout:       0,
 			PoolSize:           int(config.OpenConnectionLimit),
-			MinIdleConns:       int(config.MinIdleConns),
+			MinIdleConns:       int(config.MinIdleConnection),
 			MaxConnAge:         time.Duration(config.MaxConnAge) * time.Second,
 			PoolTimeout:        0,
 			IdleTimeout:        time.Duration(config.IdleTimeout) * time.Second,
