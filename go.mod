@@ -8,6 +8,7 @@ require (
 	github.com/golang/mock v1.4.4
 	github.com/gomodule/redigo v1.8.4
 	github.com/gorilla/mux v1.8.0
+	github.com/imdario/mergo v0.3.12
 	github.com/jackc/pgx/v4 v4.13.0
 	github.com/json-iterator/go v1.1.10
 	github.com/labstack/echo/v4 v4.2.2

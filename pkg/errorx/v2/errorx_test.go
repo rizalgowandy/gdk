@@ -81,6 +81,27 @@ func TestE(t *testing.T) {
 			},
 		},
 		{
+			name: "3 layer with fields merged",
+			args: []interface{}{
+				E(
+					E(
+						New("timeout"),
+						Fields{
+							"user_id":   1,
+							"random_id": 2,
+							"actor_id":  3,
+						},
+						Op("userGateway.FindUser"),
+					),
+					Fields{
+						"actor_id": 777,
+					},
+					Message("handler-message"),
+					Op("userHandler.FindUser"),
+				),
+			},
+		},
+		{
 			name: "Invalid type",
 			args: []interface{}{
 				123,
