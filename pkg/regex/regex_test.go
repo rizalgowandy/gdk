@@ -7,7 +7,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestMatchStr(t *testing.T) {
+func TestMatchString(t *testing.T) {
 	type args struct {
 		pattern string
 		input   string
@@ -93,10 +93,10 @@ func TestMatchStr(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, gotErr := MatchStr(tt.args.pattern, tt.args.input)
+			got, gotErr := MatchString(tt.args.pattern, tt.args.input)
 			assert.Equal(t, tt.wantErr, gotErr != nil)
 			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("MatchStr() = %v, want %v", got, tt.want)
+				t.Errorf("MatchString() = %v, want %v", got, tt.want)
 			}
 		})
 	}
@@ -139,6 +139,53 @@ func TestRegister(t *testing.T) {
 			if (got == nil) != tt.wantNil {
 				t.Errorf("Register() got = %v, wantNil %v", err, tt.wantNil)
 				return
+			}
+		})
+	}
+}
+
+func TestReplaceAllString(t *testing.T) {
+	type args struct {
+		pattern string
+		input   string
+		repl    string
+	}
+	tests := []struct {
+		name    string
+		args    args
+		want    string
+		wantErr bool
+	}{
+		{
+			name: "Replace all numeric",
+			args: args{
+				pattern: "[0-9]+",
+				input:   "/cart/logs/123456789",
+				repl:    "{id}",
+			},
+			want:    "/cart/logs/{id}",
+			wantErr: false,
+		},
+		{
+			name: "Already registered",
+			args: args{
+				pattern: "[0-9]+",
+				input:   "/orders/123456789",
+				repl:    "{id}",
+			},
+			want:    "/orders/{id}",
+			wantErr: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := ReplaceAllString(tt.args.pattern, tt.args.input, tt.args.repl)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("ReplaceAllString() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if got != tt.want {
+				t.Errorf("ReplaceAllString() got = %v, want %v", got, tt.want)
 			}
 		})
 	}

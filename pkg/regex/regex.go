@@ -22,8 +22,8 @@ func Register(pattern string) (*regexp.Regexp, error) {
 	return newMatcher, nil
 }
 
-// MatchStr returns true if current string match the pattern, false otherwise.
-func MatchStr(pattern, input string) (bool, error) {
+// MatchString returns true if current string match the pattern, false otherwise.
+func MatchString(pattern, input string) (bool, error) {
 	regex, ok := storage.Load(pattern)
 	if !ok {
 		newRegex, err := Register(pattern)
@@ -35,4 +35,22 @@ func MatchStr(pattern, input string) (bool, error) {
 	}
 
 	return (regex).(*regexp.Regexp).MatchString(input), nil
+}
+
+// ReplaceAllString returns a copy of input,
+// replacing matches of the Regexp with the replacement string repl.
+// Inside repl, $ signs are interpreted as in Expand,
+// so for instance $1 represents the text of the first sub-match.
+func ReplaceAllString(pattern, input, repl string) (string, error) {
+	regex, ok := storage.Load(pattern)
+	if !ok {
+		newRegex, err := Register(pattern)
+		if err != nil {
+			return input, err
+		}
+
+		return newRegex.ReplaceAllString(input, repl), nil
+	}
+
+	return (regex).(*regexp.Regexp).ReplaceAllString(input, repl), nil
 }
