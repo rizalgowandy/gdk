@@ -7,12 +7,15 @@ import (
 
 //go:generate mockgen -destination=cache_mock.go -package=cache -source=cache.go
 
-// RedisItf is a client to interact with Redis.
-type RedisItf interface {
+// RedisClientItf is a client to interact with Redis.
+type RedisClientItf interface {
 	// Get gets the value from redis in []byte form.
 	Get(ctx context.Context, key string) ([]byte, error)
 	// SetEX sets the value to a key with timeout in seconds.
 	SetEX(ctx context.Context, key string, seconds int64, value string) error
+	// SetNX sets a value to a key with specified timeouts.
+	// SetNX returns false if the key exists.
+	SetNX(ctx context.Context, key string, seconds int64, value string) (bool, error)
 	// Exists checks whether the key exists in redis.
 	Exists(ctx context.Context, key string) (bool, error)
 	// Expire sets the TTL of a key to specified value in seconds.
@@ -31,8 +34,8 @@ type RedisItf interface {
 	Close()
 }
 
-// RistrettoItf is a in-process or local cache storage client.
-type RistrettoItf interface {
+// RistrettoClientItf is a in-process or local cache storage client.
+type RistrettoClientItf interface {
 	// Get returns the value (if any) and a boolean representing whether the value was found or not.
 	Get(ctx context.Context, key string) (res interface{}, exists bool)
 	// Set attempts to add the key-value item to the cache.

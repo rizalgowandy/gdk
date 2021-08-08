@@ -28,8 +28,8 @@ type RedisConfiguration struct {
 	MaxConnAge int64
 	// IdleTimeout is in seconds.
 	IdleTimeout int64
-	// MinIdleConns describes the minimum open idle connection to be keep at all time.
-	MinIdleConns int64
+	// MinIdleConnection describes the minimum open idle connection to be keep at all time.
+	MinIdleConnection int64
 }
 
 // RistrettoConfiguration configuration.

@@ -12,13 +12,13 @@ import (
 )
 
 var (
-	onceNewGoRedisClusterV8    resync.Once
-	onceNewGoRedisClusterV8Res *GoRedisClusterV8
+	onceNewGoRedisCluster    resync.Once
+	onceNewGoRedisClusterRes *GoRedisCluster
 )
 
-// NewGoRedisClusterV8 returns a redis cluster client.
-func NewGoRedisClusterV8(config *RedisConfiguration) (*GoRedisClusterV8, error) {
-	onceNewGoRedisClusterV8.Do(func() {
+// NewGoRedisCluster returns a redis cluster client.
+func NewGoRedisCluster(config *RedisConfiguration) (*GoRedisCluster, error) {
+	onceNewGoRedisCluster.Do(func() {
 		// Create connection to the cluster.
 		// The unfilled configuration means, it will use the default configuration.
 		// Tweaking configuration may increase or decrease the performance.
@@ -41,7 +41,7 @@ func NewGoRedisClusterV8(config *RedisConfiguration) (*GoRedisClusterV8, error) 
 			ReadTimeout:        0,
 			WriteTimeout:       0,
 			PoolSize:           int(config.OpenConnectionLimit),
-			MinIdleConns:       int(config.MinIdleConns),
+			MinIdleConns:       int(config.MinIdleConnection),
 			MaxConnAge:         time.Duration(config.MaxConnAge) * time.Second,
 			PoolTimeout:        0,
 			IdleTimeout:        time.Duration(config.IdleTimeout) * time.Second,
@@ -49,22 +49,22 @@ func NewGoRedisClusterV8(config *RedisConfiguration) (*GoRedisClusterV8, error) 
 			TLSConfig:          nil,
 		})
 
-		onceNewGoRedisClusterV8Res = &GoRedisClusterV8{
+		onceNewGoRedisClusterRes = &GoRedisCluster{
 			client: rdb,
 		}
 	})
 
-	return onceNewGoRedisClusterV8Res, nil
+	return onceNewGoRedisClusterRes, nil
 }
 
-// GoRedisClusterV8 returns a redis cluster client using go-redis library.
-type GoRedisClusterV8 struct {
+// GoRedisCluster returns a redis cluster client using go-redis library.
+type GoRedisCluster struct {
 	client *redis.ClusterClient
 }
 
 // Get gets the value from redis in []byte form.
-func (r *GoRedisClusterV8) Get(ctx context.Context, key string) ([]byte, error) {
-	const op errorx.Op = "cache/GoRedisClusterV8.Get"
+func (r *GoRedisCluster) Get(ctx context.Context, key string) ([]byte, error) {
+	const op errorx.Op = "cache/GoRedisCluster.Get"
 
 	res, err := r.client.Get(ctx, key).Result()
 	if err != nil {
@@ -79,13 +79,13 @@ func (r *GoRedisClusterV8) Get(ctx context.Context, key string) ([]byte, error) 
 }
 
 // SetEX sets the value to a key with timeout in seconds.
-func (r *GoRedisClusterV8) SetEX(
+func (r *GoRedisCluster) SetEX(
 	ctx context.Context,
 	key string,
 	seconds int64,
 	value string,
 ) error {
-	const op errorx.Op = "cache/GoRedisClusterV8.SetEX"
+	const op errorx.Op = "cache/GoRedisCluster.SetEX"
 
 	_, err := r.client.SetEX(ctx, key, value, time.Duration(seconds)*time.Second).Result()
 	if err != nil {
@@ -96,9 +96,31 @@ func (r *GoRedisClusterV8) SetEX(
 	return nil
 }
 
+// SetNX sets a value to a key with specified timeouts.
+// SetNX returns false if the key exists.
+func (r *GoRedisCluster) SetNX(
+	ctx context.Context,
+	key string,
+	seconds int64,
+	value string,
+) (bool, error) {
+	const op errorx.Op = "cache/GoRedisCluster.SetNX"
+
+	res, err := r.client.SetNX(ctx, key, value, time.Duration(seconds)*time.Second).Result()
+	if err != nil {
+		return false, errorx.E(err, op)
+	}
+
+	logx.DBG(ctx, logx.KV{
+		tags.Key:    key,
+		tags.Detail: res,
+	}, string(op)+" success")
+	return res, nil
+}
+
 // Exists checks whether the key exists in redis.
-func (r *GoRedisClusterV8) Exists(ctx context.Context, key string) (bool, error) {
-	const op errorx.Op = "cache/GoRedisClusterV8.Exists"
+func (r *GoRedisCluster) Exists(ctx context.Context, key string) (bool, error) {
+	const op errorx.Op = "cache/GoRedisCluster.Exists"
 
 	res, err := r.client.Exists(ctx, key).Result()
 	if err != nil {
@@ -113,12 +135,12 @@ func (r *GoRedisClusterV8) Exists(ctx context.Context, key string) (bool, error)
 }
 
 // Expire sets the ttl of a key to specified value in seconds.
-func (r *GoRedisClusterV8) Expire(
+func (r *GoRedisCluster) Expire(
 	ctx context.Context,
 	key string,
 	seconds int64,
 ) (bool, error) {
-	const op errorx.Op = "cache/GoRedisClusterV8.Expire"
+	const op errorx.Op = "cache/GoRedisCluster.Expire"
 
 	res, err := r.client.Expire(ctx, key, time.Duration(seconds)*time.Second).Result()
 	if err != nil {
@@ -133,8 +155,8 @@ func (r *GoRedisClusterV8) Expire(
 }
 
 // TTL gets the time to live of a key / expiry time.
-func (r *GoRedisClusterV8) TTL(ctx context.Context, key string) (int64, error) {
-	const op errorx.Op = "cache/GoRedisClusterV8.TTL"
+func (r *GoRedisCluster) TTL(ctx context.Context, key string) (int64, error) {
+	const op errorx.Op = "cache/GoRedisCluster.TTL"
 
 	res, err := r.client.TTL(ctx, key).Result()
 	if err != nil {
@@ -149,8 +171,8 @@ func (r *GoRedisClusterV8) TTL(ctx context.Context, key string) (int64, error) {
 }
 
 // HGet gets the value of a hash field.
-func (r *GoRedisClusterV8) HGet(ctx context.Context, key, field string) ([]byte, error) {
-	const op errorx.Op = "cache/GoRedisClusterV8.HGet"
+func (r *GoRedisCluster) HGet(ctx context.Context, key, field string) ([]byte, error) {
+	const op errorx.Op = "cache/GoRedisCluster.HGet"
 
 	res, err := r.client.HGet(ctx, key, field).Result()
 	if err != nil {
@@ -165,8 +187,8 @@ func (r *GoRedisClusterV8) HGet(ctx context.Context, key, field string) ([]byte,
 }
 
 // HExists determines if a hash field exists.
-func (r *GoRedisClusterV8) HExists(ctx context.Context, key, field string) (bool, error) {
-	const op errorx.Op = "cache/GoRedisClusterV8.HExists"
+func (r *GoRedisCluster) HExists(ctx context.Context, key, field string) (bool, error) {
+	const op errorx.Op = "cache/GoRedisCluster.HExists"
 
 	res, err := r.client.HExists(ctx, key, field).Result()
 	if err != nil {
@@ -181,8 +203,8 @@ func (r *GoRedisClusterV8) HExists(ctx context.Context, key, field string) (bool
 }
 
 // HSet sets the string value of a hash field.
-func (r *GoRedisClusterV8) HSet(ctx context.Context, key, field, value string) (bool, error) {
-	const op errorx.Op = "cache/GoRedisClusterV8.HSet"
+func (r *GoRedisCluster) HSet(ctx context.Context, key, field, value string) (bool, error) {
+	const op errorx.Op = "cache/GoRedisCluster.HSet"
 
 	res, err := r.client.HSet(ctx, key, field, value).Result()
 	if err != nil {
@@ -197,8 +219,8 @@ func (r *GoRedisClusterV8) HSet(ctx context.Context, key, field, value string) (
 }
 
 // Del deletes a key.
-func (r *GoRedisClusterV8) Del(ctx context.Context, key ...interface{}) (int64, error) {
-	const op errorx.Op = "cache/GoRedisClusterV8.Del"
+func (r *GoRedisCluster) Del(ctx context.Context, key ...interface{}) (int64, error) {
+	const op errorx.Op = "cache/GoRedisCluster.Del"
 
 	stdKeys := make([]string, len(key))
 	for i, v := range key {
@@ -221,6 +243,6 @@ func (r *GoRedisClusterV8) Del(ctx context.Context, key ...interface{}) (int64, 
 }
 
 // Close closes the client, releasing any open resources.
-func (r *GoRedisClusterV8) Close() {
+func (r *GoRedisCluster) Close() {
 	_ = r.client.Close()
 }

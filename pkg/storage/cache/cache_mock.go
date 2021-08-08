@@ -6,155 +6,49 @@ package cache
 
 import (
 	context "context"
-	gomock "github.com/golang/mock/gomock"
 	reflect "reflect"
 	time "time"
+
+	gomock "github.com/golang/mock/gomock"
 )
 
-// MockRedisItf is a mock of RedisItf interface
-type MockRedisItf struct {
+// MockRedisClientItf is a mock of RedisClientItf interface.
+type MockRedisClientItf struct {
 	ctrl     *gomock.Controller
-	recorder *MockRedisItfMockRecorder
+	recorder *MockRedisClientItfMockRecorder
 }
 
-// MockRedisItfMockRecorder is the mock recorder for MockRedisItf
-type MockRedisItfMockRecorder struct {
-	mock *MockRedisItf
+// MockRedisClientItfMockRecorder is the mock recorder for MockRedisClientItf.
+type MockRedisClientItfMockRecorder struct {
+	mock *MockRedisClientItf
 }
 
-// NewMockRedisItf creates a new mock instance
-func NewMockRedisItf(ctrl *gomock.Controller) *MockRedisItf {
-	mock := &MockRedisItf{ctrl: ctrl}
-	mock.recorder = &MockRedisItfMockRecorder{mock}
+// NewMockRedisClientItf creates a new mock instance.
+func NewMockRedisClientItf(ctrl *gomock.Controller) *MockRedisClientItf {
+	mock := &MockRedisClientItf{ctrl: ctrl}
+	mock.recorder = &MockRedisClientItfMockRecorder{mock}
 	return mock
 }
 
-// EXPECT returns an object that allows the caller to indicate expected use
-func (m *MockRedisItf) EXPECT() *MockRedisItfMockRecorder {
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockRedisClientItf) EXPECT() *MockRedisClientItfMockRecorder {
 	return m.recorder
 }
 
-// Get mocks base method
-func (m *MockRedisItf) Get(ctx context.Context, key string) ([]byte, error) {
+// Close mocks base method.
+func (m *MockRedisClientItf) Close() {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Get", ctx, key)
-	ret0, _ := ret[0].([]byte)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
+	m.ctrl.Call(m, "Close")
 }
 
-// Get indicates an expected call of Get
-func (mr *MockRedisItfMockRecorder) Get(ctx, key interface{}) *gomock.Call {
+// Close indicates an expected call of Close.
+func (mr *MockRedisClientItfMockRecorder) Close() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Get", reflect.TypeOf((*MockRedisItf)(nil).Get), ctx, key)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Close", reflect.TypeOf((*MockRedisClientItf)(nil).Close))
 }
 
-// SetEX mocks base method
-func (m *MockRedisItf) SetEX(ctx context.Context, key string, seconds int64, value string) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SetEX", ctx, key, seconds, value)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// SetEX indicates an expected call of SetEX
-func (mr *MockRedisItfMockRecorder) SetEX(ctx, key, seconds, value interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetEX", reflect.TypeOf((*MockRedisItf)(nil).SetEX), ctx, key, seconds, value)
-}
-
-// Exists mocks base method
-func (m *MockRedisItf) Exists(ctx context.Context, key string) (bool, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Exists", ctx, key)
-	ret0, _ := ret[0].(bool)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// Exists indicates an expected call of Exists
-func (mr *MockRedisItfMockRecorder) Exists(ctx, key interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Exists", reflect.TypeOf((*MockRedisItf)(nil).Exists), ctx, key)
-}
-
-// Expire mocks base method
-func (m *MockRedisItf) Expire(ctx context.Context, key string, seconds int64) (bool, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Expire", ctx, key, seconds)
-	ret0, _ := ret[0].(bool)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// Expire indicates an expected call of Expire
-func (mr *MockRedisItfMockRecorder) Expire(ctx, key, seconds interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Expire", reflect.TypeOf((*MockRedisItf)(nil).Expire), ctx, key, seconds)
-}
-
-// TTL mocks base method
-func (m *MockRedisItf) TTL(ctx context.Context, key string) (int64, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "TTL", ctx, key)
-	ret0, _ := ret[0].(int64)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// TTL indicates an expected call of TTL
-func (mr *MockRedisItfMockRecorder) TTL(ctx, key interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "TTL", reflect.TypeOf((*MockRedisItf)(nil).TTL), ctx, key)
-}
-
-// HGet mocks base method
-func (m *MockRedisItf) HGet(ctx context.Context, key, field string) ([]byte, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "HGet", ctx, key, field)
-	ret0, _ := ret[0].([]byte)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// HGet indicates an expected call of HGet
-func (mr *MockRedisItfMockRecorder) HGet(ctx, key, field interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "HGet", reflect.TypeOf((*MockRedisItf)(nil).HGet), ctx, key, field)
-}
-
-// HExists mocks base method
-func (m *MockRedisItf) HExists(ctx context.Context, key, field string) (bool, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "HExists", ctx, key, field)
-	ret0, _ := ret[0].(bool)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// HExists indicates an expected call of HExists
-func (mr *MockRedisItfMockRecorder) HExists(ctx, key, field interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "HExists", reflect.TypeOf((*MockRedisItf)(nil).HExists), ctx, key, field)
-}
-
-// HSet mocks base method
-func (m *MockRedisItf) HSet(ctx context.Context, key, field, value string) (bool, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "HSet", ctx, key, field, value)
-	ret0, _ := ret[0].(bool)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// HSet indicates an expected call of HSet
-func (mr *MockRedisItfMockRecorder) HSet(ctx, key, field, value interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "HSet", reflect.TypeOf((*MockRedisItf)(nil).HSet), ctx, key, field, value)
-}
-
-// Del mocks base method
-func (m *MockRedisItf) Del(ctx context.Context, key ...interface{}) (int64, error) {
+// Del mocks base method.
+func (m *MockRedisClientItf) Del(ctx context.Context, key ...interface{}) (int64, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx}
 	for _, a := range key {
@@ -166,50 +60,208 @@ func (m *MockRedisItf) Del(ctx context.Context, key ...interface{}) (int64, erro
 	return ret0, ret1
 }
 
-// Del indicates an expected call of Del
-func (mr *MockRedisItfMockRecorder) Del(ctx interface{}, key ...interface{}) *gomock.Call {
+// Del indicates an expected call of Del.
+func (mr *MockRedisClientItfMockRecorder) Del(ctx interface{}, key ...interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	varargs := append([]interface{}{ctx}, key...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Del", reflect.TypeOf((*MockRedisItf)(nil).Del), varargs...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Del", reflect.TypeOf((*MockRedisClientItf)(nil).Del), varargs...)
 }
 
-// Close mocks base method
-func (m *MockRedisItf) Close() {
+// Exists mocks base method.
+func (m *MockRedisClientItf) Exists(ctx context.Context, key string) (bool, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Exists", ctx, key)
+	ret0, _ := ret[0].(bool)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// Exists indicates an expected call of Exists.
+func (mr *MockRedisClientItfMockRecorder) Exists(ctx, key interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Exists", reflect.TypeOf((*MockRedisClientItf)(nil).Exists), ctx, key)
+}
+
+// Expire mocks base method.
+func (m *MockRedisClientItf) Expire(ctx context.Context, key string, seconds int64) (bool, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Expire", ctx, key, seconds)
+	ret0, _ := ret[0].(bool)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// Expire indicates an expected call of Expire.
+func (mr *MockRedisClientItfMockRecorder) Expire(ctx, key, seconds interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Expire", reflect.TypeOf((*MockRedisClientItf)(nil).Expire), ctx, key, seconds)
+}
+
+// Get mocks base method.
+func (m *MockRedisClientItf) Get(ctx context.Context, key string) ([]byte, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Get", ctx, key)
+	ret0, _ := ret[0].([]byte)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// Get indicates an expected call of Get.
+func (mr *MockRedisClientItfMockRecorder) Get(ctx, key interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Get", reflect.TypeOf((*MockRedisClientItf)(nil).Get), ctx, key)
+}
+
+// HExists mocks base method.
+func (m *MockRedisClientItf) HExists(ctx context.Context, key, field string) (bool, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "HExists", ctx, key, field)
+	ret0, _ := ret[0].(bool)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// HExists indicates an expected call of HExists.
+func (mr *MockRedisClientItfMockRecorder) HExists(ctx, key, field interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "HExists", reflect.TypeOf((*MockRedisClientItf)(nil).HExists), ctx, key, field)
+}
+
+// HGet mocks base method.
+func (m *MockRedisClientItf) HGet(ctx context.Context, key, field string) ([]byte, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "HGet", ctx, key, field)
+	ret0, _ := ret[0].([]byte)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// HGet indicates an expected call of HGet.
+func (mr *MockRedisClientItfMockRecorder) HGet(ctx, key, field interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "HGet", reflect.TypeOf((*MockRedisClientItf)(nil).HGet), ctx, key, field)
+}
+
+// HSet mocks base method.
+func (m *MockRedisClientItf) HSet(ctx context.Context, key, field, value string) (bool, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "HSet", ctx, key, field, value)
+	ret0, _ := ret[0].(bool)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// HSet indicates an expected call of HSet.
+func (mr *MockRedisClientItfMockRecorder) HSet(ctx, key, field, value interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "HSet", reflect.TypeOf((*MockRedisClientItf)(nil).HSet), ctx, key, field, value)
+}
+
+// SetEX mocks base method.
+func (m *MockRedisClientItf) SetEX(ctx context.Context, key string, seconds int64, value string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SetEX", ctx, key, seconds, value)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// SetEX indicates an expected call of SetEX.
+func (mr *MockRedisClientItfMockRecorder) SetEX(ctx, key, seconds, value interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetEX", reflect.TypeOf((*MockRedisClientItf)(nil).SetEX), ctx, key, seconds, value)
+}
+
+// SetNX mocks base method.
+func (m *MockRedisClientItf) SetNX(ctx context.Context, key string, seconds int64, value string) (bool, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SetNX", ctx, key, seconds, value)
+	ret0, _ := ret[0].(bool)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// SetNX indicates an expected call of SetNX.
+func (mr *MockRedisClientItfMockRecorder) SetNX(ctx, key, seconds, value interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetNX", reflect.TypeOf((*MockRedisClientItf)(nil).SetNX), ctx, key, seconds, value)
+}
+
+// TTL mocks base method.
+func (m *MockRedisClientItf) TTL(ctx context.Context, key string) (int64, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "TTL", ctx, key)
+	ret0, _ := ret[0].(int64)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// TTL indicates an expected call of TTL.
+func (mr *MockRedisClientItfMockRecorder) TTL(ctx, key interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "TTL", reflect.TypeOf((*MockRedisClientItf)(nil).TTL), ctx, key)
+}
+
+// MockRistrettoClientItf is a mock of RistrettoClientItf interface.
+type MockRistrettoClientItf struct {
+	ctrl     *gomock.Controller
+	recorder *MockRistrettoClientItfMockRecorder
+}
+
+// MockRistrettoClientItfMockRecorder is the mock recorder for MockRistrettoClientItf.
+type MockRistrettoClientItfMockRecorder struct {
+	mock *MockRistrettoClientItf
+}
+
+// NewMockRistrettoClientItf creates a new mock instance.
+func NewMockRistrettoClientItf(ctrl *gomock.Controller) *MockRistrettoClientItf {
+	mock := &MockRistrettoClientItf{ctrl: ctrl}
+	mock.recorder = &MockRistrettoClientItfMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockRistrettoClientItf) EXPECT() *MockRistrettoClientItfMockRecorder {
+	return m.recorder
+}
+
+// Clear mocks base method.
+func (m *MockRistrettoClientItf) Clear(ctx context.Context) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "Clear", ctx)
+}
+
+// Clear indicates an expected call of Clear.
+func (mr *MockRistrettoClientItfMockRecorder) Clear(ctx interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Clear", reflect.TypeOf((*MockRistrettoClientItf)(nil).Clear), ctx)
+}
+
+// Close mocks base method.
+func (m *MockRistrettoClientItf) Close() {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "Close")
 }
 
-// Close indicates an expected call of Close
-func (mr *MockRedisItfMockRecorder) Close() *gomock.Call {
+// Close indicates an expected call of Close.
+func (mr *MockRistrettoClientItfMockRecorder) Close() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Close", reflect.TypeOf((*MockRedisItf)(nil).Close))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Close", reflect.TypeOf((*MockRistrettoClientItf)(nil).Close))
 }
 
-// MockRistrettoItf is a mock of RistrettoItf interface
-type MockRistrettoItf struct {
-	ctrl     *gomock.Controller
-	recorder *MockRistrettoItfMockRecorder
+// Del mocks base method.
+func (m *MockRistrettoClientItf) Del(ctx context.Context, key string) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "Del", ctx, key)
 }
 
-// MockRistrettoItfMockRecorder is the mock recorder for MockRistrettoItf
-type MockRistrettoItfMockRecorder struct {
-	mock *MockRistrettoItf
+// Del indicates an expected call of Del.
+func (mr *MockRistrettoClientItfMockRecorder) Del(ctx, key interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Del", reflect.TypeOf((*MockRistrettoClientItf)(nil).Del), ctx, key)
 }
 
-// NewMockRistrettoItf creates a new mock instance
-func NewMockRistrettoItf(ctrl *gomock.Controller) *MockRistrettoItf {
-	mock := &MockRistrettoItf{ctrl: ctrl}
-	mock.recorder = &MockRistrettoItfMockRecorder{mock}
-	return mock
-}
-
-// EXPECT returns an object that allows the caller to indicate expected use
-func (m *MockRistrettoItf) EXPECT() *MockRistrettoItfMockRecorder {
-	return m.recorder
-}
-
-// Get mocks base method
-func (m *MockRistrettoItf) Get(ctx context.Context, key string) (interface{}, bool) {
+// Get mocks base method.
+func (m *MockRistrettoClientItf) Get(ctx context.Context, key string) (interface{}, bool) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Get", ctx, key)
 	ret0, _ := ret[0].(interface{})
@@ -217,72 +269,36 @@ func (m *MockRistrettoItf) Get(ctx context.Context, key string) (interface{}, bo
 	return ret0, ret1
 }
 
-// Get indicates an expected call of Get
-func (mr *MockRistrettoItfMockRecorder) Get(ctx, key interface{}) *gomock.Call {
+// Get indicates an expected call of Get.
+func (mr *MockRistrettoClientItfMockRecorder) Get(ctx, key interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Get", reflect.TypeOf((*MockRistrettoItf)(nil).Get), ctx, key)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Get", reflect.TypeOf((*MockRistrettoClientItf)(nil).Get), ctx, key)
 }
 
-// Set mocks base method
-func (m *MockRistrettoItf) Set(ctx context.Context, key string, value interface{}) bool {
+// Set mocks base method.
+func (m *MockRistrettoClientItf) Set(ctx context.Context, key string, value interface{}) bool {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Set", ctx, key, value)
 	ret0, _ := ret[0].(bool)
 	return ret0
 }
 
-// Set indicates an expected call of Set
-func (mr *MockRistrettoItfMockRecorder) Set(ctx, key, value interface{}) *gomock.Call {
+// Set indicates an expected call of Set.
+func (mr *MockRistrettoClientItfMockRecorder) Set(ctx, key, value interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Set", reflect.TypeOf((*MockRistrettoItf)(nil).Set), ctx, key, value)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Set", reflect.TypeOf((*MockRistrettoClientItf)(nil).Set), ctx, key, value)
 }
 
-// SetEX mocks base method
-func (m *MockRistrettoItf) SetEX(ctx context.Context, key string, value interface{}, TTL time.Duration) bool {
+// SetEX mocks base method.
+func (m *MockRistrettoClientItf) SetEX(ctx context.Context, key string, value interface{}, TTL time.Duration) bool {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "SetEX", ctx, key, value, TTL)
 	ret0, _ := ret[0].(bool)
 	return ret0
 }
 
-// SetEX indicates an expected call of SetEX
-func (mr *MockRistrettoItfMockRecorder) SetEX(ctx, key, value, TTL interface{}) *gomock.Call {
+// SetEX indicates an expected call of SetEX.
+func (mr *MockRistrettoClientItfMockRecorder) SetEX(ctx, key, value, TTL interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetEX", reflect.TypeOf((*MockRistrettoItf)(nil).SetEX), ctx, key, value, TTL)
-}
-
-// Del mocks base method
-func (m *MockRistrettoItf) Del(ctx context.Context, key string) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "Del", ctx, key)
-}
-
-// Del indicates an expected call of Del
-func (mr *MockRistrettoItfMockRecorder) Del(ctx, key interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Del", reflect.TypeOf((*MockRistrettoItf)(nil).Del), ctx, key)
-}
-
-// Clear mocks base method
-func (m *MockRistrettoItf) Clear(ctx context.Context) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "Clear", ctx)
-}
-
-// Clear indicates an expected call of Clear
-func (mr *MockRistrettoItfMockRecorder) Clear(ctx interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Clear", reflect.TypeOf((*MockRistrettoItf)(nil).Clear), ctx)
-}
-
-// Close mocks base method
-func (m *MockRistrettoItf) Close() {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "Close")
-}
-
-// Close indicates an expected call of Close
-func (mr *MockRistrettoItfMockRecorder) Close() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Close", reflect.TypeOf((*MockRistrettoItf)(nil).Close))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetEX", reflect.TypeOf((*MockRistrettoClientItf)(nil).SetEX), ctx, key, value, TTL)
 }

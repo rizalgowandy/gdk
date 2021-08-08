@@ -16,7 +16,7 @@ var (
 )
 
 // NewRedisMigrator return a redis migrator client.
-func NewRedisMigrator(origin, destination RedisItf) (*RedisMigrator, error) {
+func NewRedisMigrator(origin, destination RedisClientItf) (*RedisMigrator, error) {
 	onceNewRedisMigrator.Do(func() {
 		onceNewRedisMigratorRes = &RedisMigrator{
 			origin:      origin,
@@ -33,8 +33,8 @@ func NewRedisMigrator(origin, destination RedisItf) (*RedisMigrator, error) {
 // While the read commands will read from the new instance first,
 // and if the result is not found, it will attempt to read from the old one.
 type RedisMigrator struct {
-	origin      RedisItf
-	destination RedisItf
+	origin      RedisClientItf
+	destination RedisClientItf
 }
 
 // Get gets the value from redis in []byte form.
@@ -76,6 +76,36 @@ func (r *RedisMigrator) SetEX(
 
 	logx.DBG(ctx, logx.KV{tags.Key: key, tags.Client: "destination"}, string(op)+" success")
 	return nil
+}
+
+// SetNX sets a value to a key with specified timeouts.
+// SetNX returns false if the key exists.
+func (r *RedisMigrator) SetNX(
+	ctx context.Context,
+	key string,
+	seconds int64,
+	value string,
+) (bool, error) {
+	const op errorx.Op = "cache/RedisMigrator.SetNX"
+
+	// Read from old client.
+	res, err := r.destination.SetNX(ctx, key, seconds, value)
+	if err != nil {
+		return false, errorx.E(err, op)
+	}
+	if res {
+		logx.DBG(ctx, logx.KV{tags.Key: key, tags.Client: "origin"}, string(op)+" success")
+		return true, nil
+	}
+
+	// Create to new client.
+	res, err = r.destination.SetNX(ctx, key, seconds, value)
+	if err != nil {
+		return false, errorx.E(err, op)
+	}
+
+	logx.DBG(ctx, logx.KV{tags.Key: key, tags.Client: "destination"}, string(op)+" success")
+	return res, nil
 }
 
 // Exists checks whether the key exists in redis.
