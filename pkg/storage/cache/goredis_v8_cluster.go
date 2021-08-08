@@ -16,11 +16,6 @@ var (
 	onceNewGoRedisClusterV8Res *GoRedisClusterV8
 )
 
-// GoRedisClusterV8 returns a redis cluster client using go-redis library.
-type GoRedisClusterV8 struct {
-	client *redis.ClusterClient
-}
-
 // NewGoRedisClusterV8 returns a redis cluster client.
 func NewGoRedisClusterV8(config *RedisConfiguration) (*GoRedisClusterV8, error) {
 	onceNewGoRedisClusterV8.Do(func() {
@@ -60,6 +55,11 @@ func NewGoRedisClusterV8(config *RedisConfiguration) (*GoRedisClusterV8, error) 
 	})
 
 	return onceNewGoRedisClusterV8Res, nil
+}
+
+// GoRedisClusterV8 returns a redis cluster client using go-redis library.
+type GoRedisClusterV8 struct {
+	client *redis.ClusterClient
 }
 
 // Get gets the value from redis in []byte form.

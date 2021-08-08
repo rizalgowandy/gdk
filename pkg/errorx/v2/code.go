@@ -16,6 +16,17 @@ const (
 	CodeConfig         Code = "config"          // Wrong configuration.
 	CodeDB             Code = "db"              // Database operation error.
 	CodeCircuitBreaker Code = "circuit_breaker" // Circuit breaker error.
+	CodeMarshal        Code = "marshal"
+	CodeUnmarshal      Code = "unmarshal"
+	CodeConversion     Code = "conversion"
+	CodeEncryption     Code = "encryption"
+	CodeDecryption     Code = "decryption"
+	CodeDBScan         Code = "db_scan"
+	CodeDBExec         Code = "db_exec"
+	CodeDBQuery        Code = "db_query"
+	CodeDBBegin        Code = "db_begin"
+	CodeDBCommit       Code = "db_commit"
+	CodeDBRollback     Code = "db_rollback"
 )
 
 // GetCode returns the code of the root error, if available. Otherwise returns CodeInternal.

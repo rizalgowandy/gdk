@@ -8,6 +8,7 @@ require (
 	github.com/golang/mock v1.4.4
 	github.com/gomodule/redigo v1.8.4
 	github.com/gorilla/mux v1.8.0
+	github.com/jackc/pgx/v4 v4.13.0
 	github.com/json-iterator/go v1.1.10
 	github.com/labstack/echo/v4 v4.2.2
 	github.com/mattn/go-colorable v0.1.8 // indirect
@@ -19,9 +20,6 @@ require (
 	github.com/segmentio/ksuid v1.0.3
 	github.com/sirupsen/logrus v1.8.1
 	github.com/stretchr/testify v1.7.0
-	golang.org/x/crypto v0.0.0-20201221181555-eec23a3978ad
-	golang.org/x/net v0.0.0-20201224014010-6772e930b67b // indirect
-	golang.org/x/sys v0.0.0-20210403161142-5e06dd20ab57 // indirect
-	golang.org/x/text v0.3.4 // indirect
+	golang.org/x/crypto v0.0.0-20210711020723-a769d52b0f97
 	google.golang.org/grpc v1.37.0
 )

@@ -9,6 +9,7 @@ var (
 	panicKeyword           = []byte("src/runtime/panic.go")
 	companyKeyword         = []byte("github.com/peractio")
 	functionPackageKeyword = []byte("/github.com/peractio/gdk/pkg/stack/")
+	projectKeyword         = []byte("github.com/peractio/gdk")
 )
 
 // Trim removes unnecessary stack trace.
@@ -67,7 +68,7 @@ func ToArr(stack []byte) []string {
 		}
 
 		tmp := []byte(v)
-		idx := bytes.Index(tmp, companyKeyword)
+		idx := bytes.Index(tmp, projectKeyword)
 		if idx == -1 {
 			idx = 0
 		}
