@@ -14,6 +14,7 @@ import (
 	_ "github.com/peractio/gdk/pkg/httpx/mux"
 	_ "github.com/peractio/gdk/pkg/httpx/mux/middleware"
 	_ "github.com/peractio/gdk/pkg/logx"
+	_ "github.com/peractio/gdk/pkg/netx"
 	_ "github.com/peractio/gdk/pkg/password"
 	_ "github.com/peractio/gdk/pkg/regex"
 	_ "github.com/peractio/gdk/pkg/resync"
