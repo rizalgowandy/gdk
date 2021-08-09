@@ -1,4 +1,4 @@
-package filex
+package filepathx
 
 import (
 	"fmt"
@@ -8,8 +8,8 @@ import (
 
 const maxRecursive = 100
 
-// FindProjectAbsolutePath find absolute path that have go.mod in parent folder.
-func FindProjectAbsolutePath() (string, error) {
+// FindProjectAbs find absolute path that have go.mod in parent folder.
+func FindProjectAbs() (string, error) {
 	p, err := filepath.Abs(".")
 	if err != nil {
 		return "", fmt.Errorf(
@@ -17,10 +17,10 @@ func FindProjectAbsolutePath() (string, error) {
 		)
 	}
 
-	return findProjectAbsolutePath(p, 0)
+	return findProjectAbs(p, 0)
 }
 
-func findProjectAbsolutePath(currentPath string, recursive int) (string, error) {
+func findProjectAbs(currentPath string, recursive int) (string, error) {
 	// Prevent too much recursive that can create deadlock.
 	if recursive > maxRecursive {
 		return "", fmt.Errorf(
@@ -61,5 +61,5 @@ func findProjectAbsolutePath(currentPath string, recursive int) (string, error) 
 		return "", fmt.Errorf("can't find go.mod in parent ancestor: stuck in %s", newPath)
 	}
 
-	return findProjectAbsolutePath(newPath, recursive+1)
+	return findProjectAbs(newPath, recursive+1)
 }

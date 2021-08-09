@@ -1,4 +1,4 @@
-package filex
+package filepathx
 
 import (
 	"testing"
@@ -18,7 +18,7 @@ func TestFindGoMod(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := FindProjectAbsolutePath()
+			got, err := FindProjectAbs()
 			if (err != nil) != tt.wantErr {
 				t.Errorf("FindGoMod() error = %v, wantErr %v", err, tt.wantErr)
 				return
