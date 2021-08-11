@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"io"
 
-	"github.com/peractio/gdk/pkg/resync"
+	"github.com/peractio/gdk/pkg/syncx"
 )
 
 //go:generate mockgen -destination=jsonx_mock.go -package=jsonx -source=jsonx.go
@@ -28,7 +28,7 @@ type DecoderItf interface {
 }
 
 var (
-	onceNew    resync.Once
+	onceNew    syncx.Once
 	onceNewRes OperatorItf
 )
 

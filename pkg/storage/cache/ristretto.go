@@ -6,14 +6,14 @@ import (
 
 	"github.com/dgraph-io/ristretto"
 	"github.com/peractio/gdk/pkg/errorx/v2"
-	"github.com/peractio/gdk/pkg/resync"
+	"github.com/peractio/gdk/pkg/syncx"
 )
 
 var (
-	onceNewRistretto    resync.Once
+	onceNewRistretto    syncx.Once
 	onceNewRistrettoRes *Ristretto
 	onceNewRistrettoErr error
-	onceRistrettoClose  resync.Once
+	onceRistrettoClose  syncx.Once
 )
 
 // NewRistretto return a redis client.

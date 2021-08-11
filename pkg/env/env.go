@@ -3,7 +3,7 @@ package env
 import (
 	"os"
 
-	"github.com/peractio/gdk/pkg/resync"
+	"github.com/peractio/gdk/pkg/syncx"
 )
 
 // List available environments.
@@ -17,7 +17,7 @@ const (
 
 // Singleton pattern to prevent reading os more than once.
 var (
-	once       resync.Once
+	once       syncx.Once
 	currentEnv string
 )
 
