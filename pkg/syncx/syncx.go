@@ -1,4 +1,4 @@
-package resync
+package syncx
 
 import (
 	"sync"

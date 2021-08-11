@@ -5,12 +5,12 @@ import (
 
 	"github.com/peractio/gdk/pkg/errorx/v2"
 	"github.com/peractio/gdk/pkg/logx"
-	"github.com/peractio/gdk/pkg/resync"
+	"github.com/peractio/gdk/pkg/syncx"
 	"github.com/peractio/gdk/pkg/tags"
 )
 
 var (
-	onceNewRedisMigrator    resync.Once
+	onceNewRedisMigrator    syncx.Once
 	onceNewRedisMigratorRes *RedisMigrator
 	onceNewRedisMigratorErr error
 )

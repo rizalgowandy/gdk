@@ -1,13 +1,13 @@
 package build
 
 import (
-	"github.com/peractio/gdk/pkg/resync"
+	"github.com/peractio/gdk/pkg/syncx"
 	"github.com/peractio/gdk/pkg/tags"
 )
 
 var (
 	md          *Metadata
-	onceInfo    resync.Once
+	onceInfo    syncx.Once
 	onceInfoRes map[string]string
 )
 

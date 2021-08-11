@@ -7,11 +7,11 @@ import (
 
 	"github.com/gomodule/redigo/redis"
 	"github.com/peractio/gdk/pkg/errorx/v2"
-	"github.com/peractio/gdk/pkg/resync"
+	"github.com/peractio/gdk/pkg/syncx"
 )
 
 var (
-	onceNewRedigo    resync.Once
+	onceNewRedigo    syncx.Once
 	onceNewRedigoRes *Redigo
 	onceNewRedigoErr error
 )

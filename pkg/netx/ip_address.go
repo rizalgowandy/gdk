@@ -2,52 +2,68 @@ package netx
 
 import (
 	"net"
+
+	"github.com/peractio/gdk/pkg/syncx"
+)
+
+var (
+	onceGetIPv4    syncx.Once
+	onceGEtIPv4Res string
+
+	onceGetIPv16    syncx.Once
+	onceGEtIPv16Res string
 )
 
 func GetIPv4() string {
-	addresses, err := net.InterfaceAddrs()
-	if err != nil {
-		return err.Error()
-	}
-
-	for _, address := range addresses {
-		current, ok := address.(*net.IPNet)
-		if !ok {
-			continue
+	onceGetIPv4.Do(func() {
+		addresses, err := net.InterfaceAddrs()
+		if err != nil {
+			onceGEtIPv4Res = err.Error()
+			return
 		}
 
-		if current.IP.IsLoopback() {
-			continue
+		for _, address := range addresses {
+			current, ok := address.(*net.IPNet)
+			if !ok {
+				continue
+			}
+
+			if current.IP.IsLoopback() || current.IP.To4() == nil {
+				continue
+			}
+
+			onceGEtIPv4Res = current.IP.To4().String()
+			return
 		}
 
-		if current.IP.To4() != nil {
-			return current.IP.To4().String()
-		}
-	}
-
-	return "ip v4: unavailable"
+		onceGEtIPv4Res = "ip v4: unavailable"
+	})
+	return onceGEtIPv4Res
 }
 
 func GetIPv16() string {
-	addresses, err := net.InterfaceAddrs()
-	if err != nil {
-		return err.Error()
-	}
-
-	for _, address := range addresses {
-		current, ok := address.(*net.IPNet)
-		if !ok {
-			continue
+	onceGetIPv16.Do(func() {
+		addresses, err := net.InterfaceAddrs()
+		if err != nil {
+			onceGEtIPv16Res = err.Error()
+			return
 		}
 
-		if current.IP.IsLoopback() {
-			continue
+		for _, address := range addresses {
+			current, ok := address.(*net.IPNet)
+			if !ok {
+				continue
+			}
+
+			if current.IP.IsLoopback() || current.IP.To16() == nil {
+				continue
+			}
+
+			onceGEtIPv16Res = current.IP.To16().String()
+			return
 		}
 
-		if current.IP.To16() != nil {
-			return current.IP.To16().String()
-		}
-	}
-
-	return "ip v16: unavailable"
+		onceGEtIPv16Res = "ip v16: unavailable"
+	})
+	return onceGEtIPv16Res
 }

@@ -8,14 +8,14 @@ import (
 	"github.com/peractio/gdk/pkg/env"
 	"github.com/peractio/gdk/pkg/errorx/v2"
 	"github.com/peractio/gdk/pkg/logx"
-	"github.com/peractio/gdk/pkg/resync"
+	"github.com/peractio/gdk/pkg/syncx"
 )
 
 var (
-	onceNewPGXClient      resync.Once
+	onceNewPGXClient      syncx.Once
 	onceNewPGXClientRes   *PGXClient
 	onceNewPGXClientErr   error
-	onceNewPGXClientClose resync.Once
+	onceNewPGXClientClose syncx.Once
 )
 
 // NewPGXClient creates a postgre client using pgx.
