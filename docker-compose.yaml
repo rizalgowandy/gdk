@@ -1,0 +1,59 @@
+version: "3.9"
+services:
+  postgres:
+    image: postgres:10.6
+    container_name: gdk-postgres
+    # volumes:
+      # - ./schema:/docker-entrypoint-initdb.d
+      #- gdk_database:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=unicorn_user
+      - POSTGRES_PASSWORD=magical_password
+      - POSTGRES_DB=tokopedia-subscription
+    tty: true
+    restart: unless-stopped
+
+  redis_cluster: # Mimic ElastiCache with Redis Cluster Mode On
+    image: grokzen/redis-cluster:5.0.12
+    container_name: gdk-redis_cluster
+    environment:
+      - IP=0.0.0.0
+    ports:
+      - "7000-7005:7000-7005"
+    restart: unless-stopped
+
+  nsqlookupd:
+    image: nsqio/nsq:v1.2.0
+    container_name: gdk-nsqlookupd
+    command: /nsqlookupd
+    ports:
+      - "4160:4160"
+      - "4161:4161"
+    restart: unless-stopped
+
+  nsqd:
+    image: nsqio/nsq:v1.2.0
+    container_name: gdk-nsqd
+    command: /nsqd --broadcast-address=nsqd --lookupd-tcp-address=nsqlookupd:4160
+    depends_on:
+      - nsqlookupd
+    ports:
+      - "4150:4150"
+      - "4151:4151"
+    restart: unless-stopped
+
+  nsqadmin:
+    image: nsqio/nsq:v1.2.0
+    container_name: gdk-nsqadmin
+    command: /nsqadmin --lookupd-http-address=nsqlookupd:4161
+    depends_on:
+      - nsqlookupd
+    ports:
+      - "4171:4171"
+    restart: unless-stopped
+
+#volumes:
+#  gdk_database:
+#    driver: local

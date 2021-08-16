@@ -15,6 +15,7 @@ require (
 	github.com/mattn/go-colorable v0.1.8 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.1 // indirect
+	github.com/nsqio/go-nsq v1.0.8
 	github.com/pingcap/go-ycsb v0.0.0-20210129115622-04d8656123e4
 	github.com/robfig/cron/v3 v3.0.1
 	github.com/rs/zerolog v1.21.0
