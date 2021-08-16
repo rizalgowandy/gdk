@@ -17,13 +17,14 @@ func Logger() cronx.Interceptor {
 		err := handler(ctx, job)
 		if err != nil {
 			logx.ERR(ctx, err, job.Name)
-		} else {
-			logx.DBG(
-				ctx,
-				logx.KV{tags.Latency: time.Since(start).String()},
-				fmt.Sprintf("Operation cron %s success", job.Name),
-			)
+			return err
 		}
+
+		logx.DBG(
+			ctx,
+			logx.KV{tags.Latency: time.Since(start).String()},
+			fmt.Sprintf("Operation cron %s success", job.Name),
+		)
 		return nil
 	}
 }

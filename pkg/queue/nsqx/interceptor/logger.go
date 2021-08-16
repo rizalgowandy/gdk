@@ -20,12 +20,13 @@ func Logger(
 	err := handler(ctx, consumer)
 	if err != nil {
 		logx.ERR(ctx, err, consumer.Method)
-	} else {
-		logx.DBG(
-			ctx,
-			logx.KV{tags.Latency: time.Since(start).String()},
-			fmt.Sprintf("Operation consumer %s success", consumer.Method),
-		)
+		return err
 	}
-	return err
+
+	logx.DBG(
+		ctx,
+		logx.KV{tags.Latency: time.Since(start).String()},
+		fmt.Sprintf("Operation consumer %s success", consumer.Method),
+	)
+	return nil
 }
