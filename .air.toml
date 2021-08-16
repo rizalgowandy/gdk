@@ -7,7 +7,7 @@ tmp_dir = "bin"
 
 [build]
 # Just plain old shell command. You could use `make` as well.
-cmd = "go build -o ./bin/main ./pkg/cronx/example"
+cmd = "go build -o ./bin/main ./pkg/cronx/example/with-library-server"
 # Binary file yields from `cmd`.
 bin = "bin/main"
 # Customize binary.

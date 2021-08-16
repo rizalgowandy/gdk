@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"errors"
+	"net/http"
 	"time"
 
 	"github.com/labstack/echo/v4"
@@ -10,6 +11,7 @@ import (
 	"github.com/peractio/gdk/pkg/converter"
 	"github.com/peractio/gdk/pkg/cronx"
 	"github.com/peractio/gdk/pkg/cronx/interceptor"
+	"github.com/peractio/gdk/pkg/cronx/page"
 	"github.com/peractio/gdk/pkg/errorx/v2"
 	"github.com/peractio/gdk/pkg/logx"
 )
@@ -57,23 +59,13 @@ func (Subscription) Run(ctx context.Context) error {
 
 func main() {
 	// Setup errorx and logx.
-	const serviceName = "example"
+	const serviceName = "without-library-server"
 	errorx.ServiceName = serviceName
 	_, _ = logx.New(&logx.Config{
 		Debug:    true,
 		AppName:  serviceName,
 		Filename: "",
 	})
-
-	// ===========================
-	// With Default Configuration
-	// ===========================
-	// Create a cron controller with default config.
-	// - running on port :8998
-	// - location is time.Local
-	// - without any middleware
-	// cronx.Default()
-	// defer cronx.Stop()
 
 	// ===========================
 	// With Custom Configuration
@@ -90,7 +82,7 @@ func main() {
 
 	// Create a cron with custom config and middleware.
 	cronx.New(cronx.Config{
-		Address: ":8000", // Determines if we want the library to serve the frontend.
+		Address: "", // Disable built-in server frontend.
 		Location: func() *time.Location { // Change timezone to Jakarta.
 			jakarta, err := time.LoadLocation("Asia/Jakarta")
 			if err != nil {
@@ -110,6 +102,21 @@ func main() {
 	// ===========================
 	e := echo.New()
 	e.Use(middleware.Recover())
+	e.Use(middleware.CORS())
+	e.Use(middleware.RemoveTrailingSlash())
+
+	// Register routes because we disable the default built-in server frontend.
+	e.GET("/", func(c echo.Context) error {
+		return c.JSON(http.StatusOK, cronx.GetInfo())
+	})
+	e.GET("/jobs", func(c echo.Context) error {
+		index, _ := page.GetStatusTemplate()
+		return index.Execute(c.Response().Writer, cronx.GetStatusData())
+	})
+	e.GET("/api/jobs", func(c echo.Context) error {
+		return c.JSON(http.StatusOK, cronx.GetStatusJSON())
+	})
+
 	e.Logger.Fatal(e.Start(":8080"))
 }
 

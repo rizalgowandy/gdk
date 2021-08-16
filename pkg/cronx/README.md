@@ -1,5 +1,5 @@
 # Cronx
-Cronx is a wrapper for _robfig/cron_.
+Cronx is a wrapper for [robfig/cron](https://github.com/robfig/cron).
 It includes a live monitoring of current schedule and state of active jobs that can be outputted as JSON or HTML template.
 
 ## Available Status
@@ -220,6 +220,7 @@ r.GET("/custom-path", func(c *gin.Context) {
     })
 })
 ```
+Here's another [example](example/without-library-server/main.go).
 
 ### Can I still get the built-in template if I use my own router?
 Yes, you can.
@@ -230,11 +231,12 @@ index, _ := page.GetStatusTemplate()
 // An example using echo as the router.
 e := echo.New()
 index, _ := page.GetStatusTemplate()
-e.GET("jobs/html", func(context echo.Context) error {
+e.GET("jobs", func(context echo.Context) error {
     // Serve the template to the writer and pass the current status data.
     return index.Execute(context.Response().Writer, cronx.GetStatusData())
 })
 ```
+Here's another [example](example/without-library-server/main.go).
 
 ### Server is located in the US, but my user is in Jakarta, can I change the cron timezone?
 Yes, you can.
@@ -257,7 +259,7 @@ cronx.New(cronx.Config{
 ```
 
 ### My job requires certain information like current wave number, how can I get this information?
-This kind of information is stored inside metadata, which stored automatically inside `context`. 
+This kind of information is stored inside metadata, which stored automatically inside `context`.
 ```go
 type subscription struct{}
 
