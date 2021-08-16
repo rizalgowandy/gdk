@@ -20,7 +20,7 @@ type Consumer struct {
 func (c *Consumer) HandleMessage(message *nsq.Message) error {
 	ctx := context.Background()
 
-	err := c.ctrl.Interceptor(ctx, c, func(ctx context.Context, consumer *Consumer) error {
+	err := c.ctrl.interceptor(ctx, c, func(ctx context.Context, consumer *Consumer) error {
 		return consumer.inner.Handle(ctx, message)
 	})
 

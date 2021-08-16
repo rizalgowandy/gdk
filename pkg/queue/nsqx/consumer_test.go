@@ -29,7 +29,7 @@ func TestConsumer_HandleMessage(t *testing.T) {
 			name: "Success",
 			fields: fields{
 				ctrl: &ConsumerController{
-					Interceptor: ConsumerChain(),
+					interceptor: ConsumerChain(),
 				},
 				topic:   "Topic",
 				channel: "Channel",

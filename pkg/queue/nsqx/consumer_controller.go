@@ -13,10 +13,8 @@ import (
 const TimeoutDuration = time.Second * 60
 
 type ConsumerController struct {
-	Consumers []*nsq.Consumer
-
-	// Interceptor holds middleware that will be executed before current consumer operation.
-	Interceptor ConsumerInterceptor
+	consumers   []*nsq.Consumer
+	interceptor ConsumerInterceptor
 }
 
 type ConsumerParam struct {
@@ -28,8 +26,8 @@ type ConsumerParam struct {
 
 func NewConsumerController(interceptors ...ConsumerInterceptor) *ConsumerController {
 	return &ConsumerController{
-		Consumers:   nil,
-		Interceptor: ConsumerChain(interceptors...),
+		consumers:   nil,
+		interceptor: ConsumerChain(interceptors...),
 	}
 }
 
@@ -69,38 +67,36 @@ func (c *ConsumerController) AddConsumers(params []ConsumerParam) error {
 			return errorx.E(err, op)
 		}
 
-		c.Consumers = append(c.Consumers, consumer)
+		c.consumers = append(c.consumers, consumer)
 	}
 
 	return nil
 }
 
 func (c *ConsumerController) Serve() {
-	<-func() <-chan struct{} {
-		finish := make(chan struct{})
-		go func() {
-			quit := make(chan os.Signal, 1)
-			signal.Notify(quit, os.Interrupt)
-			<-quit
+	finish := make(chan struct{})
+	go func() {
+		quit := make(chan os.Signal, 1)
+		signal.Notify(quit, os.Interrupt)
+		<-quit
 
-			var wg sync.WaitGroup
-			for _, v := range c.Consumers {
-				wg.Add(1)
-				con := v
+		var wg sync.WaitGroup
+		for _, v := range c.consumers {
+			wg.Add(1)
+			con := v
 
-				go func() {
-					defer wg.Done()
-					con.Stop()
+			go func() {
+				defer wg.Done()
+				con.Stop()
 
-					select {
-					case <-con.StopChan:
-					case <-time.After(TimeoutDuration):
-					}
-				}()
-			}
-			wg.Wait()
-			close(finish)
-		}()
-		return finish
+				select {
+				case <-con.StopChan:
+				case <-time.After(TimeoutDuration):
+				}
+			}()
+		}
+		wg.Wait()
+		close(finish)
 	}()
+	<-finish
 }

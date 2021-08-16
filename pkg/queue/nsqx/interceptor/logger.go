@@ -2,10 +2,12 @@ package interceptor
 
 import (
 	"context"
+	"fmt"
 	"time"
 
+	"github.com/peractio/gdk/pkg/logx"
 	"github.com/peractio/gdk/pkg/queue/nsqx"
-	"github.com/rs/zerolog/log"
+	"github.com/peractio/gdk/pkg/tags"
 )
 
 // Logger is a middleware that logs the current result from request.
@@ -14,30 +16,16 @@ func Logger(
 	consumer *nsqx.Consumer,
 	handler nsqx.ConsumerHandler,
 ) error {
-	now := time.Now()
-	log.Info().
-		Str("topic", consumer.Topic).
-		Str("channel", consumer.Channel).
-		Str("start_time", now.String()).
-		Msg("starting a consumer")
-
+	start := time.Now()
 	err := handler(ctx, consumer)
 	if err != nil {
-		log.Error().
-			Str("topic", consumer.Topic).
-			Str("channel", consumer.Channel).
-			Str("latency", time.Since(now).String()).
-			Str("finish_time", time.Now().String()).
-			Err(err).
-			Msg("consumer has finished with error")
-		return err
+		logx.ERR(ctx, err, consumer.Method)
+	} else {
+		logx.DBG(
+			ctx,
+			logx.KV{tags.Latency: time.Since(start).String()},
+			fmt.Sprintf("Operation consumer %s success", consumer.Method),
+		)
 	}
-
-	log.Info().
-		Str("topic", consumer.Topic).
-		Str("channel", consumer.Channel).
-		Str("latency", time.Since(now).String()).
-		Str("finish_time", time.Now().String()).
-		Msg("consumer has finished")
-	return nil
+	return err
 }

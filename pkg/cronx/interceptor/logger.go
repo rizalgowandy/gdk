@@ -20,7 +20,7 @@ func Logger() cronx.Interceptor {
 		} else {
 			logx.DBG(
 				ctx,
-				map[string]string{tags.Latency: time.Since(start).String()},
+				logx.KV{tags.Latency: time.Since(start).String()},
 				fmt.Sprintf("Operation cron %s success", job.Name),
 			)
 		}

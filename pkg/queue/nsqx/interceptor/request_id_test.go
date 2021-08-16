@@ -5,11 +5,10 @@ import (
 	"testing"
 
 	"github.com/peractio/gdk/pkg/errorx/v2"
-	"github.com/peractio/gdk/pkg/logx"
 	"github.com/peractio/gdk/pkg/queue/nsqx"
 )
 
-func TestLogger(t *testing.T) {
+func TestRequestID(t *testing.T) {
 	type args struct {
 		ctx      context.Context
 		consumer *nsqx.Consumer
@@ -26,7 +25,7 @@ func TestLogger(t *testing.T) {
 				ctx:      context.Background(),
 				consumer: &nsqx.Consumer{},
 				handler: func(ctx context.Context, consumer *nsqx.Consumer) error {
-					return errorx.New("error")
+					return errorx.E("error")
 				},
 			},
 			wantErr: true,
@@ -45,14 +44,8 @@ func TestLogger(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			_, _ = logx.New(&logx.Config{
-				Debug:    true,
-				AppName:  "unit_test",
-				Filename: "",
-			})
-
-			if err := Logger(tt.args.ctx, tt.args.consumer, tt.args.handler); (err != nil) != tt.wantErr {
-				t.Errorf("Logger() error = %v, wantErr %v", err, tt.wantErr)
+			if err := RequestID(tt.args.ctx, tt.args.consumer, tt.args.handler); (err != nil) != tt.wantErr {
+				t.Errorf("RequestID() error = %v, wantErr %v", err, tt.wantErr)
 			}
 		})
 	}
