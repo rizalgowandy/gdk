@@ -469,3 +469,36 @@ func TestGetEntry(t *testing.T) {
 		})
 	}
 }
+
+func TestGetInfo(t *testing.T) {
+	tests := []struct {
+		name string
+		mock func()
+		want bool
+	}{
+		{
+			name: "Uninitialized",
+			mock: func() {
+				commandController = nil
+			},
+		},
+		{
+			name: "Success without any job",
+			mock: func() {
+				Default()
+			},
+			want: true,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			tt.mock()
+			got := GetInfo()
+			if tt.want {
+				assert.NotNil(t, got)
+			} else {
+				assert.Nil(t, got)
+			}
+		})
+	}
+}

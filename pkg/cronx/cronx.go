@@ -173,6 +173,15 @@ func GetStatusJSON() map[string]interface{} {
 	return commandController.StatusJSON()
 }
 
+// GetInfo returns command controller basic information.
+func GetInfo() map[string]interface{} {
+	if commandController == nil {
+		return nil
+	}
+
+	return commandController.Info()
+}
+
 // Func is a type to allow callers to wrap a raw func.
 // Example:
 //	cronx.Schedule("@every 5m", cronx.Func(myFunc))
