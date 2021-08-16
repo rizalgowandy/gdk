@@ -19,6 +19,7 @@ import (
 	_ "github.com/peractio/gdk/pkg/logx"
 	_ "github.com/peractio/gdk/pkg/netx"
 	_ "github.com/peractio/gdk/pkg/password"
+	_ "github.com/peractio/gdk/pkg/queue/nsqx"
 	_ "github.com/peractio/gdk/pkg/regex"
 	_ "github.com/peractio/gdk/pkg/stack"
 	_ "github.com/peractio/gdk/pkg/storage/cache"
