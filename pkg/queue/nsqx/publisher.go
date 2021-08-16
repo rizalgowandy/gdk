@@ -18,13 +18,13 @@ var (
 )
 
 type Publisher struct {
-	config *Configuration
+	config *PublisherConfiguration
 	client *nsq.Producer
 	mux    sync.Mutex
 }
 
 // NewPublisher creates a client to publish message to nsq.
-func NewPublisher(config *Configuration) (*Publisher, error) {
+func NewPublisher(config *PublisherConfiguration) (*Publisher, error) {
 	onceNewPublisher.Do(func() {
 		const op errorx.Op = "nsqx.NewPublisher"
 
@@ -106,7 +106,7 @@ func (p *Publisher) DeferredPublish(
 func (p *Publisher) publish(topic string, data []byte) error {
 	var err error
 
-	for i := 1; i <= p.config.MaxRetry; i++ {
+	for i := 1; i <= p.config.MaxAttempt; i++ {
 		err = func() error {
 			p.mux.Lock()
 			err = p.client.Publish(topic, data)
@@ -120,7 +120,7 @@ func (p *Publisher) publish(topic string, data []byte) error {
 		}
 
 		// Max retry achieved.
-		if i == p.config.MaxRetry {
+		if i == p.config.MaxAttempt {
 			break
 		}
 
@@ -142,7 +142,7 @@ func (p *Publisher) publish(topic string, data []byte) error {
 func (p *Publisher) deferredPublish(topic string, delay time.Duration, data []byte) error {
 	var err error
 
-	for i := 1; i <= p.config.MaxRetry; i++ {
+	for i := 1; i <= p.config.MaxAttempt; i++ {
 		err = func() error {
 			p.mux.Lock()
 			err = p.client.DeferredPublish(topic, delay, data)
@@ -156,7 +156,7 @@ func (p *Publisher) deferredPublish(topic string, delay time.Duration, data []by
 		}
 
 		// Max retry achieved.
-		if i == p.config.MaxRetry {
+		if i == p.config.MaxAttempt {
 			break
 		}
 
