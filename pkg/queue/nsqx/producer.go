@@ -12,45 +12,45 @@ import (
 )
 
 var (
-	onceNewPublisher    syncx.Once
-	onceNewPublisherRes *Publisher
-	onceNewPublisherErr error
+	onceNewProducer    syncx.Once
+	onceNewProducerRes *Producer
+	onceNewProducerErr error
 )
 
-type Publisher struct {
-	config *PublisherConfiguration
+type Producer struct {
+	config *ProducerConfiguration
 	client *nsq.Producer
 	mux    sync.Mutex
 }
 
-// NewPublisher creates a client to publish message to nsq.
-func NewPublisher(config *PublisherConfiguration) (*Publisher, error) {
-	onceNewPublisher.Do(func() {
-		const op errorx.Op = "nsqx.NewPublisher"
+// NewProducer creates a client to publish message to nsq.
+func NewProducer(config *ProducerConfiguration) (*Producer, error) {
+	onceNewProducer.Do(func() {
+		const op errorx.Op = "nsqx.NewProducer"
 
 		if err := config.Validate(); err != nil {
-			onceNewPublisherErr = errorx.E(err, op)
+			onceNewProducerErr = errorx.E(err, op)
 			return
 		}
 
 		client, err := nsq.NewProducer(config.DaemonAddress, config.NSQ)
 		if err != nil {
-			onceNewPublisherErr = errorx.E(err, op)
+			onceNewProducerErr = errorx.E(err, op)
 			return
 		}
 
-		onceNewPublisherRes = &Publisher{
+		onceNewProducerRes = &Producer{
 			config: config,
 			client: client,
 		}
 	})
 
-	return onceNewPublisherRes, onceNewPublisherErr
+	return onceNewProducerRes, onceNewProducerErr
 }
 
 // Publish sends data to nsq.
-func (p *Publisher) Publish(_ context.Context, topic string, data interface{}) error {
-	const op errorx.Op = "nsqx/Publisher.Publish"
+func (p *Producer) Publish(_ context.Context, topic string, data interface{}) error {
+	const op errorx.Op = "nsqx/Producer.Publish"
 
 	if topic == "" {
 		return errorx.E("topic cannot be empty", op)
@@ -74,13 +74,13 @@ func (p *Publisher) Publish(_ context.Context, topic string, data interface{}) e
 }
 
 // DeferredPublish sends data to nsq after certain delay.
-func (p *Publisher) DeferredPublish(
+func (p *Producer) DeferredPublish(
 	_ context.Context,
 	topic string,
 	delay time.Duration,
 	data interface{},
 ) error {
-	const op errorx.Op = "nsqx/Publisher.DeferredPublish"
+	const op errorx.Op = "nsqx/Producer.DeferredPublish"
 
 	if topic == "" {
 		return errorx.E("topic cannot be empty", op)
@@ -103,7 +103,7 @@ func (p *Publisher) DeferredPublish(
 	return nil
 }
 
-func (p *Publisher) publish(topic string, data []byte) error {
+func (p *Producer) publish(topic string, data []byte) error {
 	var err error
 
 	for i := 1; i <= p.config.MaxAttempt; i++ {
@@ -139,7 +139,7 @@ func (p *Publisher) publish(topic string, data []byte) error {
 	return err
 }
 
-func (p *Publisher) deferredPublish(topic string, delay time.Duration, data []byte) error {
+func (p *Producer) deferredPublish(topic string, delay time.Duration, data []byte) error {
 	var err error
 
 	for i := 1; i <= p.config.MaxAttempt; i++ {

@@ -31,7 +31,6 @@ func TestNewConsumerController(t *testing.T) {
 
 func TestConsumerController_AddConsumers(t *testing.T) {
 	type fields struct {
-		Commander   *ConsumerCommander
 		Interceptor ConsumerInterceptor
 	}
 	type args struct {
@@ -46,7 +45,6 @@ func TestConsumerController_AddConsumers(t *testing.T) {
 		{
 			name: "Error missing consumer",
 			fields: fields{
-				Commander:   NewConsumerCommander(),
 				Interceptor: nil,
 			},
 			args: args{
@@ -64,7 +62,6 @@ func TestConsumerController_AddConsumers(t *testing.T) {
 		{
 			name: "Success",
 			fields: fields{
-				Commander:   NewConsumerCommander(),
 				Interceptor: nil,
 			},
 			args: args{
@@ -97,7 +94,6 @@ func TestConsumerController_AddConsumers(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			c := &ConsumerController{
-				Commander:   tt.fields.Commander,
 				Interceptor: tt.fields.Interceptor,
 			}
 			if err := c.AddConsumers(tt.args.params); (err != nil) != tt.wantErr {

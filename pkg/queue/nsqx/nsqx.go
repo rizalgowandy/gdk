@@ -9,8 +9,8 @@ import (
 
 //go:generate mockgen -destination=nsqx_mock.go -package=nsqx -source=nsqx.go
 
-// PublisherItf is publisher interface to publish nsq message.
-type PublisherItf interface {
+// ProducerItf is producer interface to publish nsq message.
+type ProducerItf interface {
 	// Publish sends data to nsq.
 	// Data should be json bytes but the struct or map.
 	Publish(ctx context.Context, topic string, data interface{}) error

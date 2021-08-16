@@ -54,7 +54,7 @@ const (
 	Build = "build"
 	// Ops describes list of internal operations that is being called.
 	Ops = "ops"
-	// Topic describes consumer or publisher topic name.
+	// Topic describes consumer or producer topic name.
 	Topic = "topic"
 	// Channel describes consumer channel name.
 	Channel = "channel"

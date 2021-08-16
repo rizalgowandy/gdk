@@ -5,13 +5,13 @@ import (
 	"github.com/peractio/gdk/pkg/errorx/v2"
 )
 
-type PublisherConfiguration struct {
+type ProducerConfiguration struct {
 	NSQ           *nsq.Config
 	DaemonAddress string
 	MaxAttempt    int
 }
 
-func (p *PublisherConfiguration) Validate() error {
+func (p *ProducerConfiguration) Validate() error {
 	if p.NSQ == nil {
 		p.NSQ = nsq.NewConfig()
 	}

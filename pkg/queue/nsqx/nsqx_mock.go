@@ -10,33 +10,34 @@ import (
 	time "time"
 
 	gomock "github.com/golang/mock/gomock"
+	nsq "github.com/nsqio/go-nsq"
 )
 
-// MockPublisherItf is a mock of PublisherItf interface.
-type MockPublisherItf struct {
+// MockProducerItf is a mock of ProducerItf interface.
+type MockProducerItf struct {
 	ctrl     *gomock.Controller
-	recorder *MockPublisherItfMockRecorder
+	recorder *MockProducerItfMockRecorder
 }
 
-// MockPublisherItfMockRecorder is the mock recorder for MockPublisherItf.
-type MockPublisherItfMockRecorder struct {
-	mock *MockPublisherItf
+// MockProducerItfMockRecorder is the mock recorder for MockProducerItf.
+type MockProducerItfMockRecorder struct {
+	mock *MockProducerItf
 }
 
-// NewMockPublisherItf creates a new mock instance.
-func NewMockPublisherItf(ctrl *gomock.Controller) *MockPublisherItf {
-	mock := &MockPublisherItf{ctrl: ctrl}
-	mock.recorder = &MockPublisherItfMockRecorder{mock}
+// NewMockProducerItf creates a new mock instance.
+func NewMockProducerItf(ctrl *gomock.Controller) *MockProducerItf {
+	mock := &MockProducerItf{ctrl: ctrl}
+	mock.recorder = &MockProducerItfMockRecorder{mock}
 	return mock
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockPublisherItf) EXPECT() *MockPublisherItfMockRecorder {
+func (m *MockProducerItf) EXPECT() *MockProducerItfMockRecorder {
 	return m.recorder
 }
 
 // DeferredPublish mocks base method.
-func (m *MockPublisherItf) DeferredPublish(ctx context.Context, topic string, delay time.Duration, data interface{}) error {
+func (m *MockProducerItf) DeferredPublish(ctx context.Context, topic string, delay time.Duration, data interface{}) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DeferredPublish", ctx, topic, delay, data)
 	ret0, _ := ret[0].(error)
@@ -44,13 +45,13 @@ func (m *MockPublisherItf) DeferredPublish(ctx context.Context, topic string, de
 }
 
 // DeferredPublish indicates an expected call of DeferredPublish.
-func (mr *MockPublisherItfMockRecorder) DeferredPublish(ctx, topic, delay, data interface{}) *gomock.Call {
+func (mr *MockProducerItfMockRecorder) DeferredPublish(ctx, topic, delay, data interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeferredPublish", reflect.TypeOf((*MockPublisherItf)(nil).DeferredPublish), ctx, topic, delay, data)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeferredPublish", reflect.TypeOf((*MockProducerItf)(nil).DeferredPublish), ctx, topic, delay, data)
 }
 
 // Publish mocks base method.
-func (m *MockPublisherItf) Publish(ctx context.Context, topic string, data interface{}) error {
+func (m *MockProducerItf) Publish(ctx context.Context, topic string, data interface{}) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Publish", ctx, topic, data)
 	ret0, _ := ret[0].(error)
@@ -58,7 +59,44 @@ func (m *MockPublisherItf) Publish(ctx context.Context, topic string, data inter
 }
 
 // Publish indicates an expected call of Publish.
-func (mr *MockPublisherItfMockRecorder) Publish(ctx, topic, data interface{}) *gomock.Call {
+func (mr *MockProducerItfMockRecorder) Publish(ctx, topic, data interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Publish", reflect.TypeOf((*MockPublisherItf)(nil).Publish), ctx, topic, data)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Publish", reflect.TypeOf((*MockProducerItf)(nil).Publish), ctx, topic, data)
+}
+
+// MockConsumerItf is a mock of ConsumerItf interface.
+type MockConsumerItf struct {
+	ctrl     *gomock.Controller
+	recorder *MockConsumerItfMockRecorder
+}
+
+// MockConsumerItfMockRecorder is the mock recorder for MockConsumerItf.
+type MockConsumerItfMockRecorder struct {
+	mock *MockConsumerItf
+}
+
+// NewMockConsumerItf creates a new mock instance.
+func NewMockConsumerItf(ctrl *gomock.Controller) *MockConsumerItf {
+	mock := &MockConsumerItf{ctrl: ctrl}
+	mock.recorder = &MockConsumerItfMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockConsumerItf) EXPECT() *MockConsumerItfMockRecorder {
+	return m.recorder
+}
+
+// Handle mocks base method.
+func (m *MockConsumerItf) Handle(ctx context.Context, message *nsq.Message) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Handle", ctx, message)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// Handle indicates an expected call of Handle.
+func (mr *MockConsumerItfMockRecorder) Handle(ctx, message interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Handle", reflect.TypeOf((*MockConsumerItf)(nil).Handle), ctx, message)
 }
