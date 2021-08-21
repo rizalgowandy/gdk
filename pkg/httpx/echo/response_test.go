@@ -17,7 +17,7 @@ func TestGetDefaultResponse(t *testing.T) {
 	}{
 		{
 			name:   "Success",
-			expect: converter.ToStr(http.StatusInternalServerError),
+			expect: converter.String(http.StatusInternalServerError),
 		},
 	}
 	for _, tt := range tests {
@@ -39,7 +39,7 @@ func TestGetSuccessResponse(t *testing.T) {
 	}{
 		{
 			name:   "Success",
-			expect: converter.ToStr(http.StatusOK),
+			expect: converter.String(http.StatusOK),
 		},
 	}
 	for _, tt := range tests {
@@ -61,7 +61,7 @@ func TestPostDefaultResponse(t *testing.T) {
 	}{
 		{
 			name:   "Success",
-			expect: converter.ToStr(http.StatusInternalServerError),
+			expect: converter.String(http.StatusInternalServerError),
 		},
 	}
 	for _, tt := range tests {

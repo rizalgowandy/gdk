@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func TestToArrInt(t *testing.T) {
+func TestArrInt(t *testing.T) {
 	type args struct {
 		v interface{}
 	}
@@ -76,14 +76,14 @@ func TestToArrInt(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := ToArrInt(tt.args.v); !reflect.DeepEqual(got, tt.want) {
+			if got := ArrInt(tt.args.v); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("TestToArrInt() = %v, want %v", got, tt.want)
 			}
 		})
 	}
 }
 
-func TestToArrStr(t *testing.T) {
+func TestArrStr(t *testing.T) {
 	type args struct {
 		v interface{}
 	}
@@ -133,14 +133,14 @@ func TestToArrStr(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := ToArrStr(tt.args.v); !reflect.DeepEqual(got, tt.want) {
+			if got := ArrStr(tt.args.v); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("TestToArrStr() = %v, want %v", got, tt.want)
 			}
 		})
 	}
 }
 
-func TestToArrInt64(t *testing.T) {
+func TestArrInt64(t *testing.T) {
 	type args struct {
 		v interface{}
 	}
@@ -211,8 +211,8 @@ func TestToArrInt64(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := ToArrInt64(tt.args.v); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("ToArrInt64() = %v, want %v", got, tt.want)
+			if got := ArrInt64(tt.args.v); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("ArrInt64() = %v, want %v", got, tt.want)
 			}
 		})
 	}

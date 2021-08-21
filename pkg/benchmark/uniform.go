@@ -26,5 +26,5 @@ func (g *Uniform) Name() string {
 }
 
 func (g *Uniform) Next() string {
-	return converter.ToStr(g.h.Next(g.r))
+	return converter.String(g.h.Next(g.r))
 }

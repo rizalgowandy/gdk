@@ -26,5 +26,5 @@ func (g *Hotspot) Name() string {
 }
 
 func (g *Hotspot) Next() string {
-	return converter.ToStr(g.h.Next(g.r))
+	return converter.String(g.h.Next(g.r))
 }

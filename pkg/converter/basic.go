@@ -7,8 +7,8 @@ import (
 	"github.com/peractio/gdk/pkg/jsonx"
 )
 
-// ToStr converts any value to string.
-func ToStr(v interface{}) string {
+// String converts any value to string.
+func String(v interface{}) string {
 	if v == nil {
 		return ""
 	}
@@ -21,6 +21,8 @@ func ToStr(v interface{}) string {
 		return strconv.Itoa(int(v))
 	case int64:
 		return strconv.FormatInt(v, 10)
+	case uint64:
+		return strconv.FormatInt(int64(v), 10)
 	case bool:
 		return strconv.FormatBool(v)
 	case float32:
@@ -38,8 +40,8 @@ func ToStr(v interface{}) string {
 	}
 }
 
-// ToBool convert any value to boolean.
-func ToBool(v interface{}) bool {
+// Bool convert any value to boolean.
+func Bool(v interface{}) bool {
 	switch v := v.(type) {
 	case string:
 		str := strings.TrimSpace(v)
@@ -55,8 +57,8 @@ func ToBool(v interface{}) bool {
 	}
 }
 
-// ToInt converts any value to int
-func ToInt(v interface{}) int {
+// Int converts any value to int
+func Int(v interface{}) int {
 	switch v := v.(type) {
 	case string:
 		str := strings.TrimSpace(v)
@@ -70,6 +72,8 @@ func ToInt(v interface{}) int {
 	case int32:
 		return int(v)
 	case int64:
+		return int(v)
+	case uint64:
 		return int(v)
 	case float32:
 		return int(v)
@@ -86,8 +90,8 @@ func ToInt(v interface{}) int {
 	}
 }
 
-// ToInt64 converts any value to int64
-func ToInt64(v interface{}) int64 {
+// Int64 converts any value to int64
+func Int64(v interface{}) int64 {
 	switch v := v.(type) {
 	case string:
 		str := strings.TrimSpace(v)
@@ -102,6 +106,8 @@ func ToInt64(v interface{}) int64 {
 		return int64(v)
 	case int64:
 		return v
+	case uint64:
+		return int64(v)
 	case float32:
 		return int64(v)
 	case float64:
@@ -112,6 +118,39 @@ func ToInt64(v interface{}) int64 {
 			return 0
 		}
 		return int64(result)
+	default:
+		return 0
+	}
+}
+
+// Float64 converts any value to float64
+func Float64(v interface{}) float64 {
+	switch v := v.(type) {
+	case string:
+		str := strings.TrimSpace(v)
+		result, err := strconv.Atoi(str)
+		if err != nil {
+			return 0
+		}
+		return float64(result)
+	case int:
+		return float64(v)
+	case int32:
+		return float64(v)
+	case int64:
+		return float64(v)
+	case uint64:
+		return float64(v)
+	case float32:
+		return float64(v)
+	case float64:
+		return v
+	case []byte:
+		result, err := strconv.Atoi(string(v))
+		if err != nil {
+			return 0
+		}
+		return float64(result)
 	default:
 		return 0
 	}

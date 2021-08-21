@@ -3,6 +3,7 @@ module github.com/peractio/gdk
 go 1.15
 
 require (
+	github.com/cloudfoundry/gosigar v1.2.0
 	github.com/dgraph-io/ristretto v0.1.0
 	github.com/go-redis/redis/v8 v8.11.3
 	github.com/golang/mock v1.4.4
@@ -22,5 +23,6 @@ require (
 	github.com/sirupsen/logrus v1.8.1
 	github.com/stretchr/testify v1.7.0
 	golang.org/x/crypto v0.0.0-20210711020723-a769d52b0f97
+	golang.org/x/sys v0.0.0-20210820121016-41cdb8703e55 // indirect
 	google.golang.org/grpc v1.37.0
 )

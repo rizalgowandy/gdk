@@ -9,6 +9,7 @@ import (
 	"github.com/peractio/gdk/pkg/cronx/interceptor"
 	"github.com/peractio/gdk/pkg/errorx/v2"
 	"github.com/peractio/gdk/pkg/logx"
+	"github.com/peractio/gdk/pkg/pprofx"
 )
 
 type SendEmail struct{}
@@ -53,6 +54,8 @@ func (Subscription) Run(ctx context.Context) error {
 }
 
 func main() {
+	pprofx.New()
+
 	// ===========================
 	// With Custom Configuration
 	// ===========================
@@ -98,7 +101,7 @@ func RegisterJobs() {
 	// Create some jobs with the same struct.
 	// Duplication is okay.
 	for i := 0; i < 3; i++ {
-		spec := "@every " + converter.ToStr(i+1) + "m"
+		spec := "@every " + converter.String(i+1) + "m"
 		if err := cronx.Schedule(spec, PayBill{}); err != nil {
 			logx.ERR(ctx, err, "register pay bill must success")
 		}
@@ -106,7 +109,7 @@ func RegisterJobs() {
 
 	// Create some jobs with broken spec.
 	for i := 0; i < 3; i++ {
-		spec := "broken spec " + converter.ToStr(i+1)
+		spec := "broken spec " + converter.String(i+1)
 		if err := cronx.Schedule(spec, PayBill{}); err != nil {
 			logx.ERR(ctx, err, "register pay bill must success")
 		}

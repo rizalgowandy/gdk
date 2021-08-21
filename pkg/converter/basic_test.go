@@ -4,7 +4,7 @@ import (
 	"testing"
 )
 
-func TestToStr(t *testing.T) {
+func TestStr(t *testing.T) {
 	type args struct {
 		v interface{}
 	}
@@ -96,14 +96,14 @@ func TestToStr(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := ToStr(tt.args.v); got != tt.want {
-				t.Errorf("ToStr() = %v, want %v", got, tt.want)
+			if got := String(tt.args.v); got != tt.want {
+				t.Errorf("Str() = %v, want %v", got, tt.want)
 			}
 		})
 	}
 }
 
-func TestToBool(t *testing.T) {
+func TestBool(t *testing.T) {
 	type args struct {
 		v interface{}
 	}
@@ -157,14 +157,14 @@ func TestToBool(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := ToBool(tt.args.v); got != tt.want {
-				t.Errorf("ToBool() = %v, want %v", got, tt.want)
+			if got := Bool(tt.args.v); got != tt.want {
+				t.Errorf("Bool() = %v, want %v", got, tt.want)
 			}
 		})
 	}
 }
 
-func TestToInt(t *testing.T) {
+func TestInt(t *testing.T) {
 	type args struct {
 		v interface{}
 	}
@@ -260,14 +260,14 @@ func TestToInt(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := ToInt(tt.args.v); got != tt.want {
-				t.Errorf("ToInt() = %v, want %v", got, tt.want)
+			if got := Int(tt.args.v); got != tt.want {
+				t.Errorf("Int() = %v, want %v", got, tt.want)
 			}
 		})
 	}
 }
 
-func TestToInt64(t *testing.T) {
+func TestInt64(t *testing.T) {
 	type args struct {
 		v interface{}
 	}
@@ -363,8 +363,8 @@ func TestToInt64(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := ToInt64(tt.args.v); got != tt.want {
-				t.Errorf("ToInt64() = %v, want %v", got, tt.want)
+			if got := Int64(tt.args.v); got != tt.want {
+				t.Errorf("Int64() = %v, want %v", got, tt.want)
 			}
 		})
 	}

@@ -42,7 +42,7 @@ func NewServer(commandCtrl *CommandController) {
 	e.GET("/jobs", ctrl.Jobs)
 	e.GET("/api/jobs", ctrl.APIJobs)
 
-	// Start server.s
+	// Start server.
 	go func() {
 		if err := e.Start(commandCtrl.Address); err != nil && err != http.ErrServerClosed {
 			logx.FTL(logx.NewContext(), err, "shutting down the server")

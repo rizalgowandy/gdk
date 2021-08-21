@@ -26,5 +26,5 @@ func (g *ScrambledZipfian) Name() string {
 }
 
 func (g *ScrambledZipfian) Next() string {
-	return converter.ToStr(g.z.Next(g.r))
+	return converter.String(g.z.Next(g.r))
 }
