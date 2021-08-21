@@ -1,7 +1,6 @@
 package jsonx
 
 import (
-	"bytes"
 	"io"
 
 	"github.com/peractio/gdk/pkg/syncx"
@@ -13,7 +12,7 @@ import (
 type OperatorItf interface {
 	Unmarshal(data []byte, v interface{}) error
 	Marshal(v interface{}) ([]byte, error)
-	NewEncoder(buffer *bytes.Buffer) EncoderItf
+	NewEncoder(w io.Writer) EncoderItf
 	NewDecoder(r io.Reader) DecoderItf
 }
 
@@ -52,8 +51,8 @@ func Unmarshal(data []byte, v interface{}) error {
 }
 
 // NewEncoder returns encoder to encode data to buffer.
-func NewEncoder(buffer *bytes.Buffer) EncoderItf {
-	return New().NewEncoder(buffer)
+func NewEncoder(w io.Writer) EncoderItf {
+	return New().NewEncoder(w)
 }
 
 // NewDecoder returns decoder to decode data to buffer.

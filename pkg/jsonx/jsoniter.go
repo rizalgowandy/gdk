@@ -1,7 +1,6 @@
 package jsonx
 
 import (
-	"bytes"
 	"io"
 
 	jsoniter "github.com/json-iterator/go"
@@ -30,8 +29,8 @@ func (j *JSONIterator) Marshal(v interface{}) ([]byte, error) {
 }
 
 // NewEncoder returns encoder to encode data to buffer.
-func (j *JSONIterator) NewEncoder(buffer *bytes.Buffer) EncoderItf {
-	return j.json.NewEncoder(buffer)
+func (j *JSONIterator) NewEncoder(w io.Writer) EncoderItf {
+	return j.json.NewEncoder(w)
 }
 
 // NewDecoder returns decoder to decode data to buffer.

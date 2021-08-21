@@ -4,7 +4,7 @@ import (
 	"testing"
 )
 
-func TestToArrInt2(t *testing.T) {
+func TestOrdinal(t *testing.T) {
 	type args struct {
 		x int
 	}
@@ -86,8 +86,8 @@ func TestToArrInt2(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := ToOrdinal(tt.args.x); got != tt.want {
-				t.Errorf("ToOrdinal() = %v, want %v", got, tt.want)
+			if got := Ordinal(tt.args.x); got != tt.want {
+				t.Errorf("Ordinal() = %v, want %v", got, tt.want)
 			}
 		})
 	}

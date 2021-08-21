@@ -4,8 +4,8 @@ import (
 	"github.com/peractio/gdk/pkg/jsonx"
 )
 
-// ToArrInt convert any value to []int.
-func ToArrInt(v interface{}) []int {
+// ArrInt convert any value to []int.
+func ArrInt(v interface{}) []int {
 	switch v := v.(type) {
 	case []int:
 		return v
@@ -13,14 +13,14 @@ func ToArrInt(v interface{}) []int {
 	case []int32:
 		result := make([]int, len(v))
 		for k, one := range v {
-			result[k] = ToInt(one)
+			result[k] = Int(one)
 		}
 		return result
 
 	case []int64:
 		result := make([]int, len(v))
 		for k, one := range v {
-			result[k] = ToInt(one)
+			result[k] = Int(one)
 		}
 		return result
 
@@ -35,14 +35,14 @@ func ToArrInt(v interface{}) []int {
 	case []string:
 		result := make([]int, len(v))
 		for k, vv := range v {
-			result[k] = ToInt(vv)
+			result[k] = Int(vv)
 		}
 		return result
 
 	case [][]byte:
 		result := make([]int, len(v))
 		for k, vv := range v {
-			result[k] = ToInt(vv)
+			result[k] = Int(vv)
 		}
 		return result
 
@@ -52,7 +52,7 @@ func ToArrInt(v interface{}) []int {
 }
 
 // ToArrStr convert any value to []string.
-func ToArrStr(v interface{}) []string {
+func ArrStr(v interface{}) []string {
 	switch v := v.(type) {
 	case string:
 		var result []string
@@ -75,19 +75,19 @@ func ToArrStr(v interface{}) []string {
 }
 
 // ToArrInt64 convert any value to []int64.
-func ToArrInt64(v interface{}) []int64 {
+func ArrInt64(v interface{}) []int64 {
 	switch v := v.(type) {
 	case []int:
 		result := make([]int64, len(v))
 		for k, one := range v {
-			result[k] = ToInt64(one)
+			result[k] = Int64(one)
 		}
 		return result
 
 	case []int32:
 		result := make([]int64, len(v))
 		for k, one := range v {
-			result[k] = ToInt64(one)
+			result[k] = Int64(one)
 		}
 		return result
 
@@ -105,14 +105,14 @@ func ToArrInt64(v interface{}) []int64 {
 	case []string:
 		result := make([]int64, len(v))
 		for k, vv := range v {
-			result[k] = ToInt64(vv)
+			result[k] = Int64(vv)
 		}
 		return result
 
 	case [][]byte:
 		result := make([]int64, len(v))
 		for k, vv := range v {
-			result[k] = ToInt64(vv)
+			result[k] = Int64(vv)
 		}
 		return result
 

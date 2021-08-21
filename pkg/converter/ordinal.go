@@ -14,8 +14,8 @@ const (
 	thirdOrdinalDivider  = 13
 )
 
-// ToOrdinal get ordinal 1st, 2nd, 3rd, etc.
-func ToOrdinal(x int) string {
+// Ordinal get ordinal 1st, 2nd, 3rd, etc.
+func Ordinal(x int) string {
 	suffix := "th"
 	switch x % 10 {
 	case firstOrdinal:
