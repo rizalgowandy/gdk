@@ -1,18 +1,23 @@
 package cronx
 
 import (
+	"context"
 	"net/http"
+	"os"
+	"os/signal"
 	"time"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/peractio/gdk/pkg/cronx/page"
+	"github.com/peractio/gdk/pkg/errorx/v2"
+	"github.com/peractio/gdk/pkg/logx"
+	"github.com/peractio/gdk/pkg/tags"
 )
 
-// SleepDuration defines the duration to sleep the server if the defined address is busy.
-const SleepDuration = time.Second * 10
+const TimeoutDuration = time.Second * 10
 
-// NewServer creates a new http server.
+// NewServer creates an HTTP server.
 // - /			=> current server status.
 // - /jobs		=> current jobs as frontend html.
 // - /api/jobs	=> current jobs as json.
@@ -37,14 +42,41 @@ func NewServer(commandCtrl *CommandController) {
 	e.GET("/jobs", ctrl.Jobs)
 	e.GET("/api/jobs", ctrl.APIJobs)
 
-	// Overcome issue with socket-master respawning 2nd app,
-	// We will keep trying to run the server.
-	// If the current address is busy,
-	// sleep then try again until the address has become available.
-	for {
-		if err := e.Start(commandCtrl.Address); err != nil {
-			time.Sleep(SleepDuration)
+	// Start server.s
+	go func() {
+		if err := e.Start(commandCtrl.Address); err != nil && err != http.ErrServerClosed {
+			logx.FTL(logx.NewContext(), err, "shutting down the server")
 		}
+	}()
+
+	// Wait for interrupt signal to gracefully shutdown the server with a certain timeout.
+	// Use a buffered channel to avoid missing signals as recommended for signal.Notify.
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, os.Interrupt)
+	<-quit
+
+	// Stop cron jobs.
+	ctx := commandController.Commander.Stop()
+	ctx = logx.ContextWithRequestID(ctx)
+	select {
+	case <-ctx.Done():
+		logx.INF(ctx, nil, "cron has been shutdown")
+	case <-time.After(TimeoutDuration):
+		logx.WRN(
+			ctx,
+			errorx.E("timeout", errorx.Fields{tags.Duration: TimeoutDuration.String()}),
+			"cron shutdown failure",
+		)
+	}
+
+	ctx, cancel := context.WithTimeout(ctx, TimeoutDuration)
+	defer cancel()
+
+	// Shutdown server.
+	if err := e.Shutdown(ctx); err != nil && err != context.Canceled {
+		logx.FTL(ctx, err, "server shutdown failure")
+	} else {
+		logx.INF(ctx, nil, "server has been shutdown")
 	}
 }
 
@@ -55,17 +87,17 @@ type ServerController struct {
 }
 
 // HealthCheck returns server status.
-func (c *ServerController) HealthCheck(context echo.Context) error {
-	return context.JSON(http.StatusOK, c.CommandController.Info())
+func (c *ServerController) HealthCheck(ctx echo.Context) error {
+	return ctx.JSON(http.StatusOK, c.CommandController.Info())
 }
 
 // Jobs return job status as frontend template.
-func (c *ServerController) Jobs(context echo.Context) error {
+func (c *ServerController) Jobs(ctx echo.Context) error {
 	index, _ := page.GetStatusTemplate()
-	return index.Execute(context.Response().Writer, c.CommandController.StatusData())
+	return index.Execute(ctx.Response().Writer, c.CommandController.StatusData())
 }
 
 // APIJobs returns job status as json.
-func (c *ServerController) APIJobs(context echo.Context) error {
-	return context.JSON(http.StatusOK, c.CommandController.StatusJSON())
+func (c *ServerController) APIJobs(ctx echo.Context) error {
+	return ctx.JSON(http.StatusOK, c.CommandController.StatusJSON())
 }

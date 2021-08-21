@@ -16,7 +16,7 @@ func (p *ProducerConfiguration) Validate() error {
 		p.NSQ = nsq.NewConfig()
 	}
 	if p.DaemonAddress == "" {
-		return errorx.New("missing daemon address")
+		return errorx.E("missing daemon address")
 	}
 	if p.MaxAttempt <= 1 {
 		p.MaxAttempt = 1

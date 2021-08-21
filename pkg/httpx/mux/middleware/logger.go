@@ -102,7 +102,7 @@ func (m *LoggingMiddleware) Middleware(next http.Handler) http.Handler {
 			entry.WithFields(logrus.Fields{
 				"request": r.RequestURI,
 				"method":  r.Method,
-			}).Info(fmt.Sprintf("Operation %s starting", r.URL.Path))
+			}).Info(fmt.Sprintf("operation %s starting", r.URL.Path))
 		}
 
 		lw := mux.NewWriter(w)
@@ -116,6 +116,6 @@ func (m *LoggingMiddleware) Middleware(next http.Handler) http.Handler {
 			"request_uri": r.RequestURI,
 			"status_code": lw.StatusCode,
 			"took":        m.clock.Since(start).String(),
-		}).Info(fmt.Sprintf("Operation %s result", r.URL.Path))
+		}).Info(fmt.Sprintf("operation %s result", r.URL.Path))
 	})
 }

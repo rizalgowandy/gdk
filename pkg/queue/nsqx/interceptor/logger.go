@@ -26,7 +26,7 @@ func Logger(
 	logx.DBG(
 		ctx,
 		logx.KV{tags.Latency: time.Since(start).String()},
-		fmt.Sprintf("Operation consumer %s success", consumer.Method),
+		fmt.Sprintf("operation consumer %s success", consumer.Method),
 	)
 	return nil
 }

@@ -10,7 +10,7 @@ import (
 
 func TestNewZerolog(t *testing.T) {
 	type args struct {
-		config *Config
+		config Config
 	}
 	tests := []struct {
 		name    string
@@ -20,7 +20,7 @@ func TestNewZerolog(t *testing.T) {
 		{
 			name: "Success with debug",
 			args: args{
-				config: &Config{
+				config: Config{
 					Debug:    true,
 					AppName:  "gdk",
 					Filename: "",
@@ -31,7 +31,7 @@ func TestNewZerolog(t *testing.T) {
 		{
 			name: "Success",
 			args: args{
-				config: &Config{
+				config: Config{
 					Debug:    false,
 					AppName:  "gdk",
 					Filename: "",

@@ -2,15 +2,12 @@ package logx
 
 import (
 	"context"
-	"errors"
+
+	"github.com/peractio/gdk/pkg/syncx"
 )
 
 // KV is wrapper for map[string]interface{}.
 type KV map[string]interface{}
-
-var (
-	l *ZeroLogger
-)
 
 type Config struct {
 	Debug    bool
@@ -18,40 +15,79 @@ type Config struct {
 	Filename string
 }
 
-func New(config *Config) (*ZeroLogger, error) {
-	if config == nil {
-		return nil, errors.New("missing configuration")
-	}
+var (
+	once    syncx.Once
+	onceRes Logger
+	onceErr error
 
-	logger, err := NewZerolog(config)
-	if err != nil {
-		return nil, err
+	// DefaultConfig is a configuration to create:
+	// - Non JSON structured.
+	// - No app name.
+	// - Output to os.Stderr.
+	DefaultConfig = Config{
+		Debug:    true,
+		AppName:  "",
+		Filename: "",
 	}
+)
 
-	l = logger
-	return l, nil
+func New(configs ...Config) error {
+	once.Do(func() {
+		var config Config
+		if len(configs) == 0 {
+			config = DefaultConfig
+		} else {
+			config = configs[0]
+		}
+
+		logger, err := NewZerolog(config)
+		if err != nil {
+			onceErr = err
+			return
+		}
+		onceRes = logger
+	})
+	return onceErr
 }
 
 func TRC(ctx context.Context, metadata interface{}, message string) {
-	l.Trace(GetRequestID(ctx), Metadata(metadata), message)
+	if createErr := New(); createErr != nil {
+		return
+	}
+	onceRes.Trace(GetRequestID(ctx), Metadata(metadata), message)
 }
 
 func DBG(ctx context.Context, metadata interface{}, message string) {
-	l.Debug(GetRequestID(ctx), Metadata(metadata), message)
+	if createErr := New(); createErr != nil {
+		return
+	}
+	onceRes.Debug(GetRequestID(ctx), Metadata(metadata), message)
 }
 
 func INF(ctx context.Context, metadata interface{}, message string) {
-	l.Info(GetRequestID(ctx), Metadata(metadata), message)
+	if createErr := New(); createErr != nil {
+		return
+	}
+	onceRes.Info(GetRequestID(ctx), Metadata(metadata), message)
 }
 
 func WRN(ctx context.Context, err error, message string) {
-	l.Warn(GetRequestID(ctx), err, ErrMetadata(err), message)
+	if createErr := New(); createErr != nil {
+		return
+	}
+	onceRes.Warn(GetRequestID(ctx), err, ErrMetadata(err), message)
 }
 
 func ERR(ctx context.Context, err error, message string) {
-	l.Error(GetRequestID(ctx), err, ErrMetadata(err), message)
+	if createErr := New(); createErr != nil {
+		return
+	}
+	onceRes.Error(GetRequestID(ctx), err, ErrMetadata(err), message)
 }
 
 func FTL(ctx context.Context, err error, message string) {
-	l.Fatal(GetRequestID(ctx), err, ErrMetadata(err), message)
+	if createErr := New(); createErr != nil {
+		return
+	}
+	onceRes.Fatal(GetRequestID(ctx), err, ErrMetadata(err), message)
 }

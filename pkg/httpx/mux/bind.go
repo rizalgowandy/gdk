@@ -51,7 +51,7 @@ func Bind(r *http.Request, i interface{}) (err error) {
 				return NewHTTPError(
 					http.StatusBadRequest,
 					fmt.Sprintf(
-						"Unmarshal type error: expected=%v, got=%v, field=%v, offset=%v",
+						"unmarshal type error: expected=%v, got=%v, field=%v, offset=%v",
 						ute.Type,
 						ute.Value,
 						ute.Field,
@@ -64,7 +64,7 @@ func Bind(r *http.Request, i interface{}) (err error) {
 			if se, ok := err.(*json.SyntaxError); ok {
 				return NewHTTPError(
 					http.StatusBadRequest,
-					fmt.Sprintf("Syntax error: offset=%v, error=%v", se.Offset, se.Error()),
+					fmt.Sprintf("syntax error: offset=%v, error=%v", se.Offset, se.Error()),
 				).SetInternal(
 					err,
 				)
@@ -76,7 +76,7 @@ func Bind(r *http.Request, i interface{}) (err error) {
 			if ute, ok := err.(*xml.UnsupportedTypeError); ok {
 				return NewHTTPError(
 					http.StatusBadRequest,
-					fmt.Sprintf("Unsupported type error: type=%v, error=%v", ute.Type, ute.Error()),
+					fmt.Sprintf("unsupported type error: type=%v, error=%v", ute.Type, ute.Error()),
 				).SetInternal(
 					err,
 				)
@@ -84,7 +84,7 @@ func Bind(r *http.Request, i interface{}) (err error) {
 			if se, ok := err.(*xml.SyntaxError); ok {
 				return NewHTTPError(
 					http.StatusBadRequest,
-					fmt.Sprintf("Syntax error: line=%v, error=%v", se.Line, se.Error()),
+					fmt.Sprintf("syntax error: line=%v, error=%v", se.Line, se.Error()),
 				).SetInternal(
 					err,
 				)

@@ -2,11 +2,8 @@ package main
 
 import (
 	"context"
-	"errors"
 	"time"
 
-	"github.com/labstack/echo/v4"
-	"github.com/labstack/echo/v4/middleware"
 	"github.com/peractio/gdk/pkg/converter"
 	"github.com/peractio/gdk/pkg/cronx"
 	"github.com/peractio/gdk/pkg/errorx/v2"
@@ -47,7 +44,7 @@ type Subscription struct{}
 func (Subscription) Run(ctx context.Context) error {
 	md, ok := cronx.GetJobMetadata(ctx)
 	if !ok {
-		return errors.New("cannot job metadata")
+		return errorx.E("cannot job metadata")
 	}
 
 	logx.INF(ctx, md, "Subscription is running")
@@ -55,15 +52,6 @@ func (Subscription) Run(ctx context.Context) error {
 }
 
 func main() {
-	// Setup errorx and logx.
-	const serviceName = "basic"
-	errorx.ServiceName = serviceName
-	_, _ = logx.New(&logx.Config{
-		Debug:    true,
-		AppName:  serviceName,
-		Filename: "",
-	})
-
 	// ===========================
 	// With Default Configuration
 	// ===========================
@@ -72,19 +60,12 @@ func main() {
 	// - location is time.Local
 	// - without any middleware
 	cronx.Default()
-	defer cronx.Stop()
 
 	// Register jobs.
 	RegisterJobs()
 
-	// ===========================
-	// Start Main Server
-	// ===========================
-	e := echo.New()
-	e.Use(middleware.Recover())
-	e.Use(middleware.CORS())
-	e.Use(middleware.RemoveTrailingSlash())
-	e.Logger.Fatal(e.Start(":8080"))
+	// Start HTTP server.
+	cronx.Serve()
 }
 
 func RegisterJobs() {

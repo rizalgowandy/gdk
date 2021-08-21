@@ -2,26 +2,10 @@ package main
 
 import (
 	"context"
-	"os"
 	"testing"
 
 	"github.com/peractio/gdk/pkg/cronx"
-	"github.com/peractio/gdk/pkg/errorx/v2"
-	"github.com/peractio/gdk/pkg/logx"
 )
-
-func TestMain(m *testing.M) {
-	// Setup errorx and logx.
-	const serviceName = "example"
-	errorx.ServiceName = serviceName
-	_, _ = logx.New(&logx.Config{
-		Debug:    true,
-		AppName:  serviceName,
-		Filename: "",
-	})
-
-	os.Exit(m.Run())
-}
 
 func TestAlwaysError_Run(t *testing.T) {
 	type args struct {
