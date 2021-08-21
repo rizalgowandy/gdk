@@ -4,7 +4,6 @@ import (
 	"context"
 
 	"github.com/nsqio/go-nsq"
-	"github.com/peractio/gdk/pkg/errorx/v2"
 	"github.com/peractio/gdk/pkg/logx"
 	"github.com/peractio/gdk/pkg/queue/nsqx"
 	"github.com/peractio/gdk/pkg/queue/nsqx/interceptor"
@@ -18,15 +17,6 @@ func (s SendEmail) Handle(ctx context.Context, message *nsq.Message) error {
 }
 
 func main() {
-	// Setup errorx and logx.
-	const serviceName = "consumer"
-	errorx.ServiceName = serviceName
-	_, _ = logx.New(&logx.Config{
-		Debug:    true,
-		AppName:  serviceName,
-		Filename: "",
-	})
-
 	// Create controller.
 	ctrl := nsqx.NewConsumerController(
 		nsqx.ConsumerChain(

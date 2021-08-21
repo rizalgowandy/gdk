@@ -2,10 +2,11 @@ package cronx
 
 import (
 	"context"
-	"errors"
 	"strings"
 	"time"
 
+	"github.com/peractio/gdk/pkg/errorx/v2"
+	"github.com/peractio/gdk/pkg/logx"
 	"github.com/robfig/cron/v3"
 )
 
@@ -38,14 +39,12 @@ func New(config Config, interceptors ...Interceptor) {
 	if config.Location == nil {
 		config.Location = defaultConfig.Location
 	}
+	if config.Address == "" {
+		config.Address = defaultConfig.Address
+	}
 
 	// Create new command controller and start the underlying jobs.
 	commandController = NewCommandController(config, interceptors...)
-
-	// Check if client want to start a server to serve json and frontend.
-	if config.Address != "" {
-		go NewServer(commandController)
-	}
 }
 
 // Schedule sets a job to run at specific time.
@@ -58,7 +57,7 @@ func Schedule(spec string, job JobItf) error {
 
 func schedule(spec string, job JobItf, waveNumber, totalWave int64) error {
 	if commandController == nil || commandController.Commander == nil {
-		return errors.New("cronx has not been initialized")
+		return errorx.E("cronx has not been initialized")
 	}
 
 	// Check if spec is correct.
@@ -89,10 +88,10 @@ func schedule(spec string, job JobItf, waveNumber, totalWave int64) error {
 //	This input schedules the job to run 3 times.
 func Schedules(spec, separator string, job JobItf) error {
 	if spec == "" {
-		return errors.New("invalid specification")
+		return errorx.E("invalid specification")
 	}
 	if separator == "" {
-		return errors.New("invalid separator")
+		return errorx.E("invalid separator")
 	}
 	schedules := strings.Split(spec, separator)
 	for k, v := range schedules {
@@ -122,7 +121,13 @@ func Stop() {
 		return
 	}
 
-	commandController.Commander.Stop()
+	// Stop cron jobs.
+	ctx := commandController.Commander.Stop()
+	ctx = logx.ContextWithRequestID(ctx)
+	select {
+	case <-ctx.Done():
+	case <-time.After(TimeoutDuration):
+	}
 }
 
 // GetEntries returns all the current registered jobs.
@@ -180,6 +185,15 @@ func GetInfo() map[string]interface{} {
 	}
 
 	return commandController.Info()
+}
+
+// Serve creates an HTTP server.
+func Serve() {
+	if commandController == nil {
+		return
+	}
+
+	NewServer(commandController)
 }
 
 // Func is a type to allow callers to wrap a raw func.

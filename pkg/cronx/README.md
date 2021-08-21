@@ -40,7 +40,6 @@ func main() {
 	// - location is time.Local
 	// - without any middleware
 	cronx.Default()
-	defer cronx.Stop()
 
 	// Register a new cron job.
 	// Struct name will become the name for the current job.
@@ -51,9 +50,8 @@ func main() {
 			Msg("register sendEmail must success")
 	}
 
-	e := echo.New()
-	e.Use(middleware.Recover())
-	e.Logger.Fatal(e.Start(":8080"))
+    // Start HTTP server.
+    cronx.Serve()
 }
 ```
 Get dependencies
@@ -92,7 +90,7 @@ Browse to
 ```go
 // Create a cron with custom config.
 cronx.New(cronx.Config{
-    Address:  ":8998", // Determines if we want the library to serve the frontend.
+    Address:  ":8998", // Determine the built-in HTTP server port.
     Location: func() *time.Location { // Change timezone to Jakarta.
         jakarta, err := time.LoadLocation("Asia/Jakarta")
         if err != nil {
@@ -117,6 +115,7 @@ Hence, reduce the code duplication on each job implementation.
 // The order is important.
 // The first one will be executed first.
 middleware := cronx.Chain(
+    interceptor.RequestID, // Inject request id to context.
     interceptor.Recover(), // Auto recover from panic.
     interceptor.Logger(), // Log start and finish process.
     interceptor.DefaultWorkerPool(), // Limit concurrent running job.
@@ -124,6 +123,7 @@ middleware := cronx.Chain(
 
 cronx.Default(middleware)
 ```
+Check all available interceptors [here](interceptor).
 
 ### Custom Interceptor / Middleware
 ```go
@@ -136,6 +136,7 @@ func Sleep() cronx.Interceptor {
 	}
 }
 ```
+For more example check [here](interceptor).
 
 ## Schedule Specification Format
 
@@ -193,19 +194,18 @@ Schedules(spec, separator string, job JobItf) error
 // Minimal time is 1 sec.
 Every(duration time.Duration, job JobItf)
 ```
-Go to `cronx/cronx.go` to see the list of available commands.
+Go to [here](cronx.go) to see the list of available commands.
 
 ### What are the available interceptors?
-Go to `cronx/interceptors` to see the available interceptors.
+Go to [here](interceptor) to see the available interceptors.
 
 ### Can I use my own router without starting the built-in router?
 Yes, you can. This library is very modular.
 ```go
-// Create a custom config and leave the address as empty string.
-// Empty string meaning the library won't start the built-in server.
-cronx.New(cronx.Config{
-    Address:  "",
-})
+// Since we want to create custom HTTP server.
+// Do not forget to shutdown the cron gracefully manually here.
+cronx.New()
+defer cronx.Stop()
 
 // GetStatusData will return the []cronx.StatusData.
 // You can use this data like any other Golang data structure.
@@ -219,6 +219,9 @@ r.GET("/custom-path", func(c *gin.Context) {
     	"data": res,
     })
 })
+
+// Start your own server and don't call cronx.Serve().
+r.Run()
 ```
 Here's another [example](example/without-library-server/main.go).
 

@@ -2,7 +2,6 @@ package logx
 
 import (
 	"context"
-	"reflect"
 	"testing"
 
 	"github.com/peractio/gdk/pkg/errorx/v2"
@@ -32,39 +31,6 @@ func TestTRC(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			TRC(tt.args.ctx, tt.args.metadata, tt.args.message)
-		})
-	}
-}
-
-func TestNew(t *testing.T) {
-	type args struct {
-		config *Config
-	}
-	tests := []struct {
-		name    string
-		args    args
-		want    *ZeroLogger
-		wantErr bool
-	}{
-		{
-			name: "Missing configuration",
-			args: args{
-				config: nil,
-			},
-			want:    nil,
-			wantErr: true,
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			got, err := New(tt.args.config)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("New() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("New() got = %v, want %v", got, tt.want)
-			}
 		})
 	}
 }
@@ -175,6 +141,41 @@ func TestERR(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			ERR(tt.args.ctx, tt.args.err, tt.args.message)
+		})
+	}
+}
+
+func TestNew(t *testing.T) {
+	type args struct {
+		config Config
+	}
+	tests := []struct {
+		name    string
+		args    args
+		wantErr bool
+	}{
+		{
+			name:    "Without configuration",
+			args:    args{},
+			wantErr: false,
+		},
+		{
+			name: "Success",
+			args: args{
+				config: Config{
+					Debug:    true,
+					AppName:  "unit_test",
+					Filename: "",
+				},
+			},
+			wantErr: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if err := New(tt.args.config); (err != nil) != tt.wantErr {
+				t.Errorf("New() error = %v, wantErr %v", err, tt.wantErr)
+			}
 		})
 	}
 }

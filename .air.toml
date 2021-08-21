@@ -15,7 +15,7 @@ full_bin = "./bin/main"
 # Watch these filename extensions.
 include_ext = ["go", "json"]
 # Ignore these filename extensions or directories.
-exclude_dir = ["bin", "vendor"]
+exclude_dir = ["bin"]
 # Watch these directories if you specified.
 include_dir = []
 # Exclude files.

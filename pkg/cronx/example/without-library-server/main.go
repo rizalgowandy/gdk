@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"errors"
 	"net/http"
 	"time"
 
@@ -50,7 +49,7 @@ type Subscription struct{}
 func (Subscription) Run(ctx context.Context) error {
 	md, ok := cronx.GetJobMetadata(ctx)
 	if !ok {
-		return errors.New("cannot job metadata")
+		return errorx.E("cannot job metadata")
 	}
 
 	logx.INF(ctx, md, "Subscription is running")
@@ -58,15 +57,6 @@ func (Subscription) Run(ctx context.Context) error {
 }
 
 func main() {
-	// Setup errorx and logx.
-	const serviceName = "without-library-server"
-	errorx.ServiceName = serviceName
-	_, _ = logx.New(&logx.Config{
-		Debug:    true,
-		AppName:  serviceName,
-		Filename: "",
-	})
-
 	// ===========================
 	// With Custom Configuration
 	// ===========================
@@ -92,6 +82,8 @@ func main() {
 			return jakarta
 		}(),
 	}, cronMiddleware)
+	// Since we want to create custom HTTP server.
+	// Do not forget to shutdown the cron gracefully manually here.
 	defer cronx.Stop()
 
 	// Register jobs.
@@ -105,7 +97,7 @@ func main() {
 	e.Use(middleware.CORS())
 	e.Use(middleware.RemoveTrailingSlash())
 
-	// Register routes because we disable the default built-in server frontend.
+	// Register routes because we want to create custom HTTP server.
 	e.GET("/", func(c echo.Context) error {
 		return c.JSON(http.StatusOK, cronx.GetInfo())
 	})

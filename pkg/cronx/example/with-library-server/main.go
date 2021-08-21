@@ -2,11 +2,8 @@ package main
 
 import (
 	"context"
-	"errors"
 	"time"
 
-	"github.com/labstack/echo/v4"
-	"github.com/labstack/echo/v4/middleware"
 	"github.com/peractio/gdk/pkg/converter"
 	"github.com/peractio/gdk/pkg/cronx"
 	"github.com/peractio/gdk/pkg/cronx/interceptor"
@@ -48,7 +45,7 @@ type Subscription struct{}
 func (Subscription) Run(ctx context.Context) error {
 	md, ok := cronx.GetJobMetadata(ctx)
 	if !ok {
-		return errors.New("cannot job metadata")
+		return errorx.E("cannot job metadata")
 	}
 
 	logx.INF(ctx, md, "Subscription is running")
@@ -56,15 +53,6 @@ func (Subscription) Run(ctx context.Context) error {
 }
 
 func main() {
-	// Setup errorx and logx.
-	const serviceName = "with-library-server"
-	errorx.ServiceName = serviceName
-	_, _ = logx.New(&logx.Config{
-		Debug:    true,
-		AppName:  serviceName,
-		Filename: "",
-	})
-
 	// ===========================
 	// With Custom Configuration
 	// ===========================
@@ -80,7 +68,7 @@ func main() {
 
 	// Create a cron with custom config and middleware.
 	cronx.New(cronx.Config{
-		Address: ":8000", // Determines if we want the library to serve the frontend.
+		Address: ":8080", // Determines if we want the library to serve the frontend.
 		Location: func() *time.Location { // Change timezone to Jakarta.
 			jakarta, err := time.LoadLocation("Asia/Jakarta")
 			if err != nil {
@@ -90,19 +78,12 @@ func main() {
 			return jakarta
 		}(),
 	}, cronMiddleware)
-	defer cronx.Stop()
 
 	// Register jobs.
 	RegisterJobs()
 
-	// ===========================
-	// Start Main Server
-	// ===========================
-	e := echo.New()
-	e.Use(middleware.Recover())
-	e.Use(middleware.CORS())
-	e.Use(middleware.RemoveTrailingSlash())
-	e.Logger.Fatal(e.Start(":8080"))
+	// Start HTTP server.
+	cronx.Serve()
 }
 
 func RegisterJobs() {

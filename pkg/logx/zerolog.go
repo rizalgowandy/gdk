@@ -3,8 +3,6 @@ package logx
 import (
 	"io"
 	"os"
-	"strconv"
-	"strings"
 
 	"github.com/peractio/gdk/pkg/filex"
 	"github.com/peractio/gdk/pkg/tags"
@@ -17,7 +15,7 @@ type ZeroLogger struct {
 	client zerolog.Logger
 }
 
-func NewZerolog(config *Config) (*ZeroLogger, error) {
+func NewZerolog(config Config) (*ZeroLogger, error) {
 	// Default writer to stderr.
 	writer := io.Writer(os.Stderr)
 
@@ -34,12 +32,6 @@ func NewZerolog(config *Config) (*ZeroLogger, error) {
 	// On debug use pretty print.
 	if config.Debug {
 		writer = zerolog.ConsoleWriter{Out: writer}
-	}
-
-	// Override caller.
-	zerolog.CallerMarshalFunc = func(file string, line int) string {
-		file = file[strings.Index(file, config.AppName)+len(config.AppName):]
-		return file + ":" + strconv.Itoa(line)
 	}
 
 	// Create client.
@@ -65,7 +57,7 @@ func (z *ZeroLogger) Trace(
 	fields map[string]interface{},
 	message string,
 ) {
-	l.client.Trace().
+	z.client.Trace().
 		Str(tags.RequestID, requestID).
 		Fields(fields).
 		Msg(message)
@@ -76,7 +68,7 @@ func (z *ZeroLogger) Debug(
 	fields map[string]interface{},
 	message string,
 ) {
-	l.client.Debug().
+	z.client.Debug().
 		Str(tags.RequestID, requestID).
 		Fields(fields).
 		Msg(message)
@@ -87,7 +79,7 @@ func (z *ZeroLogger) Info(
 	fields map[string]interface{},
 	message string,
 ) {
-	l.client.Info().
+	z.client.Info().
 		Str(tags.RequestID, requestID).
 		Fields(fields).
 		Msg(message)
@@ -99,7 +91,7 @@ func (z *ZeroLogger) Warn(
 	fields map[string]interface{},
 	message string,
 ) {
-	l.client.Warn().
+	z.client.Warn().
 		Str(tags.RequestID, requestID).
 		Fields(fields).
 		Err(err).
@@ -112,7 +104,7 @@ func (z *ZeroLogger) Error(
 	fields map[string]interface{},
 	message string,
 ) {
-	l.client.Error().
+	z.client.Error().
 		Str(tags.RequestID, requestID).
 		Fields(fields).
 		Err(err).
@@ -125,7 +117,7 @@ func (z *ZeroLogger) Fatal(
 	fields map[string]interface{},
 	message string,
 ) {
-	l.client.Fatal().
+	z.client.Fatal().
 		Str(tags.RequestID, requestID).
 		Fields(fields).
 		Err(err).
