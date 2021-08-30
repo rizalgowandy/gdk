@@ -3,7 +3,7 @@ package logx
 import (
 	"context"
 
-	"github.com/peractio/gdk/pkg/syncx"
+	"github.com/rizalgowandy/gdk/pkg/syncx"
 )
 
 // KV is wrapper for map[string]interface{}.

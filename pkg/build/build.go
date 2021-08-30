@@ -1,8 +1,8 @@
 package build
 
 import (
-	"github.com/peractio/gdk/pkg/syncx"
-	"github.com/peractio/gdk/pkg/tags"
+	"github.com/rizalgowandy/gdk/pkg/syncx"
+	"github.com/rizalgowandy/gdk/pkg/tags"
 )
 
 var (

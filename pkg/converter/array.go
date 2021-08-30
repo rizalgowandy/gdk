@@ -1,7 +1,7 @@
 package converter
 
 import (
-	"github.com/peractio/gdk/pkg/jsonx"
+	"github.com/rizalgowandy/gdk/pkg/jsonx"
 )
 
 // ArrInt convert any value to []int.

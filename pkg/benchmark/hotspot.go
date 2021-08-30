@@ -4,7 +4,7 @@ import (
 	"math/rand"
 	"time"
 
-	"github.com/peractio/gdk/pkg/converter"
+	"github.com/rizalgowandy/gdk/pkg/converter"
 	"github.com/pingcap/go-ycsb/pkg/generator"
 )
 

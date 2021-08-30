@@ -3,8 +3,8 @@ package interceptor
 import (
 	"context"
 
-	"github.com/peractio/gdk/pkg/logx"
-	"github.com/peractio/gdk/pkg/queue/nsqx"
+	"github.com/rizalgowandy/gdk/pkg/logx"
+	"github.com/rizalgowandy/gdk/pkg/queue/nsqx"
 )
 
 // RequestID is a middleware that inject request id to the context if it doesn't exists.

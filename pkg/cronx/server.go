@@ -9,10 +9,10 @@ import (
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
-	"github.com/peractio/gdk/pkg/cronx/page"
-	"github.com/peractio/gdk/pkg/errorx/v2"
-	"github.com/peractio/gdk/pkg/logx"
-	"github.com/peractio/gdk/pkg/tags"
+	"github.com/rizalgowandy/gdk/pkg/cronx/page"
+	"github.com/rizalgowandy/gdk/pkg/errorx/v2"
+	"github.com/rizalgowandy/gdk/pkg/logx"
+	"github.com/rizalgowandy/gdk/pkg/tags"
 )
 
 const TimeoutDuration = time.Second * 10

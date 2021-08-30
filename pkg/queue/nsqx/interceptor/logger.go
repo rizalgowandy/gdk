@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/peractio/gdk/pkg/logx"
-	"github.com/peractio/gdk/pkg/queue/nsqx"
-	"github.com/peractio/gdk/pkg/tags"
+	"github.com/rizalgowandy/gdk/pkg/logx"
+	"github.com/rizalgowandy/gdk/pkg/queue/nsqx"
+	"github.com/rizalgowandy/gdk/pkg/tags"
 )
 
 // Logger is a middleware that logs the current result from request.

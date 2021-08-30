@@ -3,7 +3,7 @@ package jsonx
 import (
 	"io"
 
-	"github.com/peractio/gdk/pkg/syncx"
+	"github.com/rizalgowandy/gdk/pkg/syncx"
 )
 
 //go:generate mockgen -destination=jsonx_mock.go -package=jsonx -source=jsonx.go

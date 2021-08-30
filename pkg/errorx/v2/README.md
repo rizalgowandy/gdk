@@ -30,7 +30,7 @@ In order to create a meaningful error from this package, we need to use `errorx.
 ### Simple error creation
 
 ```go
-import "github.com/peractio/gdk/pkg/errorx/v2"
+import "github.com/rizalgowandy/gdk/pkg/errorx/v2"
 
 func main() {
     err := errorx.E("this is error from library")
@@ -44,7 +44,7 @@ func main() {
 Error with fields is useful to give context to error. For example `user_id` of user.
 
 ```go
-import "github.com/peractio/gdk/pkg/errorx/v2"
+import "github.com/rizalgowandy/gdk/pkg/errorx/v2"
 
 func main() {
     err := errorx.E("this is error from library", errorx.Fields{"user_id": 1234})
@@ -57,7 +57,7 @@ func main() {
 Sometimes we need to know what kind of operations we do in error, we want to know where exactly error happens.
 
 ```go
-import "github.com/peractio/gdk/pkg/errorx/v2"
+import "github.com/rizalgowandy/gdk/pkg/errorx/v2"
 
 func main() {
     err := SomeFunction()
@@ -79,7 +79,7 @@ import (
     "net/http"
     "strings"
 
-    "github.com/peractio/gdk/pkg/errorx/v2"
+    "github.com/rizalgowandy/gdk/pkg/errorx/v2"
 )
 
 // Error variables for error matching example

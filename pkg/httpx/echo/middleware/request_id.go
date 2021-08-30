@@ -5,7 +5,7 @@ import (
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
-	"github.com/peractio/gdk/pkg/logx"
+	"github.com/rizalgowandy/gdk/pkg/logx"
 	"github.com/segmentio/ksuid"
 )
 

@@ -3,7 +3,7 @@ package netx
 import (
 	"net"
 
-	"github.com/peractio/gdk/pkg/syncx"
+	"github.com/rizalgowandy/gdk/pkg/syncx"
 )
 
 var (

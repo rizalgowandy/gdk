@@ -1,4 +1,4 @@
-module github.com/peractio/gdk
+module github.com/rizalgowandy/gdk
 
 go 1.15
 

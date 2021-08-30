@@ -4,12 +4,12 @@ import (
 	"context"
 	"time"
 
-	"github.com/peractio/gdk/pkg/converter"
-	"github.com/peractio/gdk/pkg/cronx"
-	"github.com/peractio/gdk/pkg/cronx/interceptor"
-	"github.com/peractio/gdk/pkg/errorx/v2"
-	"github.com/peractio/gdk/pkg/logx"
-	"github.com/peractio/gdk/pkg/pprofx"
+	"github.com/rizalgowandy/gdk/pkg/converter"
+	"github.com/rizalgowandy/gdk/pkg/cronx"
+	"github.com/rizalgowandy/gdk/pkg/cronx/interceptor"
+	"github.com/rizalgowandy/gdk/pkg/errorx/v2"
+	"github.com/rizalgowandy/gdk/pkg/logx"
+	"github.com/rizalgowandy/gdk/pkg/pprofx"
 )
 
 type SendEmail struct{}

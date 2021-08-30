@@ -5,10 +5,10 @@ import (
 	"time"
 
 	"github.com/go-redis/redis/v8"
-	"github.com/peractio/gdk/pkg/errorx/v2"
-	"github.com/peractio/gdk/pkg/logx"
-	"github.com/peractio/gdk/pkg/syncx"
-	"github.com/peractio/gdk/pkg/tags"
+	"github.com/rizalgowandy/gdk/pkg/errorx/v2"
+	"github.com/rizalgowandy/gdk/pkg/logx"
+	"github.com/rizalgowandy/gdk/pkg/syncx"
+	"github.com/rizalgowandy/gdk/pkg/tags"
 )
 
 var (

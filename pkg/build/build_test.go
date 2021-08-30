@@ -4,7 +4,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/peractio/gdk/pkg/tags"
+	"github.com/rizalgowandy/gdk/pkg/tags"
 )
 
 func TestInfo(t *testing.T) {

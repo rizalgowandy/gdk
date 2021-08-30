@@ -5,7 +5,7 @@ import (
 	"io/ioutil"
 	"net/http"
 
-	"github.com/peractio/gdk/pkg/jsonx"
+	"github.com/rizalgowandy/gdk/pkg/jsonx"
 )
 
 // CopyBody returns query param for get method, and body for others.

@@ -25,20 +25,20 @@ func TestTrim(t *testing.T) {
 			name: "Success, remove unnecessary start",
 			args: args{
 				stack: []byte(
-					"random\nsrc/runtime/panic.go\ngithub.com/peractio\ntrace1\ntrace2\n",
+					"random\nsrc/runtime/panic.go\ngithub.com/rizalgowandy\ntrace1\ntrace2\n",
 				),
 			},
-			want: []byte("github.com/peractio\ntrace1\ntrace2\n"),
+			want: []byte("github.com/rizalgowandy\ntrace1\ntrace2\n"),
 		},
 		{
 			name: "Success, remove unnecessary start and end",
 			args: args{
 				stack: []byte(
-					"random\nsrc/runtime/panic.go\ngithub.com/peractio\ntrace1\ntrace2\nsrc/github.com/peractio/gdk/pkg/stack/stack.go\nrandom",
+					"random\nsrc/runtime/panic.go\ngithub.com/rizalgowandy\ntrace1\ntrace2\nsrc/github.com/rizalgowandy/gdk/pkg/stack/stack.go\nrandom",
 				),
 			},
 			want: []byte(
-				"github.com/peractio\ntrace1\ntrace2\nsrc/github.com/peractio/gdk/pkg/stack/stack.go\n",
+				"github.com/rizalgowandy\ntrace1\ntrace2\nsrc/github.com/rizalgowandy/gdk/pkg/stack/stack.go\n",
 			),
 		},
 		{
@@ -77,22 +77,22 @@ func TestToArr(t *testing.T) {
 		{
 			name: "Success, return with trim",
 			args: args{
-				stack: []byte("home/peractio/go/src/github.com/peractio/gdk/pkg/stack.go 130\n"),
+				stack: []byte("home/rizalgowandy/go/src/github.com/rizalgowandy/gdk/pkg/stack.go 130\n"),
 			},
 			want: []string{
-				"github.com/peractio/gdk/pkg/stack.go 130",
+				"github.com/rizalgowandy/gdk/pkg/stack.go 130",
 			},
 		},
 		{
 			name: "Success, 1 line match, return with trim",
 			args: args{
 				stack: []byte(
-					"random\n/home/peractio/go/src/github.com/peractio/gdk/pkg/stack.go 130\nqwerty",
+					"random\n/home/rizalgowandy/go/src/github.com/rizalgowandy/gdk/pkg/stack.go 130\nqwerty",
 				),
 			},
 			want: []string{
 				"random",
-				"github.com/peractio/gdk/pkg/stack.go 130",
+				"github.com/rizalgowandy/gdk/pkg/stack.go 130",
 				"qwerty",
 			},
 		},

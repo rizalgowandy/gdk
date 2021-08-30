@@ -3,7 +3,7 @@ package interceptor
 import (
 	"context"
 
-	"github.com/peractio/gdk/pkg/cronx"
+	"github.com/rizalgowandy/gdk/pkg/cronx"
 )
 
 // Default configuration.

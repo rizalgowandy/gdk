@@ -4,7 +4,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/peractio/gdk/pkg/jsonx"
+	"github.com/rizalgowandy/gdk/pkg/jsonx"
 )
 
 // String converts any value to string.

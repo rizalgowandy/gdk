@@ -3,7 +3,7 @@ package logx
 import (
 	"context"
 
-	"github.com/peractio/gdk/pkg/tags"
+	"github.com/rizalgowandy/gdk/pkg/tags"
 	"github.com/segmentio/ksuid"
 	"google.golang.org/grpc/metadata"
 )

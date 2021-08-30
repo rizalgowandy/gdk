@@ -3,7 +3,7 @@ package middleware
 import (
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
-	"github.com/peractio/gdk/pkg/env"
+	"github.com/rizalgowandy/gdk/pkg/env"
 )
 
 // Logger returns a middleware that logs HTTP requests

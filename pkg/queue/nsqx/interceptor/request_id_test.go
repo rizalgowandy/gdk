@@ -4,8 +4,8 @@ import (
 	"context"
 	"testing"
 
-	"github.com/peractio/gdk/pkg/errorx/v2"
-	"github.com/peractio/gdk/pkg/queue/nsqx"
+	"github.com/rizalgowandy/gdk/pkg/errorx/v2"
+	"github.com/rizalgowandy/gdk/pkg/queue/nsqx"
 )
 
 func TestRequestID(t *testing.T) {

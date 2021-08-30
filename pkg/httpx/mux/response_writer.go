@@ -3,8 +3,8 @@ package mux
 import (
 	"net/http"
 
-	"github.com/peractio/gdk/pkg/env"
-	"github.com/peractio/gdk/pkg/jsonx"
+	"github.com/rizalgowandy/gdk/pkg/env"
+	"github.com/rizalgowandy/gdk/pkg/jsonx"
 )
 
 type Writer struct {

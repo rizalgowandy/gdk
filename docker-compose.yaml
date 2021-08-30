@@ -11,7 +11,7 @@ services:
     environment:
       - POSTGRES_USER=unicorn_user
       - POSTGRES_PASSWORD=magical_password
-      - POSTGRES_DB=peractio-gdk
+      - POSTGRES_DB=rizalgowandy-gdk
     tty: true
     restart: unless-stopped
 

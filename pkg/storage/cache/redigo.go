@@ -6,8 +6,8 @@ import (
 	"time"
 
 	"github.com/gomodule/redigo/redis"
-	"github.com/peractio/gdk/pkg/errorx/v2"
-	"github.com/peractio/gdk/pkg/syncx"
+	"github.com/rizalgowandy/gdk/pkg/errorx/v2"
+	"github.com/rizalgowandy/gdk/pkg/syncx"
 )
 
 var (

@@ -4,8 +4,8 @@ import (
 	"io"
 	"os"
 
-	"github.com/peractio/gdk/pkg/filex"
-	"github.com/peractio/gdk/pkg/tags"
+	"github.com/rizalgowandy/gdk/pkg/filex"
+	"github.com/rizalgowandy/gdk/pkg/tags"
 	"github.com/rs/zerolog"
 )
 

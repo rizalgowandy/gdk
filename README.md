@@ -1,11 +1,11 @@
-[![Go Doc](https://pkg.go.dev/badge/github.com/peractio/gdk?status.svg)](https://pkg.go.dev/github.com/peractio/gdk?tab=doc)
-[![Release](https://img.shields.io/github/release/peractio/gdk.svg?style=flat-square)](https://github.com/peractio/gdk/releases)
-[![Go Report Card](https://goreportcard.com/badge/github.com/peractio/gdk)](https://goreportcard.com/report/github.com/peractio/gdk)
-[![Build Status](https://github.com/peractio/gdk/workflows/Go/badge.svg?branch=main)](https://github.com/peractio/gdk/actions?query=branch%3Amain)
-[![Sourcegraph](https://sourcegraph.com/github.com/peractio/gdk/-/badge.svg)](https://sourcegraph.com/github.com/peractio/gdk?badge)
-[![TODOs](https://badgen.net/https/api.tickgit.com/badgen/github.com/peractio/gdk)](https://www.tickgit.com/browse?repo=github.com/peractio/gdk)
+[![Go Doc](https://pkg.go.dev/badge/github.com/rizalgowandy/gdk?status.svg)](https://pkg.go.dev/github.com/rizalgowandy/gdk?tab=doc)
+[![Release](https://img.shields.io/github/release/rizalgowandy/gdk.svg?style=flat-square)](https://github.com/rizalgowandy/gdk/releases)
+[![Go Report Card](https://goreportcard.com/badge/github.com/rizalgowandy/gdk)](https://goreportcard.com/report/github.com/rizalgowandy/gdk)
+[![Build Status](https://github.com/rizalgowandy/gdk/workflows/Go/badge.svg?branch=main)](https://github.com/rizalgowandy/gdk/actions?query=branch%3Amain)
+[![Sourcegraph](https://sourcegraph.com/github.com/rizalgowandy/gdk/-/badge.svg)](https://sourcegraph.com/github.com/rizalgowandy/gdk?badge)
+[![TODOs](https://badgen.net/https/api.tickgit.com/badgen/github.com/rizalgowandy/gdk)](https://www.tickgit.com/browse?repo=github.com/rizalgowandy/gdk)
 
-![gdk](https://socialify.git.ci/peractio/gdk/image?description=1&font=Source%20Code%20Pro&language=1&owner=1&pattern=Circuit%20Board&theme=Light)
+![gdk](https://socialify.git.ci/rizalgowandy/gdk/image?description=1&language=1&pattern=Floating%20Cogs&theme=Light)
 
 ## Getting Started
 
@@ -14,7 +14,7 @@ A collection of libraries to speed your Go development.
 ## Installation
 
 ```shell
-go get -v github.com/peractio/gdk
+go get -v github.com/rizalgowandy/gdk
 ```
 
 ## Examples

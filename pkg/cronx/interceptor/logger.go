@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/peractio/gdk/pkg/cronx"
-	"github.com/peractio/gdk/pkg/logx"
-	"github.com/peractio/gdk/pkg/tags"
+	"github.com/rizalgowandy/gdk/pkg/cronx"
+	"github.com/rizalgowandy/gdk/pkg/logx"
+	"github.com/rizalgowandy/gdk/pkg/tags"
 )
 
 // Logger is a middleware that logs the current job start and finish.

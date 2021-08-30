@@ -6,7 +6,7 @@ import (
 	"testing"
 
 	"github.com/labstack/echo/v4"
-	"github.com/peractio/gdk/pkg/converter"
+	"github.com/rizalgowandy/gdk/pkg/converter"
 	"github.com/stretchr/testify/assert"
 )
 

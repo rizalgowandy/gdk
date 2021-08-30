@@ -3,7 +3,7 @@ package logx
 import (
 	"testing"
 
-	"github.com/peractio/gdk/pkg/errorx/v2"
+	"github.com/rizalgowandy/gdk/pkg/errorx/v2"
 	"github.com/rs/zerolog"
 	"github.com/stretchr/testify/assert"
 )

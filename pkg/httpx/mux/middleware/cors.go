@@ -5,8 +5,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/peractio/gdk/pkg/env"
-	"github.com/peractio/gdk/pkg/httpx/mux"
+	"github.com/rizalgowandy/gdk/pkg/env"
+	"github.com/rizalgowandy/gdk/pkg/httpx/mux"
 )
 
 const maxDomainLength = 253

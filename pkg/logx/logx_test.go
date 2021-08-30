@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/peractio/gdk/pkg/errorx/v2"
+	"github.com/rizalgowandy/gdk/pkg/errorx/v2"
 )
 
 func TestTRC(t *testing.T) {

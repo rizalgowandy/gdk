@@ -7,12 +7,12 @@ import (
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
-	"github.com/peractio/gdk/pkg/converter"
-	"github.com/peractio/gdk/pkg/cronx"
-	"github.com/peractio/gdk/pkg/cronx/interceptor"
-	"github.com/peractio/gdk/pkg/cronx/page"
-	"github.com/peractio/gdk/pkg/errorx/v2"
-	"github.com/peractio/gdk/pkg/logx"
+	"github.com/rizalgowandy/gdk/pkg/converter"
+	"github.com/rizalgowandy/gdk/pkg/cronx"
+	"github.com/rizalgowandy/gdk/pkg/cronx/interceptor"
+	"github.com/rizalgowandy/gdk/pkg/cronx/page"
+	"github.com/rizalgowandy/gdk/pkg/errorx/v2"
+	"github.com/rizalgowandy/gdk/pkg/logx"
 )
 
 type SendEmail struct{}

@@ -5,7 +5,7 @@ import (
 	"strings"
 	"unicode"
 
-	"github.com/peractio/gdk/pkg/errorx/v2"
+	"github.com/rizalgowandy/gdk/pkg/errorx/v2"
 )
 
 const (

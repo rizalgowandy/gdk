@@ -4,8 +4,8 @@ import (
 	"context"
 	"runtime/debug"
 
-	"github.com/peractio/gdk/pkg/cronx"
-	"github.com/peractio/gdk/pkg/stack"
+	"github.com/rizalgowandy/gdk/pkg/cronx"
+	"github.com/rizalgowandy/gdk/pkg/stack"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 )

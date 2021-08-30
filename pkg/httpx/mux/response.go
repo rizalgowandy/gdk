@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/peractio/gdk/pkg/converter"
+	"github.com/rizalgowandy/gdk/pkg/converter"
 )
 
 // GetDefaultResponse is the default response for http get request

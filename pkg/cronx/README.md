@@ -19,7 +19,7 @@ import (
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
-	"github.com/peractio/gdk/pkg/cronx"
+	"github.com/rizalgowandy/gdk/pkg/cronx"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 )

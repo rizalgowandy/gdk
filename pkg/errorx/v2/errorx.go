@@ -9,7 +9,7 @@ import (
 	"github.com/imdario/mergo"
 )
 
-var ServiceName = "peractio"
+var ServiceName = "rizalgowandy"
 
 // E for creating new error.
 // error should always be the first param.

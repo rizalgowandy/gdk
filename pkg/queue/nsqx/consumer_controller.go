@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/nsqio/go-nsq"
-	"github.com/peractio/gdk/pkg/errorx/v2"
+	"github.com/rizalgowandy/gdk/pkg/errorx/v2"
 )
 
 const TimeoutDuration = time.Second * 60

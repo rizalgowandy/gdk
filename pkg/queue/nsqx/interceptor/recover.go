@@ -4,8 +4,8 @@ import (
 	"context"
 	"runtime/debug"
 
-	"github.com/peractio/gdk/pkg/queue/nsqx"
-	"github.com/peractio/gdk/pkg/stack"
+	"github.com/rizalgowandy/gdk/pkg/queue/nsqx"
+	"github.com/rizalgowandy/gdk/pkg/stack"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 )

@@ -1,9 +1,9 @@
 package logx
 
 import (
-	"github.com/peractio/gdk/pkg/build"
-	"github.com/peractio/gdk/pkg/errorx/v2"
-	"github.com/peractio/gdk/pkg/tags"
+	"github.com/rizalgowandy/gdk/pkg/build"
+	"github.com/rizalgowandy/gdk/pkg/errorx/v2"
+	"github.com/rizalgowandy/gdk/pkg/tags"
 )
 
 // ErrMetadata returns a metadata constructed from error.

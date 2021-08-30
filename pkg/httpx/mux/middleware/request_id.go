@@ -4,8 +4,8 @@ import (
 	"context"
 	"net/http"
 
-	"github.com/peractio/gdk/pkg/httpx/mux"
-	"github.com/peractio/gdk/pkg/logx"
+	"github.com/rizalgowandy/gdk/pkg/httpx/mux"
+	"github.com/rizalgowandy/gdk/pkg/logx"
 	"github.com/segmentio/ksuid"
 )
 

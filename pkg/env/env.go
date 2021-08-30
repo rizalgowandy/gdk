@@ -3,7 +3,7 @@ package env
 import (
 	"os"
 
-	"github.com/peractio/gdk/pkg/syncx"
+	"github.com/rizalgowandy/gdk/pkg/syncx"
 )
 
 // List available environments.

@@ -4,8 +4,8 @@ import (
 	"context"
 	"testing"
 
-	"github.com/peractio/gdk/pkg/cronx"
-	"github.com/peractio/gdk/pkg/errorx/v2"
+	"github.com/rizalgowandy/gdk/pkg/cronx"
+	"github.com/rizalgowandy/gdk/pkg/errorx/v2"
 )
 
 func TestRequestID(t *testing.T) {

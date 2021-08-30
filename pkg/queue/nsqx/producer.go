@@ -6,9 +6,9 @@ import (
 	"time"
 
 	"github.com/nsqio/go-nsq"
-	"github.com/peractio/gdk/pkg/errorx/v2"
-	"github.com/peractio/gdk/pkg/jsonx"
-	"github.com/peractio/gdk/pkg/syncx"
+	"github.com/rizalgowandy/gdk/pkg/errorx/v2"
+	"github.com/rizalgowandy/gdk/pkg/jsonx"
+	"github.com/rizalgowandy/gdk/pkg/syncx"
 )
 
 var (

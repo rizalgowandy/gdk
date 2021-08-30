@@ -4,7 +4,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/peractio/gdk/pkg/errorx/v2"
+	"github.com/rizalgowandy/gdk/pkg/errorx/v2"
 )
 
 func TestDummy_Close(t *testing.T) {

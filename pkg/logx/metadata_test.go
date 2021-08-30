@@ -5,8 +5,8 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/peractio/gdk/pkg/errorx/v2"
-	"github.com/peractio/gdk/pkg/tags"
+	"github.com/rizalgowandy/gdk/pkg/errorx/v2"
+	"github.com/rizalgowandy/gdk/pkg/tags"
 	"github.com/stretchr/testify/assert"
 )
 

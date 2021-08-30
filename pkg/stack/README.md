@@ -11,6 +11,6 @@ You should copy the code to each repository and modify:
 ```go
 var (
     // replace with the path where you place the code
-    functionPackageKeyword = []byte("/github.com/peractio/gdk/pkg/stack/")
+    functionPackageKeyword = []byte("/github.com/rizalgowandy/gdk/pkg/stack/")
 )
 ```

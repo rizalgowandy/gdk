@@ -5,8 +5,8 @@ import (
 	"time"
 
 	"github.com/dgraph-io/ristretto"
-	"github.com/peractio/gdk/pkg/errorx/v2"
-	"github.com/peractio/gdk/pkg/syncx"
+	"github.com/rizalgowandy/gdk/pkg/errorx/v2"
+	"github.com/rizalgowandy/gdk/pkg/syncx"
 )
 
 var (

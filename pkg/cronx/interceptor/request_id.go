@@ -3,8 +3,8 @@ package interceptor
 import (
 	"context"
 
-	"github.com/peractio/gdk/pkg/cronx"
-	"github.com/peractio/gdk/pkg/logx"
+	"github.com/rizalgowandy/gdk/pkg/cronx"
+	"github.com/rizalgowandy/gdk/pkg/logx"
 )
 
 // RequestID is a middleware that inject request id to the context if it doesn't exists.

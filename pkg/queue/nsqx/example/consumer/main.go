@@ -4,9 +4,9 @@ import (
 	"context"
 
 	"github.com/nsqio/go-nsq"
-	"github.com/peractio/gdk/pkg/logx"
-	"github.com/peractio/gdk/pkg/queue/nsqx"
-	"github.com/peractio/gdk/pkg/queue/nsqx/interceptor"
+	"github.com/rizalgowandy/gdk/pkg/logx"
+	"github.com/rizalgowandy/gdk/pkg/queue/nsqx"
+	"github.com/rizalgowandy/gdk/pkg/queue/nsqx/interceptor"
 )
 
 type SendEmail struct{}

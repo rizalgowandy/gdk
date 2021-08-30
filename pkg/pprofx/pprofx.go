@@ -8,8 +8,8 @@ import (
 	"time"
 
 	sigar "github.com/cloudfoundry/gosigar"
-	"github.com/peractio/gdk/pkg/converter"
-	"github.com/peractio/gdk/pkg/jsonx"
+	"github.com/rizalgowandy/gdk/pkg/converter"
+	"github.com/rizalgowandy/gdk/pkg/jsonx"
 )
 
 const SleepDuration = time.Second * 10

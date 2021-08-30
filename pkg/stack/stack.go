@@ -7,9 +7,9 @@ import (
 
 var (
 	panicKeyword           = []byte("src/runtime/panic.go")
-	companyKeyword         = []byte("github.com/peractio")
-	functionPackageKeyword = []byte("/github.com/peractio/gdk/pkg/stack/")
-	projectKeyword         = []byte("github.com/peractio/gdk")
+	companyKeyword         = []byte("github.com/rizalgowandy")
+	functionPackageKeyword = []byte("/github.com/rizalgowandy/gdk/pkg/stack/")
+	projectKeyword         = []byte("github.com/rizalgowandy/gdk")
 )
 
 // Trim removes unnecessary stack trace.
@@ -51,7 +51,7 @@ func Trim(stack []byte) []byte {
 // Only trim all characters before company keyword.
 //
 // Example:
-// Input  => /home/peractio/go/src/github.com/peractio/gdk/pkg/stack.go 130
+// Input  => /home/rizalgowandy/go/src/github.com/rizalgowandy/gdk/pkg/stack.go 130
 // Result => gdk/pkg/stack.go 130
 func ToArr(stack []byte) []string {
 	if stack == nil {
