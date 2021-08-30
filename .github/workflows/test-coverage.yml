@@ -2,7 +2,6 @@ name: Coverage
 
 on:
   push:
-    branches: [ main ]
   pull_request:
     branches: [ main ]
   workflow_dispatch:
@@ -56,6 +55,7 @@ jobs:
           return await goTool({file: "../pr.out"})
 
     - name: Create comment
+      if: github.event_name == 'pull_request'
       uses: actions/github-script@v3
       env:
         main_code_cov: ${{steps.codecov-main-branch.outputs.result}}
