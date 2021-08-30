@@ -228,7 +228,7 @@ func TestIs(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := Is(tt.args.code, tt.args.err)
+			got := Is(tt.args.err, tt.args.code)
 			if !reflect.DeepEqual(tt.want, got) {
 				msg := "\nwant = %#v" + "\ngot  = %#v"
 				t.Errorf(msg, tt.want, got)

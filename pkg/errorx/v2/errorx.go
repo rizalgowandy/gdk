@@ -3,21 +3,18 @@ package errorx
 import (
 	"errors"
 	"fmt"
-	"runtime"
-	"strings"
 
 	"github.com/imdario/mergo"
+	"github.com/rizalgowandy/gdk/pkg/fn"
 )
 
-var ServiceName = "rizalgowandy"
+const callerSkip = 2
 
 // E for creating new error.
 // error should always be the first param.
 func E(args ...interface{}) error {
 	if len(args) == 0 {
-		_, file, line, _ := runtime.Caller(1)
-		file = file[strings.Index(file, ServiceName)+len(ServiceName):]
-		return Errorf("errorx.E: bad call without args from file=%s:%d", file, line)
+		return Errorf("errorx.E: bad call without args from file=%s", fn.Line(callerSkip))
 	}
 
 	e := &Error{}
@@ -27,18 +24,17 @@ func E(args ...interface{}) error {
 			// Copy and put the errors back.
 			errCopy := *arg
 			e = &errCopy
+			e.OpTraces = append([]Op{Op(fn.Name(callerSkip))}, e.OpTraces...)
 
 		case error:
 			e.Err = arg
-			_, file, line, _ := runtime.Caller(1)
-			file = file[strings.Index(file, ServiceName)+len(ServiceName):]
-			e.Line = Line(fmt.Sprintf("%s:%d", file, line))
+			e.Line = Line(fn.Line(callerSkip))
+			e.OpTraces = append([]Op{Op(fn.Name(callerSkip))}, e.OpTraces...)
 
 		case string:
 			e.Err = Errorf(arg)
-			_, file, line, _ := runtime.Caller(1)
-			file = file[strings.Index(file, ServiceName)+len(ServiceName):]
-			e.Line = Line(fmt.Sprintf("%s:%d", file, line))
+			e.Line = Line(fn.Line(callerSkip))
+			e.OpTraces = append([]Op{Op(fn.Name(callerSkip))}, e.OpTraces...)
 
 		case Code:
 			// New code will always replace the old code.
@@ -60,7 +56,8 @@ func E(args ...interface{}) error {
 			}
 
 		case Op:
-			e.OpTraces = append([]Op{arg}, e.OpTraces...)
+			// For backward compatibility.
+			// Client is no longer to pass Op manually as an argument but will be filled automatically.
 
 		case Message:
 			e.Message = arg
@@ -70,9 +67,7 @@ func E(args ...interface{}) error {
 
 		default:
 			// The default error is unknown.
-			_, file, line, _ := runtime.Caller(1)
-			file = file[strings.Index(file, ServiceName)+len(ServiceName):]
-			msg := fmt.Sprintf("errorx.E: bad call from file=%s:%d args=%v", file, line, args)
+			msg := fmt.Sprintf("errorx.E: bad call from file=%s args=%v", fn.Line(callerSkip), args)
 			return Errorf(msg+"; unknown_type=%T value=%v", arg, arg)
 		}
 	}
@@ -118,7 +113,7 @@ func Match(errs1, errs2 error) bool {
 
 // Is reports whether err is an *Error of the given Code.
 // If err is nil then Is returns false.
-func Is(code Code, err error) bool {
+func Is(err error, code Code) bool {
 	if err == nil {
 		return false
 	}
@@ -133,7 +128,7 @@ func Is(code Code, err error) bool {
 	}
 
 	if e.Err != nil {
-		return Is(code, e.Err)
+		return Is(e.Err, code)
 	}
 
 	return false

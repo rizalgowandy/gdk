@@ -72,7 +72,6 @@ linters:
     - bodyclose
     - deadcode
     - depguard
-    - dogsled
     - dupl
     - errcheck
     - exhaustive
@@ -109,6 +108,7 @@ linters:
     - whitespace
 
   # don't enable:
+  # - dogsled
   # - asciicheck
   # - gochecknoglobals
   # - gocognit

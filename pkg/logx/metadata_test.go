@@ -47,7 +47,7 @@ func TestErrMetadata(t *testing.T) {
 					tags.Message:      errorx.Message("qwerty"),
 					tags.MetricStatus: errorx.MetricStatusExpectedErr,
 					tags.Ops: []errorx.Op{
-						errorx.Op("abc"),
+						errorx.Op("logx.TestErrMetadata"),
 					},
 					tags.ErrorLine: "",
 				},
@@ -69,7 +69,7 @@ func TestErrMetadata(t *testing.T) {
 				}
 			}
 
-			assert.Equal(t, got, tt.want)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
