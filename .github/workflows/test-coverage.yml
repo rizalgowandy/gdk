@@ -28,7 +28,7 @@ jobs:
       run: |
         go test ./... -cover -count=1 -race -coverprofile ../main.out
 
-    - name: Set Main Branch Code Coverage
+    - name: Set main branch code coverage
       id: codecov-main-branch
       uses: actions/github-script@v3
       with:
@@ -38,14 +38,14 @@ jobs:
           const goTool = require(`${process.env.GITHUB_WORKSPACE}/.github/scripts/gotool.js`)
           return await goTool({file: "../main.out"})
 
-    - name: Checkout PR Branch
+    - name: Checkout PR branch
       uses: actions/checkout@v2
 
-    - name: Test PR Branch
+    - name: Test PR branch
       run: |
         go test ./... -cover -count=1 -race -coverprofile ../pr.out
 
-    - name: Set PR Branch Code Coverage
+    - name: Set PR branch code coverage
       id: codecov-pr-branch
       uses: actions/github-script@v3
       with:
@@ -55,7 +55,7 @@ jobs:
           const goTool = require(`${process.env.GITHUB_WORKSPACE}/.github/scripts/gotool.js`)
           return await goTool({file: "../pr.out"})
 
-    - name: Create Comment
+    - name: Create comment
       uses: actions/github-script@v3
       env:
         main_code_cov: ${{steps.codecov-main-branch.outputs.result}}
