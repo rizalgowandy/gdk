@@ -4,8 +4,8 @@ import (
 	"math/rand"
 	"time"
 
-	"github.com/rizalgowandy/gdk/pkg/converter"
 	"github.com/pingcap/go-ycsb/pkg/generator"
+	"github.com/rizalgowandy/gdk/pkg/converter"
 )
 
 type Hotspot struct {
