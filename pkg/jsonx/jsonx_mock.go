@@ -5,7 +5,6 @@
 package jsonx
 
 import (
-	bytes "bytes"
 	io "io"
 	reflect "reflect"
 
@@ -65,17 +64,17 @@ func (mr *MockOperatorItfMockRecorder) NewDecoder(r interface{}) *gomock.Call {
 }
 
 // NewEncoder mocks base method.
-func (m *MockOperatorItf) NewEncoder(buffer *bytes.Buffer) EncoderItf {
+func (m *MockOperatorItf) NewEncoder(w io.Writer) EncoderItf {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "NewEncoder", buffer)
+	ret := m.ctrl.Call(m, "NewEncoder", w)
 	ret0, _ := ret[0].(EncoderItf)
 	return ret0
 }
 
 // NewEncoder indicates an expected call of NewEncoder.
-func (mr *MockOperatorItfMockRecorder) NewEncoder(buffer interface{}) *gomock.Call {
+func (mr *MockOperatorItfMockRecorder) NewEncoder(w interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "NewEncoder", reflect.TypeOf((*MockOperatorItf)(nil).NewEncoder), buffer)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "NewEncoder", reflect.TypeOf((*MockOperatorItf)(nil).NewEncoder), w)
 }
 
 // Unmarshal mocks base method.
