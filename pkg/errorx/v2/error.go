@@ -1,5 +1,11 @@
 package errorx
 
+import (
+	"fmt"
+
+	"github.com/rizalgowandy/gdk/pkg/fn"
+)
+
 type (
 	// Op is operation of error.
 	Op string
@@ -43,6 +49,10 @@ type Error struct {
 
 // Error returns the string representation of the error message.
 func (e *Error) Error() string {
+	if e.Err == nil {
+		return fmt.Sprintf("errorx.E: bad call without args from file=%s", fn.Line(callerSkip))
+	}
+
 	return e.Err.Error()
 }
 
