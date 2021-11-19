@@ -3,9 +3,6 @@ services:
   postgres:
     image: postgres:10.6
     container_name: gdk-postgres
-    # volumes:
-      # - ./schema:/docker-entrypoint-initdb.d
-      #- gdk_database:/var/lib/postgresql/data
     ports:
       - "5432:5432"
     environment:
@@ -54,6 +51,36 @@ services:
       - "4171:4171"
     restart: unless-stopped
 
-#volumes:
-#  gdk_database:
-#    driver: local
+  redpanda: # supports kafka
+    image: docker.vectorized.io/vectorized/redpanda:v21.9.5
+    container_name: gdk-redpanda
+    ports:
+      - 9092:9092
+      - 29092:29092
+    command:
+      - redpanda
+      - start
+      - --smp
+      - '1'
+      - --reserve-memory
+      - 0M
+      - --overprovisioned
+      - --node-id
+      - '0'
+      - --kafka-addr
+      - PLAINTEXT://0.0.0.0:29092,OUTSIDE://0.0.0.0:9092
+      - --advertise-kafka-addr
+      - PLAINTEXT://redpanda:29092,OUTSIDE://localhost:9092
+    restart: unless-stopped
+
+  kafdrop: # kafka-ui
+    image: obsidiandynamics/kafdrop:3.27.0
+    container_name: gdk-kafdrop
+    ports:
+      - 9100:9000
+    environment:
+      - KAFKA_BROKERCONNECT=redpanda:29092
+      - JVM_OPTS=-Xms32M -Xmx64M
+    depends_on:
+      - redpanda
+    restart: unless-stopped
