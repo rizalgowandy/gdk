@@ -3,12 +3,16 @@ module github.com/rizalgowandy/gdk
 go 1.15
 
 require (
+	github.com/ThreeDotsLabs/watermill v1.2.0-rc.6
+	github.com/ThreeDotsLabs/watermill-amqp v1.1.4
+	github.com/ThreeDotsLabs/watermill-kafka/v2 v2.2.1
 	github.com/cloudfoundry/gosigar v1.2.0
 	github.com/dgraph-io/ristretto v0.1.0
 	github.com/go-redis/redis/v8 v8.11.3
 	github.com/golang/mock v1.4.4
 	github.com/gomodule/redigo v1.8.5
 	github.com/gorilla/mux v1.8.0
+	github.com/hashicorp/go-multierror v1.1.1
 	github.com/imdario/mergo v0.3.12
 	github.com/jackc/pgx/v4 v4.13.0
 	github.com/json-iterator/go v1.1.11
@@ -17,6 +21,7 @@ require (
 	github.com/modern-go/reflect2 v1.0.1 // indirect
 	github.com/nsqio/go-nsq v1.0.8
 	github.com/pingcap/go-ycsb v0.0.0-20210129115622-04d8656123e4
+	github.com/pkg/errors v0.9.1
 	github.com/robfig/cron/v3 v3.0.1
 	github.com/rs/zerolog v1.21.0
 	github.com/segmentio/ksuid v1.0.4
