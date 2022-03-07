@@ -17,8 +17,6 @@ require (
 	github.com/jackc/pgx/v4 v4.13.0
 	github.com/json-iterator/go v1.1.11
 	github.com/labstack/echo/v4 v4.5.0
-	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
-	github.com/modern-go/reflect2 v1.0.1 // indirect
 	github.com/nsqio/go-nsq v1.0.8
 	github.com/pingcap/go-ycsb v0.0.0-20210129115622-04d8656123e4
 	github.com/pkg/errors v0.9.1

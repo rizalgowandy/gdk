@@ -100,7 +100,7 @@ func CORS(next http.Handler) http.Handler {
 }
 
 // CORSWithConfig returns a Cross-Origin Resource Sharing (CORS) middleware.
-// nolint gocyclo
+// nolint:gocyclo
 func CORSWithConfig(next http.Handler, config *CORSConfig) http.Handler {
 	// Defaults
 	if config.Skipper == nil {

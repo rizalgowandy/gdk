@@ -74,7 +74,6 @@ linters:
     - depguard
     - dupl
     - errcheck
-    - exhaustive
     - funlen
     - gochecknoinits
     - goconst
@@ -83,7 +82,6 @@ linters:
     - gofmt
     - goimports
     - golint
-    - gomnd
     - goprintffuncname
     - gosec
     - gosimple
@@ -120,6 +118,8 @@ linters:
   # - prealloc
   # - testpackage
   # - wsl
+  # - gomnd
+  # - exhaustive
 
 issues:
   # Excluding configuration per-path, per-linter, per-text and per-source

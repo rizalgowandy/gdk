@@ -205,7 +205,6 @@ func bindData(ptr interface{}, data map[string][]string, tag string) error {
 	return nil
 }
 
-// nolint:exhaustive
 func unmarshalField(valueKind reflect.Kind, val string, field reflect.Value) (bool, error) {
 	switch valueKind {
 	case reflect.Ptr:
@@ -235,7 +234,7 @@ func unmarshalFieldPtr(value string, field reflect.Value) (bool, error) {
 	return unmarshalFieldNonPtr(value, field.Elem())
 }
 
-// nolint:gocyclo,exhaustive
+// nolint:gocyclo
 func setWithProperType(valueKind reflect.Kind, val string, structField reflect.Value) error {
 	// But also call it here, in case we're dealing with an array of BindUnmarshalers
 	if ok, err := unmarshalField(valueKind, val, structField); ok {
