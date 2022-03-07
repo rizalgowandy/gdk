@@ -7,7 +7,7 @@ import (
 	"github.com/rizalgowandy/gdk/pkg/cronx"
 )
 
-func TestAlwaysError_Run(t *testing.T) {
+func Test_alwaysError_Run(t *testing.T) {
 	type args struct {
 		in context.Context
 	}
@@ -24,7 +24,7 @@ func TestAlwaysError_Run(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			a := AlwaysError{}
+			a := alwaysError{}
 			if err := a.Run(tt.args.in); (err != nil) != tt.wantErr {
 				t.Errorf("Run() error = %v, wantErr %v", err, tt.wantErr)
 			}
@@ -32,7 +32,7 @@ func TestAlwaysError_Run(t *testing.T) {
 	}
 }
 
-func TestEveryJob_Run(t *testing.T) {
+func Test_everyJob_Run(t *testing.T) {
 	type args struct {
 		in0 context.Context
 	}
@@ -49,7 +49,7 @@ func TestEveryJob_Run(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			ev := EveryJob{}
+			ev := everyJob{}
 			if err := ev.Run(tt.args.in0); (err != nil) != tt.wantErr {
 				t.Errorf("Run() error = %v, wantErr %v", err, tt.wantErr)
 			}
@@ -57,7 +57,7 @@ func TestEveryJob_Run(t *testing.T) {
 	}
 }
 
-func TestSubscription_Run(t *testing.T) {
+func Test_subscription_Run(t *testing.T) {
 	type args struct {
 		in0 context.Context
 	}
@@ -81,7 +81,7 @@ func TestSubscription_Run(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			su := Subscription{}
+			su := subscription{}
 			if err := su.Run(tt.args.in0); (err != nil) != tt.wantErr {
 				t.Errorf("Run() error = %v, wantErr %v", err, tt.wantErr)
 			}
@@ -89,7 +89,7 @@ func TestSubscription_Run(t *testing.T) {
 	}
 }
 
-func TestSendEmail_Run(t *testing.T) {
+func Test_sendEmail_Run(t *testing.T) {
 	type args struct {
 		in0 context.Context
 	}
@@ -106,7 +106,7 @@ func TestSendEmail_Run(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			e := SendEmail{}
+			e := sendEmail{}
 			if err := e.Run(tt.args.in0); (err != nil) != tt.wantErr {
 				t.Errorf("Run() error = %v, wantErr %v", err, tt.wantErr)
 			}
@@ -114,7 +114,7 @@ func TestSendEmail_Run(t *testing.T) {
 	}
 }
 
-func TestPayBill_Run(t *testing.T) {
+func Test_payBill_Run(t *testing.T) {
 	type args struct {
 		in0 context.Context
 	}
@@ -131,7 +131,7 @@ func TestPayBill_Run(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			p := PayBill{}
+			p := payBill{}
 			if err := p.Run(tt.args.in0); (err != nil) != tt.wantErr {
 				t.Errorf("Run() error = %v, wantErr %v", err, tt.wantErr)
 			}

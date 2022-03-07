@@ -1,27 +1,55 @@
 package cronx
 
 import (
-	"context"
 	"net/http"
-	"os"
-	"os/signal"
 	"time"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/rizalgowandy/gdk/pkg/cronx/page"
 	"github.com/rizalgowandy/gdk/pkg/errorx/v2"
-	"github.com/rizalgowandy/gdk/pkg/logx"
-	"github.com/rizalgowandy/gdk/pkg/tags"
 )
 
-const TimeoutDuration = time.Second * 10
+// SleepDuration defines the duration to sleep the server if the defined address is busy.
+const SleepDuration = time.Second * 10
 
-// NewServer creates an HTTP server.
+// NewServer creates a new HTTP server.
 // - /			=> current server status.
 // - /jobs		=> current jobs as frontend html.
 // - /api/jobs	=> current jobs as json.
-func NewServer(commandCtrl *CommandController) {
+func NewServer(address string) (*http.Server, error) {
+	if commandController == nil || commandController.Commander == nil {
+		return nil, errorx.E("cronx has not been initialized")
+	}
+
+	// Create server.
+	e := echo.New()
+	e.HideBanner = true
+	e.HidePort = true
+	e.Use(middleware.CORS())
+	e.Use(middleware.Recover())
+	e.Use(middleware.RemoveTrailingSlash())
+
+	// Create server controller.
+	ctrl := &ServerController{CommandController: commandController}
+
+	// Register routes.
+	e.GET("/", ctrl.HealthCheck)
+	e.GET("/jobs", ctrl.Jobs)
+	e.GET("/api/jobs", ctrl.APIJobs)
+
+	return &http.Server{
+		Addr:    address,
+		Handler: e,
+	}, nil
+}
+
+// NewSideCarServer creates a new side car HTTP server.
+// HTTP server will be start automatically.
+// - /			=> current server status.
+// - /jobs		=> current jobs as frontend html.
+// - /api/jobs	=> current jobs as json.
+func NewSideCarServer(commandCtrl *CommandController) {
 	if commandCtrl.Location == nil {
 		commandCtrl.Location = defaultConfig.Location
 	}
@@ -30,8 +58,8 @@ func NewServer(commandCtrl *CommandController) {
 	e := echo.New()
 	e.HideBanner = true
 	e.HidePort = true
-	e.Use(middleware.Recover())
 	e.Use(middleware.CORS())
+	e.Use(middleware.Recover())
 	e.Use(middleware.RemoveTrailingSlash())
 
 	// Create server controller.
@@ -42,41 +70,14 @@ func NewServer(commandCtrl *CommandController) {
 	e.GET("/jobs", ctrl.Jobs)
 	e.GET("/api/jobs", ctrl.APIJobs)
 
-	// Start server.
-	go func() {
-		if err := e.Start(commandCtrl.Address); err != nil && err != http.ErrServerClosed {
-			logx.FTL(logx.NewContext(), err, "shutting down the server")
+	// Overcome issue with socket-master respawning 2nd app,
+	// We will keep trying to run the server.
+	// If the current address is busy,
+	// sleep then try again until the address has become available.
+	for {
+		if err := e.Start(commandCtrl.Address); err != nil {
+			time.Sleep(SleepDuration)
 		}
-	}()
-
-	// Wait for interrupt signal to gracefully shutdown the server with a certain timeout.
-	// Use a buffered channel to avoid missing signals as recommended for signal.Notify.
-	quit := make(chan os.Signal, 1)
-	signal.Notify(quit, os.Interrupt)
-	<-quit
-
-	// Stop cron jobs.
-	ctx := commandController.Commander.Stop()
-	ctx = logx.ContextWithRequestID(ctx)
-	select {
-	case <-ctx.Done():
-		logx.INF(ctx, nil, "cron has been shutdown")
-	case <-time.After(TimeoutDuration):
-		logx.WRN(
-			ctx,
-			errorx.E("timeout", errorx.Fields{tags.Duration: TimeoutDuration.String()}),
-			"cron shutdown failure",
-		)
-	}
-
-	ctx, cancel := context.WithTimeout(ctx, TimeoutDuration)
-	defer cancel()
-
-	// Shutdown server.
-	if err := e.Shutdown(ctx); err != nil && err != context.Canceled {
-		logx.FTL(ctx, err, "server shutdown failure")
-	} else {
-		logx.INF(ctx, nil, "server has been shutdown")
 	}
 }
 

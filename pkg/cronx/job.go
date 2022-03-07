@@ -84,9 +84,9 @@ func (j *Job) Run() {
 	j.UpdateStatus()
 }
 
-// NewJob creates a new job with default status and name.
-func NewJob(job JobItf, waveNumber, totalWave int64) *Job {
-	name := reflect.TypeOf(job).Name()
+// jobNameFromJob return the Job name by reflect the job
+func jobNameFromJob(job JobItf) (name string) {
+	name = reflect.TypeOf(job).Name()
 	if name == "" {
 		name = reflect.TypeOf(job).Elem().Name()
 	}
@@ -95,6 +95,14 @@ func NewJob(job JobItf, waveNumber, totalWave int64) *Job {
 	}
 	if name == "Func" {
 		name = "(nameless)"
+	}
+	return
+}
+
+// NewJob creates a new job with default status and name.
+func NewJob(job JobItf, name string, waveNumber, totalWave int64) *Job {
+	if name == "" {
+		name = jobNameFromJob(job)
 	}
 
 	return &Job{

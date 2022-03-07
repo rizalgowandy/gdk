@@ -25,7 +25,7 @@ func TestEvery(t *testing.T) {
 				duration: 0,
 				job:      nil,
 				mock: func() {
-					Default()
+					New()
 					commandController.Commander = nil
 				},
 			},
@@ -36,7 +36,7 @@ func TestEvery(t *testing.T) {
 				duration: 5 * time.Minute,
 				job:      Func(func(ctx context.Context) error { return nil }),
 				mock: func() {
-					Default()
+					New()
 				},
 			},
 		},
@@ -75,14 +75,14 @@ func TestGetEntries(t *testing.T) {
 		{
 			name: "Uninitialized",
 			mock: func() {
-				Default()
+				New()
 				commandController.Commander = nil
 			},
 		},
 		{
 			name: "Success",
 			mock: func() {
-				Default()
+				New()
 			},
 			want: true,
 		},
@@ -114,7 +114,7 @@ func TestRemove(t *testing.T) {
 			args: args{
 				id: 1,
 				mock: func() {
-					Default()
+					New()
 					commandController.Commander = nil
 				},
 			},
@@ -124,7 +124,7 @@ func TestRemove(t *testing.T) {
 			args: args{
 				id: 1,
 				mock: func() {
-					Default()
+					New()
 				},
 			},
 		},
@@ -154,7 +154,7 @@ func TestSchedule(t *testing.T) {
 				spec: "@every 5m",
 				job:  Func(func(ctx context.Context) error { return nil }),
 				mock: func() {
-					Default()
+					New()
 					commandController.Commander = nil
 				},
 			},
@@ -166,7 +166,7 @@ func TestSchedule(t *testing.T) {
 				spec: "this is clearly not a spec",
 				job:  Func(func(ctx context.Context) error { return nil }),
 				mock: func() {
-					Default()
+					New()
 				},
 			},
 			wantErr: true,
@@ -177,7 +177,7 @@ func TestSchedule(t *testing.T) {
 				spec: "@every 5m",
 				job:  Func(func(ctx context.Context) error { return nil }),
 				mock: func() {
-					Default()
+					New()
 				},
 			},
 			wantErr: false,
@@ -188,7 +188,7 @@ func TestSchedule(t *testing.T) {
 				spec: "0 */30 * * * *",
 				job:  Func(func(ctx context.Context) error { return nil }),
 				mock: func() {
-					Default()
+					New()
 				},
 			},
 			wantErr: false,
@@ -199,7 +199,7 @@ func TestSchedule(t *testing.T) {
 				spec: "*/30 * * * *",
 				job:  Func(func(ctx context.Context) error { return nil }),
 				mock: func() {
-					Default()
+					New()
 				},
 			},
 			wantErr: false,
@@ -247,7 +247,29 @@ func TestNew(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			New(tt.args.config)
+			New()
+		})
+	}
+}
+
+func TestCustom(t *testing.T) {
+	type args struct {
+		config Config
+	}
+	tests := []struct {
+		name string
+		args args
+	}{
+		{
+			name: "Success",
+			args: args{
+				config: Config{},
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			Custom(tt.args.config)
 		})
 	}
 }
@@ -260,14 +282,14 @@ func TestStop(t *testing.T) {
 		{
 			name: "Uninitialized",
 			mock: func() {
-				Default()
+				New()
 				commandController.Commander = nil
 			},
 		},
 		{
 			name: "Success",
 			mock: func() {
-				Default()
+				New()
 			},
 		},
 	}
@@ -369,14 +391,14 @@ func TestGetStatusData(t *testing.T) {
 		{
 			name: "Success without any job",
 			mock: func() {
-				Default()
+				New()
 			},
 			want: true,
 		},
 		{
 			name: "Success",
 			mock: func() {
-				Default()
+				New()
 				_ = Schedule("@every 5m", Func(func(ctx context.Context) error { return nil }))
 			},
 			want: true,
@@ -411,7 +433,7 @@ func TestGetStatusJSON(t *testing.T) {
 		{
 			name: "Success without any job",
 			mock: func() {
-				Default()
+				New()
 			},
 			want: true,
 		},
@@ -442,14 +464,14 @@ func TestGetEntry(t *testing.T) {
 		{
 			name: "Uninitialized",
 			mock: func() {
-				Default()
+				New()
 				commandController.Commander = nil
 			},
 		},
 		{
 			name: "Success",
 			mock: func() {
-				Default()
+				New()
 				Every(time.Hour, Func(func(ctx context.Context) error {
 					return nil
 				}))
@@ -485,7 +507,7 @@ func TestGetInfo(t *testing.T) {
 		{
 			name: "Success without any job",
 			mock: func() {
-				Default()
+				New()
 			},
 			want: true,
 		},

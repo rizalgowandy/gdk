@@ -42,6 +42,5 @@ func (i IgnoreErrors) Middleware(h message.HandlerFunc) message.HandlerFunc {
 		}
 
 		return events, err
-
 	}
 }

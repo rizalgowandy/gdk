@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"github.com/rizalgowandy/gdk/pkg/errorx/v2"
-	"github.com/rizalgowandy/gdk/pkg/logx"
 	"github.com/robfig/cron/v3"
 )
 
@@ -29,22 +28,31 @@ var (
 )
 
 // Default creates a cron with default config.
+// HTTP server is built in as side car by default.
 func Default(interceptors ...Interceptor) {
-	New(defaultConfig, interceptors...)
+	Custom(defaultConfig, interceptors...)
 }
 
-// New creates a cron with custom config.
-func New(config Config, interceptors ...Interceptor) {
+// New creates a cron without HTTP server built in.
+func New(interceptors ...Interceptor) {
+	Custom(Config{}, interceptors...)
+}
+
+// Custom creates a cron with custom config.
+// For advance user, allow custom modification.
+func Custom(config Config, interceptors ...Interceptor) {
 	// If there is invalid config use the default config instead.
 	if config.Location == nil {
 		config.Location = defaultConfig.Location
 	}
-	if config.Address == "" {
-		config.Address = defaultConfig.Address
-	}
 
 	// Create new command controller and start the underlying jobs.
 	commandController = NewCommandController(config, interceptors...)
+
+	// Check if client want to start a server to serve json and frontend.
+	if config.Address != "" {
+		go NewSideCarServer(commandController)
+	}
 }
 
 // Schedule sets a job to run at specific time.
@@ -52,18 +60,26 @@ func New(config Config, interceptors ...Interceptor) {
 //  @every 5m
 //  0 */10 * * * * => every 10m
 func Schedule(spec string, job JobItf) error {
-	return schedule(spec, job, 1, 1)
+	return schedule(spec, "", job, 1, 1)
 }
 
-func schedule(spec string, job JobItf, waveNumber, totalWave int64) error {
+// ScheduleWithName sets a job to run at specific time with a Job name
+// Example:
+//  @every 5m
+//  0 */10 * * * * => every 10m
+func ScheduleWithName(name, spec string, job JobItf) error {
+	return schedule(spec, name, job, 1, 1)
+}
+
+func schedule(spec, jobName string, job JobItf, waveNumber, totalWave int64) error {
 	if commandController == nil || commandController.Commander == nil {
-		return errorx.E("cronx has not been initialized")
+		return errorx.New("cronx has not been initialized")
 	}
 
 	// Check if spec is correct.
 	schedule, err := commandController.Parser.Parse(spec)
 	if err != nil {
-		downJob := NewJob(job, waveNumber, totalWave)
+		downJob := NewJob(job, jobName, waveNumber, totalWave)
 		downJob.Status = StatusCodeDown
 		downJob.Error = err.Error()
 		commandController.UnregisteredJobs = append(
@@ -73,7 +89,7 @@ func schedule(spec string, job JobItf, waveNumber, totalWave int64) error {
 		return err
 	}
 
-	j := NewJob(job, waveNumber, totalWave)
+	j := NewJob(job, jobName, waveNumber, totalWave)
 	j.EntryID = commandController.Commander.Schedule(schedule, j)
 	return nil
 }
@@ -88,14 +104,14 @@ func schedule(spec string, job JobItf, waveNumber, totalWave int64) error {
 //	This input schedules the job to run 3 times.
 func Schedules(spec, separator string, job JobItf) error {
 	if spec == "" {
-		return errorx.E("invalid specification")
+		return errorx.New("invalid specification")
 	}
 	if separator == "" {
-		return errorx.E("invalid separator")
+		return errorx.New("invalid separator")
 	}
 	schedules := strings.Split(spec, separator)
 	for k, v := range schedules {
-		if err := schedule(v, job, int64(k+1), int64(len(schedules))); err != nil {
+		if err := schedule(v, "", job, int64(k+1), int64(len(schedules))); err != nil {
 			return err
 		}
 	}
@@ -111,7 +127,7 @@ func Every(duration time.Duration, job JobItf) {
 		return
 	}
 
-	j := NewJob(job, 1, 1)
+	j := NewJob(job, "", 1, 1)
 	j.EntryID = commandController.Commander.Schedule(cron.Every(duration), j)
 }
 
@@ -121,13 +137,7 @@ func Stop() {
 		return
 	}
 
-	// Stop cron jobs.
-	ctx := commandController.Commander.Stop()
-	ctx = logx.ContextWithRequestID(ctx)
-	select {
-	case <-ctx.Done():
-	case <-time.After(TimeoutDuration):
-	}
+	commandController.Commander.Stop()
 }
 
 // GetEntries returns all the current registered jobs.
@@ -178,22 +188,13 @@ func GetStatusJSON() map[string]interface{} {
 	return commandController.StatusJSON()
 }
 
-// GetInfo returns command controller basic information.
+// GetInfo returns current cron check basic information.
 func GetInfo() map[string]interface{} {
 	if commandController == nil {
 		return nil
 	}
 
 	return commandController.Info()
-}
-
-// Serve creates an HTTP server.
-func Serve() {
-	if commandController == nil {
-		return
-	}
-
-	NewServer(commandController)
 }
 
 // Func is a type to allow callers to wrap a raw func.
