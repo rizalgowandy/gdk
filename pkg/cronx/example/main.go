@@ -96,7 +96,6 @@ func main() {
 	// ===========================
 	// Start Main Server
 	// ===========================
-
 	server, err := cronx.NewServer(":9001")
 	if err != nil {
 		log.WithLevel(zerolog.FatalLevel).
@@ -104,7 +103,6 @@ func main() {
 			Msg("new server creation must success")
 		return
 	}
-
 	if err := server.ListenAndServe(); err != nil {
 		log.WithLevel(zerolog.FatalLevel).
 			Err(err).

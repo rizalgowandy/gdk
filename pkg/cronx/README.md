@@ -1,8 +1,9 @@
 # Cronx
-Cronx is a wrapper for [robfig/cron](https://github.com/robfig/cron).
-It includes a live monitoring of current schedule and state of active jobs that can be outputted as JSON or HTML template.
+
+Cronx is a wrapper for [robfig/cron](https://github.com/robfig/cron). It includes a live monitoring of current schedule and state of active jobs that can be outputted as JSON or HTML template.
 
 ## Available Status
+
 * **Down** => Job fails to be registered.
 * **Up** => Job has just been created.
 * **Running** => Job is currently running.
@@ -10,7 +11,9 @@ It includes a live monitoring of current schedule and state of active jobs that 
 * **Error** => Job fails on the last run.
 
 ## Quick Start
+
 Create a _**main.go**_ file.
+
 ```go
 package main
 
@@ -30,16 +33,23 @@ type sendEmail struct{}
 func (s sendEmail) Run(ctx context.Context) error {
 	log.WithLevel(zerolog.InfoLevel).
 		Str("job", "sendEmail").
-		Msg("every 5 sec send reminder emails")
+		Msg("every 5 seconds send reminder emails")
 	return nil
 }
 
 func main() {
-	// Create a cron controller with default config that:
-	// - running on port :8998
-	// - location is time.Local
-	// - without any middleware
-	cronx.Default()
+	// Create cron middleware.
+	// The order is important.
+	// The first one will be executed first.
+	cronMiddleware := cronx.Chain(
+		interceptor.Recover(),
+		interceptor.Logger(),
+		interceptor.DefaultWorkerPool(),
+	)
+
+	// Create a cron with middleware.
+	cronx.New(cronMiddleware)
+	defer cronx.Stop()
 
 	// Register a new cron job.
 	// Struct name will become the name for the current job.
@@ -50,24 +60,40 @@ func main() {
 			Msg("register sendEmail must success")
 	}
 
-    // Start HTTP server.
-    cronx.Serve()
+	// Start server.
+	server, err := cronx.NewServer(":9001")
+	if err != nil {
+		log.WithLevel(zerolog.FatalLevel).
+			Err(err).
+			Msg("new server creation must success")
+		return
+	}
+	if err := server.ListenAndServe(); err != nil {
+		log.WithLevel(zerolog.FatalLevel).
+			Err(err).
+			Msg("server listen and server must success")
+	}
 }
 ```
+
 Get dependencies
+
 ```shell
 $ go mod vendor -v
 ```
 
 Start server
+
 ```shell
 $ go run main.go
 ```
 
 Browse to
+
 - http://localhost:8998 => see server health status.
 - http://localhost:8998/jobs => see the html page.
 - http://localhost:8998/api/jobs => see the json response.
+
 ```json
 {
   "data": [
@@ -86,10 +112,49 @@ Browse to
 }
 ```
 
+## Interceptor / Middleware
+
+Interceptor or commonly known as middleware is an operation that commonly executed before any of other operation. This library has the capability to add multiple middlewares that will be executed before or after the real job. It means you can log the running job, send telemetry, or protect the application from going
+down because of panic by adding middlewares. The idea of a middleware is to be declared once, and be executed on all registered jobs. Hence, reduce the code duplication on each job implementation.
+
+### Adding Interceptor / Middleware
+
+```go
+// Create cron middleware.
+// The order is important.
+// The first one will be executed first.
+middleware := cronx.Chain(
+    interceptor.RequestID, // Inject request id to context.
+    interceptor.Recover(), // Auto recover from panic.
+    interceptor.Logger(), // Log start and finish process.
+    interceptor.DefaultWorkerPool(), // Limit concurrent running job.
+)
+
+cronx.New(middleware)
+```
+
+Check all available interceptors [here](interceptor).
+
+### Custom Interceptor / Middleware
+
+```go
+// Sleep is a middleware that sleep a few second after job has been executed.
+func Sleep() cronx.Interceptor {
+	return func(ctx context.Context, job *cronx.Job, handler cronx.Handler) error {
+		err := handler(ctx, job)
+		time.Sleep(10 * time.Second)
+		return err
+	}
+}
+```
+
+For more example check [here](interceptor).
+
 ## Custom Configuration
+
 ```go
 // Create a cron with custom config.
-cronx.New(cronx.Config{
+cronx.Custom(cronx.Config{
     Address:  ":8998", // Determine the built-in HTTP server port.
     Location: func() *time.Location { // Change timezone to Jakarta.
         jakarta, err := time.LoadLocation("Asia/Jakarta")
@@ -102,45 +167,10 @@ cronx.New(cronx.Config{
 })
 ```
 
-## Interceptor / Middleware
-Interceptor or commonly known as middleware is an operation that commonly executed before any of other operation. 
-This library has the capability to add multiple middlewares that will be executed before or after the real job.
-It means you can log the running job, send telemetry, or protect the application from going down because of panic by adding middlewares.
-The idea of a middleware is to be declared once, and be executed on all registered jobs.
-Hence, reduce the code duplication on each job implementation.
-
-### Adding Interceptor / Middleware
-```go
-// Create cron middleware.
-// The order is important.
-// The first one will be executed first.
-middleware := cronx.Chain(
-    interceptor.RequestID, // Inject request id to context.
-    interceptor.Recover(), // Auto recover from panic.
-    interceptor.Logger(), // Log start and finish process.
-    interceptor.DefaultWorkerPool(), // Limit concurrent running job.
-)
-
-cronx.Default(middleware)
-```
-Check all available interceptors [here](interceptor).
-
-### Custom Interceptor / Middleware
-```go
-// Sleep is a middleware that sleep a few second after job has been executed.
-func Sleep() cronx.Interceptor {
-	return func(ctx context.Context, job *cronx.Job, handler cronx.Handler) error {
-		err := handler(ctx, job)
-		time.Sleep(10 * time.Second)
-		return err
-	}
-}
-```
-For more example check [here](interceptor).
-
 ## Schedule Specification Format
 
 ### Schedule
+
 Field name   | Mandatory? | Allowed values  | Allowed special characters
 ----------   | ---------- | --------------  | --------------------------
 Seconds      | Optional   | 0-59            | * / , -
@@ -151,6 +181,7 @@ Month        | Yes        | 1-12 or JAN-DEC | * / , -
 Day of week  | Yes        | 0-6 or SUN-SAT  | * / , - ?
 
 ### Predefined schedules
+
 Entry                  | Description                                | Equivalent
 -----                  | -----------                                | -------------
 @yearly (or @annually) | Run once a year, midnight, Jan. 1st        | 0 0 0 1 1 *
@@ -160,9 +191,11 @@ Entry                  | Description                                | Equivalent
 @hourly                | Run once an hour, beginning of hour        | 0 0 * * * *
 
 ### Intervals
+
 ```
 @every <duration>
 ```
+
 For example, "@every 1h30m10s" would indicate a schedule that activates after 1 hour, 30 minutes, 10 seconds, and then every interval after that.
 
 Please refer to this [link](https://pkg.go.dev/github.com/robfig/cron?readme=expanded#section-readme/) for more detail.
@@ -170,13 +203,21 @@ Please refer to this [link](https://pkg.go.dev/github.com/robfig/cron?readme=exp
 ## FAQ
 
 ### What are the available commands?
+
 Here the list of commonly used commands.
+
 ```go
 // Schedule sets a job to run at specific time.
 // Example:
 //  @every 5m
 //  0 */10 * * * * => every 10m
 Schedule(spec string, job JobItf) error
+
+// ScheduleWithName sets a job to run at specific time with a Job name
+// Example:
+//  @every 5m
+//  0 */10 * * * * => every 10m
+ScheduleWithName(name, spec string, job JobItf) error
 
 // Schedules sets a job to run multiple times at specific time.
 // Symbol */,-? should never be used as separator character.
@@ -194,13 +235,17 @@ Schedules(spec, separator string, job JobItf) error
 // Minimal time is 1 sec.
 Every(duration time.Duration, job JobItf)
 ```
+
 Go to [here](cronx.go) to see the list of available commands.
 
 ### What are the available interceptors?
+
 Go to [here](interceptor) to see the available interceptors.
 
 ### Can I use my own router without starting the built-in router?
+
 Yes, you can. This library is very modular.
+
 ```go
 // Since we want to create custom HTTP server.
 // Do not forget to shutdown the cron gracefully manually here.
@@ -210,7 +255,7 @@ defer cronx.Stop()
 // GetStatusData will return the []cronx.StatusData.
 // You can use this data like any other Golang data structure.
 // You can print it, or even serves it using your own router.
-res := cronx.GetStatusData() 
+res := cronx.GetStatusData()
 
 // An example using gin as the router.
 r := gin.Default()
@@ -220,13 +265,14 @@ r.GET("/custom-path", func(c *gin.Context) {
     })
 })
 
-// Start your own server and don't call cronx.Serve().
+// Start your own server and don't call cronx.NewServer().
 r.Run()
 ```
-Here's another [example](example/without-library-server/main.go).
 
 ### Can I still get the built-in template if I use my own router?
+
 Yes, you can.
+
 ```go
 // GetStatusTemplate will return the built-in status page template.
 index, _ := page.GetStatusTemplate()
@@ -239,17 +285,14 @@ e.GET("jobs", func(context echo.Context) error {
     return index.Execute(context.Response().Writer, cronx.GetStatusData())
 })
 ```
-Here's another [example](example/without-library-server/main.go).
 
 ### Server is located in the US, but my user is in Jakarta, can I change the cron timezone?
-Yes, you can.
-By default, the cron timezone will follow the server location timezone using `time.Local`.
-If you placed the server in the US, it will use the US timezone.
-If you placed the server in the SG, it will use the SG timezone.
+
+Yes, you can. By default, the cron timezone will follow the server location timezone using `time.Local`. If you placed the server in the US, it will use the US timezone. If you placed the server in the SG, it will use the SG timezone.
+
 ```go
 // Create a custom config.
-cronx.New(cronx.Config{
-    Address:  ":8998",
+cronx.Custom(cronx.Config{
     Location: func() *time.Location { // Change timezone to Jakarta.
         jakarta, err := time.LoadLocation("Asia/Jakarta")
         if err != nil {
@@ -262,14 +305,16 @@ cronx.New(cronx.Config{
 ```
 
 ### My job requires certain information like current wave number, how can I get this information?
+
 This kind of information is stored inside metadata, which stored automatically inside `context`.
+
 ```go
 type subscription struct{}
 
 func (subscription) Run(ctx context.Context) error {
 	md, ok := cronx.GetJobMetadata(ctx)
 	if !ok {
-		return errors.New("cannot job metadata")
+		return errors.New("cannot get job metadata")
 	}
 
 	log.WithLevel(zerolog.InfoLevel).
