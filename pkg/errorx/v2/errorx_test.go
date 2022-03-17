@@ -236,3 +236,22 @@ func TestIs(t *testing.T) {
 		})
 	}
 }
+
+func TestFuncName(t *testing.T) {
+	tests := []struct {
+		name string
+		want Op
+	}{
+		{
+			name: "Success",
+			want: "v2.TestFuncName.func1",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := FuncName(); got != tt.want {
+				t.Errorf("FuncName() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}

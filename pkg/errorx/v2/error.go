@@ -20,6 +20,18 @@ type (
 	Message string
 )
 
+func (o Op) String() string {
+	return string(o)
+}
+
+func (l Line) String() string {
+	return string(l)
+}
+
+func (m Message) String() string {
+	return string(m)
+}
+
 // Error defines a standard application error.
 type Error struct {
 	// Underlying error.

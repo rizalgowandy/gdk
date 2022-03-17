@@ -133,3 +133,8 @@ func Is(err error, code Code) bool {
 
 	return false
 }
+
+// FuncName returns current operation function name.
+func FuncName() Op {
+	return Op(fn.Name(callerSkip))
+}
