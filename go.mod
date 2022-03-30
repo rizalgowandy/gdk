@@ -20,7 +20,6 @@ require (
 	github.com/nsqio/go-nsq v1.0.8
 	github.com/pingcap/go-ycsb v0.0.0-20210129115622-04d8656123e4
 	github.com/pkg/errors v0.9.1
-	github.com/robfig/cron/v3 v3.0.1
 	github.com/rs/zerolog v1.21.0
 	github.com/segmentio/ksuid v1.0.4
 	github.com/sirupsen/logrus v1.8.1

@@ -19,10 +19,6 @@ go get -v github.com/rizalgowandy/gdk
 
 ## Examples
 
-### Cronx
-
-![cronx](pkg/cronx/screenshot/4_status_page.png)
-
 ### Logx
 
 ![logx](pkg/logx/screenshot/1_log.png)
