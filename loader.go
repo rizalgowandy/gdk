@@ -4,8 +4,6 @@ import (
 	_ "github.com/rizalgowandy/gdk/pkg/benchmark"
 	_ "github.com/rizalgowandy/gdk/pkg/build"
 	_ "github.com/rizalgowandy/gdk/pkg/converter"
-	_ "github.com/rizalgowandy/gdk/pkg/cronx"
-	_ "github.com/rizalgowandy/gdk/pkg/cronx/interceptor"
 	_ "github.com/rizalgowandy/gdk/pkg/env"
 	_ "github.com/rizalgowandy/gdk/pkg/errorx/v1"
 	_ "github.com/rizalgowandy/gdk/pkg/errorx/v2"
