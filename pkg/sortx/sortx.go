@@ -8,8 +8,8 @@ type (
 )
 
 const (
-	SortOrderAscending Order = iota + 1
-	SortOrderDescending
+	OrderAscending Order = iota + 1
+	OrderDescending
 )
 
 type Sort struct {
@@ -29,16 +29,16 @@ func NewSorts(qs string) []Sort {
 
 		s := Sort{
 			Key:   Key(kv[0]),
-			Order: SortOrderAscending,
+			Order: OrderAscending,
 		}
 		if len(kv) == 2 {
 			switch kv[1] {
 			case "asc":
-				s.Order = SortOrderAscending
+				s.Order = OrderAscending
 			case "desc":
-				s.Order = SortOrderDescending
+				s.Order = OrderDescending
 			default:
-				s.Order = SortOrderAscending
+				s.Order = OrderAscending
 			}
 		}
 		res = append(res, s)
