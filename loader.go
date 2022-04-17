@@ -22,6 +22,7 @@ import (
 	_ "github.com/rizalgowandy/gdk/pkg/queue/nsqx"
 	_ "github.com/rizalgowandy/gdk/pkg/queue/nsqx/interceptor"
 	_ "github.com/rizalgowandy/gdk/pkg/regex"
+	_ "github.com/rizalgowandy/gdk/pkg/sortx"
 	_ "github.com/rizalgowandy/gdk/pkg/stack"
 	_ "github.com/rizalgowandy/gdk/pkg/storage/cache"
 	_ "github.com/rizalgowandy/gdk/pkg/storage/database"
