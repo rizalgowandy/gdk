@@ -22,15 +22,15 @@ func TestNewSorts(t *testing.T) {
 			want: []Sort{
 				{
 					Key:   "id",
-					Order: SortOrderDescending,
+					Order: OrderDescending,
 				},
 				{
 					Key:   "status",
-					Order: SortOrderAscending,
+					Order: OrderAscending,
 				},
 				{
 					Key:   "created_at",
-					Order: SortOrderAscending,
+					Order: OrderAscending,
 				},
 			},
 		},
