@@ -1,20 +1,23 @@
 package sortx
 
-import "strings"
+import (
+	"strings"
+)
 
 type (
 	Key   string
-	Order int64
+	Order string
 )
 
 const (
-	OrderAscending Order = iota + 1
-	OrderDescending
+	OrderAscending  Order = "ASC"
+	OrderDescending Order = "DESC"
 )
 
 type Sort struct {
-	Key   Key
-	Order Order
+	Key      Key
+	Order    Order
+	Original string
 }
 
 // NewSorts create sorting based on
@@ -28,11 +31,12 @@ func NewSorts(qs string) []Sort {
 		kv := strings.Split(v, ":")
 
 		s := Sort{
-			Key:   Key(kv[0]),
-			Order: OrderAscending,
+			Key:      Key(strings.ToLower(kv[0])),
+			Order:    OrderAscending,
+			Original: strings.ToLower(v),
 		}
 		if len(kv) == 2 {
-			switch kv[1] {
+			switch strings.ToLower(kv[1]) {
 			case "asc":
 				s.Order = OrderAscending
 			case "desc":
