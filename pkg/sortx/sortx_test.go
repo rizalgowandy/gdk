@@ -21,16 +21,42 @@ func TestNewSorts(t *testing.T) {
 			},
 			want: []Sort{
 				{
-					Key:   "id",
-					Order: OrderDescending,
+					Key:      "id",
+					Order:    OrderDescending,
+					Original: "id:desc",
 				},
 				{
-					Key:   "status",
-					Order: OrderAscending,
+					Key:      "status",
+					Order:    OrderAscending,
+					Original: "status:asc",
 				},
 				{
-					Key:   "created_at",
-					Order: OrderAscending,
+					Key:      "created_at",
+					Order:    OrderAscending,
+					Original: "created_at",
+				},
+			},
+		},
+		{
+			name: "Success with different case",
+			args: args{
+				qs: "ID:DESC,Status:Asc,created_at",
+			},
+			want: []Sort{
+				{
+					Key:      "id",
+					Order:    OrderDescending,
+					Original: "id:desc",
+				},
+				{
+					Key:      "status",
+					Order:    OrderAscending,
+					Original: "status:asc",
+				},
+				{
+					Key:      "created_at",
+					Order:    OrderAscending,
+					Original: "created_at",
 				},
 			},
 		},
