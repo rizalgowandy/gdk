@@ -6,6 +6,7 @@ import (
 
 	"github.com/jackc/pgx/v4"
 	"github.com/rizalgowandy/gdk/pkg/errorx/v2"
+	"github.com/rizalgowandy/gdk/pkg/regex"
 )
 
 func NewPGX() *PGX {
@@ -30,6 +31,9 @@ func (p *PGX) Log(
 			if ok {
 				query = strings.ReplaceAll(query, "\t", " ")
 				query = strings.ReplaceAll(query, "\n", " ")
+				if sanitized, replaceErr := regex.ReplaceAllString(`\s+`, query, " "); replaceErr == nil {
+					query = sanitized
+				}
 				data["sql"] = query
 			}
 		}

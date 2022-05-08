@@ -17,6 +17,7 @@ import (
 	_ "github.com/rizalgowandy/gdk/pkg/jsonx"
 	_ "github.com/rizalgowandy/gdk/pkg/logx"
 	_ "github.com/rizalgowandy/gdk/pkg/netx"
+	_ "github.com/rizalgowandy/gdk/pkg/pagination"
 	_ "github.com/rizalgowandy/gdk/pkg/password"
 	_ "github.com/rizalgowandy/gdk/pkg/pprofx"
 	_ "github.com/rizalgowandy/gdk/pkg/queue/nsqx"
