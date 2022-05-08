@@ -2,6 +2,7 @@ package logx
 
 import (
 	"context"
+	"strings"
 
 	"github.com/jackc/pgx/v4"
 	"github.com/rizalgowandy/gdk/pkg/errorx/v2"
@@ -20,6 +21,19 @@ func (p *PGX) Log(
 	data map[string]interface{},
 ) {
 	err := errorx.E("db operation error", errorx.Fields(data))
+
+	// Sanitize sql query by replacing \t and \n as space.
+	if data != nil {
+		val, ok := data["sql"]
+		if ok {
+			query, ok := val.(string)
+			if ok {
+				query = strings.ReplaceAll(query, "\t", " ")
+				query = strings.ReplaceAll(query, "\n", " ")
+				data["sql"] = query
+			}
+		}
+	}
 
 	switch level {
 	case pgx.LogLevelError:
