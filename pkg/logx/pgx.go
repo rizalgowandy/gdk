@@ -34,6 +34,7 @@ func (p *PGX) Log(
 				if sanitized, replaceErr := regex.ReplaceAllString(`\s+`, query, " "); replaceErr == nil {
 					query = sanitized
 				}
+				query = strings.TrimSpace(query)
 				data["sql"] = query
 			}
 		}
