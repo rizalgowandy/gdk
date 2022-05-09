@@ -6,6 +6,7 @@ import (
 
 	"github.com/go-redis/redis/v8"
 	"github.com/rizalgowandy/gdk/pkg/errorx/v2"
+	"github.com/rizalgowandy/gdk/pkg/fn"
 	"github.com/rizalgowandy/gdk/pkg/logx"
 	"github.com/rizalgowandy/gdk/pkg/syncx"
 	"github.com/rizalgowandy/gdk/pkg/tags"
@@ -64,17 +65,15 @@ type GoRedisCluster struct {
 
 // Get gets the value from redis in []byte form.
 func (r *GoRedisCluster) Get(ctx context.Context, key string) ([]byte, error) {
-	const op errorx.Op = "cache/GoRedisCluster.Get"
-
 	res, err := r.client.Get(ctx, key).Result()
 	if err != nil {
-		return nil, errorx.E(err, op)
+		return nil, errorx.E(err)
 	}
 
 	logx.DBG(ctx, logx.KV{
 		tags.Key:    key,
 		tags.Detail: res,
-	}, string(op)+" success")
+	}, fn.Name()+" success")
 	return []byte(res), nil
 }
 
@@ -85,14 +84,12 @@ func (r *GoRedisCluster) SetEX(
 	seconds int64,
 	value string,
 ) error {
-	const op errorx.Op = "cache/GoRedisCluster.SetEX"
-
 	_, err := r.client.SetEX(ctx, key, value, time.Duration(seconds)*time.Second).Result()
 	if err != nil {
-		return errorx.E(err, op)
+		return errorx.E(err)
 	}
 
-	logx.DBG(ctx, logx.KV{tags.Key: key}, string(op)+" success")
+	logx.DBG(ctx, logx.KV{tags.Key: key}, fn.Name()+" success")
 	return nil
 }
 
@@ -104,33 +101,29 @@ func (r *GoRedisCluster) SetNX(
 	seconds int64,
 	value string,
 ) (bool, error) {
-	const op errorx.Op = "cache/GoRedisCluster.SetNX"
-
 	res, err := r.client.SetNX(ctx, key, value, time.Duration(seconds)*time.Second).Result()
 	if err != nil {
-		return false, errorx.E(err, op)
+		return false, errorx.E(err)
 	}
 
 	logx.DBG(ctx, logx.KV{
 		tags.Key:    key,
 		tags.Detail: res,
-	}, string(op)+" success")
+	}, fn.Name()+" success")
 	return res, nil
 }
 
 // Exists checks whether the key exists in redis.
 func (r *GoRedisCluster) Exists(ctx context.Context, key string) (bool, error) {
-	const op errorx.Op = "cache/GoRedisCluster.Exists"
-
 	res, err := r.client.Exists(ctx, key).Result()
 	if err != nil {
-		return false, errorx.E(err, op)
+		return false, errorx.E(err)
 	}
 
 	logx.DBG(ctx, logx.KV{
 		tags.Key:    key,
 		tags.Detail: res,
-	}, string(op)+" success")
+	}, fn.Name()+" success")
 	return res > 0, nil
 }
 
@@ -140,88 +133,76 @@ func (r *GoRedisCluster) Expire(
 	key string,
 	seconds int64,
 ) (bool, error) {
-	const op errorx.Op = "cache/GoRedisCluster.Expire"
-
 	res, err := r.client.Expire(ctx, key, time.Duration(seconds)*time.Second).Result()
 	if err != nil {
-		return false, errorx.E(err, op)
+		return false, errorx.E(err)
 	}
 
 	logx.DBG(ctx, logx.KV{
 		tags.Key:    key,
 		tags.Detail: res,
-	}, string(op)+" success")
+	}, fn.Name()+" success")
 	return res, nil
 }
 
 // TTL gets the time to live of a key / expiry time.
 func (r *GoRedisCluster) TTL(ctx context.Context, key string) (int64, error) {
-	const op errorx.Op = "cache/GoRedisCluster.TTL"
-
 	res, err := r.client.TTL(ctx, key).Result()
 	if err != nil {
-		return 0, errorx.E(err, op)
+		return 0, errorx.E(err)
 	}
 
 	logx.DBG(ctx, logx.KV{
 		tags.Key:    key,
 		tags.Detail: res,
-	}, string(op)+" success")
+	}, fn.Name()+" success")
 	return int64(res), nil
 }
 
 // HGet gets the value of a hash field.
 func (r *GoRedisCluster) HGet(ctx context.Context, key, field string) ([]byte, error) {
-	const op errorx.Op = "cache/GoRedisCluster.HGet"
-
 	res, err := r.client.HGet(ctx, key, field).Result()
 	if err != nil {
-		return nil, errorx.E(err, op)
+		return nil, errorx.E(err)
 	}
 
 	logx.DBG(ctx, logx.KV{
 		tags.Key:    key,
 		tags.Detail: res,
-	}, string(op)+" success")
+	}, fn.Name()+" success")
 	return []byte(res), nil
 }
 
 // HExists determines if a hash field exists.
 func (r *GoRedisCluster) HExists(ctx context.Context, key, field string) (bool, error) {
-	const op errorx.Op = "cache/GoRedisCluster.HExists"
-
 	res, err := r.client.HExists(ctx, key, field).Result()
 	if err != nil {
-		return false, errorx.E(err, op)
+		return false, errorx.E(err)
 	}
 
 	logx.DBG(ctx, logx.KV{
 		tags.Key:    key,
 		tags.Detail: res,
-	}, string(op)+" success")
+	}, fn.Name()+" success")
 	return res, nil
 }
 
 // HSet sets the string value of a hash field.
 func (r *GoRedisCluster) HSet(ctx context.Context, key, field, value string) (bool, error) {
-	const op errorx.Op = "cache/GoRedisCluster.HSet"
-
 	res, err := r.client.HSet(ctx, key, field, value).Result()
 	if err != nil {
-		return false, errorx.E(err, op)
+		return false, errorx.E(err)
 	}
 
 	logx.DBG(ctx, logx.KV{
 		tags.Key:    key,
 		tags.Detail: res,
-	}, string(op)+" success")
+	}, fn.Name()+" success")
 	return res > 0, nil
 }
 
 // Del deletes a key.
 func (r *GoRedisCluster) Del(ctx context.Context, key ...interface{}) (int64, error) {
-	const op errorx.Op = "cache/GoRedisCluster.Del"
-
 	stdKeys := make([]string, len(key))
 	for i, v := range key {
 		stdKey, ok := v.(string)
@@ -232,13 +213,13 @@ func (r *GoRedisCluster) Del(ctx context.Context, key ...interface{}) (int64, er
 
 	res, err := r.client.Del(ctx, stdKeys...).Result()
 	if err != nil {
-		return 0, errorx.E(err, op)
+		return 0, errorx.E(err)
 	}
 
 	logx.DBG(ctx, logx.KV{
 		tags.Key:    key,
 		tags.Detail: res,
-	}, string(op)+" success")
+	}, fn.Name()+" success")
 	return res, nil
 }
 

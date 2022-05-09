@@ -61,3 +61,33 @@ func (mr *MockPostgreClientItfMockRecorder) Get(ctx interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Get", reflect.TypeOf((*MockPostgreClientItf)(nil).Get), ctx)
 }
+
+// GetReader mocks base method.
+func (m *MockPostgreClientItf) GetReader(ctx context.Context) (*pgxpool.Pool, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetReader", ctx)
+	ret0, _ := ret[0].(*pgxpool.Pool)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetReader indicates an expected call of GetReader.
+func (mr *MockPostgreClientItfMockRecorder) GetReader(ctx interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetReader", reflect.TypeOf((*MockPostgreClientItf)(nil).GetReader), ctx)
+}
+
+// GetWriter mocks base method.
+func (m *MockPostgreClientItf) GetWriter(ctx context.Context) (*pgxpool.Pool, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetWriter", ctx)
+	ret0, _ := ret[0].(*pgxpool.Pool)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetWriter indicates an expected call of GetWriter.
+func (mr *MockPostgreClientItfMockRecorder) GetWriter(ctx interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetWriter", reflect.TypeOf((*MockPostgreClientItf)(nil).GetWriter), ctx)
+}
