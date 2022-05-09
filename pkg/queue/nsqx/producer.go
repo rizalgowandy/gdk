@@ -26,16 +26,14 @@ type Producer struct {
 // NewProducer creates a client to publish message to nsq.
 func NewProducer(config *ProducerConfiguration) (*Producer, error) {
 	onceNewProducer.Do(func() {
-		const op errorx.Op = "nsqx.NewProducer"
-
 		if err := config.Validate(); err != nil {
-			onceNewProducerErr = errorx.E(err, op)
+			onceNewProducerErr = errorx.E(err)
 			return
 		}
 
 		client, err := nsq.NewProducer(config.DaemonAddress, config.NSQ)
 		if err != nil {
-			onceNewProducerErr = errorx.E(err, op)
+			onceNewProducerErr = errorx.E(err)
 			return
 		}
 
@@ -50,10 +48,8 @@ func NewProducer(config *ProducerConfiguration) (*Producer, error) {
 
 // Publish sends data to nsq.
 func (p *Producer) Publish(_ context.Context, topic string, data interface{}) error {
-	const op errorx.Op = "nsqx/Producer.Publish"
-
 	if topic == "" {
-		return errorx.E("topic cannot be empty", op)
+		return errorx.E("topic cannot be empty")
 	}
 
 	var err error
@@ -61,13 +57,13 @@ func (p *Producer) Publish(_ context.Context, topic string, data interface{}) er
 	if !ok {
 		dataByte, err = jsonx.Marshal(data)
 		if err != nil {
-			return errorx.E(err, op)
+			return errorx.E(err)
 		}
 	}
 
 	err = p.publish(topic, dataByte)
 	if err != nil {
-		return errorx.E(err, op)
+		return errorx.E(err)
 	}
 
 	return nil
@@ -80,10 +76,8 @@ func (p *Producer) DeferredPublish(
 	delay time.Duration,
 	data interface{},
 ) error {
-	const op errorx.Op = "nsqx/Producer.DeferredPublish"
-
 	if topic == "" {
-		return errorx.E("topic cannot be empty", op)
+		return errorx.E("topic cannot be empty")
 	}
 
 	var err error
@@ -91,13 +85,13 @@ func (p *Producer) DeferredPublish(
 	if !ok {
 		dataByte, err = jsonx.Marshal(data)
 		if err != nil {
-			return errorx.E(err, op)
+			return errorx.E(err)
 		}
 	}
 
 	err = p.deferredPublish(topic, delay, dataByte)
 	if err != nil {
-		return errorx.E(err, op)
+		return errorx.E(err)
 	}
 
 	return nil

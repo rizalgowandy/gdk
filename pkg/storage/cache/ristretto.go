@@ -19,8 +19,6 @@ var (
 // NewRistretto return a redis client.
 func NewRistretto(config *RistrettoConfiguration) (*Ristretto, error) {
 	onceNewRistretto.Do(func() {
-		const op errorx.Op = "cache.NewRistretto"
-
 		cache, err := ristretto.NewCache(&ristretto.Config{
 			NumCounters: config.NumCounters,
 			MaxCost:     config.MaxCost,
@@ -28,7 +26,7 @@ func NewRistretto(config *RistrettoConfiguration) (*Ristretto, error) {
 			Metrics:     config.Metrics,
 		})
 		if err != nil {
-			onceNewRedigoErr = errorx.E(err, op)
+			onceNewRedigoErr = errorx.E(err)
 			return
 		}
 

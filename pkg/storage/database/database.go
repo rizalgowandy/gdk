@@ -12,6 +12,13 @@ import (
 type PostgreClientItf interface {
 	// Get returns connection client to postgres.
 	Get(ctx context.Context) (*pgxpool.Pool, error)
+
+	// GetWriter returns connection client to postgres only for writing.
+	GetWriter(ctx context.Context) (*pgxpool.Pool, error)
+
+	// GetReader returns connection client to postgres only for reading.
+	GetReader(ctx context.Context) (*pgxpool.Pool, error)
+
 	// Close closes all connection to the postgres.
 	Close()
 }

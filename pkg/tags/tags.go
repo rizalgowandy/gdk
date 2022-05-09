@@ -122,4 +122,8 @@ const (
 	Cache = "cache"
 	// Client
 	Client = "client"
+	// Type
+	Type = "type"
+	// Index
+	Index = "index"
 )

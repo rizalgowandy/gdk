@@ -32,23 +32,21 @@ func NewConsumerController(interceptors ...ConsumerInterceptor) *ConsumerControl
 }
 
 func (c *ConsumerController) AddConsumers(params []ConsumerParam) error {
-	const op errorx.Op = "nsqx/ConsumerController.AddConsumers"
-
 	for _, param := range params {
 		if param.Config == nil {
 			param.Config = &ConsumerConfiguration{}
 		}
 		if param.Consumer == nil {
-			return errorx.E("invalid consumer", op)
+			return errorx.E("invalid consumer")
 		}
 
 		if err := param.Config.Validate(); err != nil {
-			return errorx.E(err, op)
+			return errorx.E(err)
 		}
 
 		consumer, err := nsq.NewConsumer(param.Topic, param.Channel, param.Config.NSQ)
 		if err != nil {
-			return errorx.E(err, op)
+			return errorx.E(err)
 		}
 
 		consumer.AddConcurrentHandlers(
@@ -64,7 +62,7 @@ func (c *ConsumerController) AddConsumers(params []ConsumerParam) error {
 
 		err = consumer.ConnectToNSQLookupds(param.Config.LookupAddress)
 		if err != nil {
-			return errorx.E(err, op)
+			return errorx.E(err)
 		}
 
 		c.consumers = append(c.consumers, consumer)
