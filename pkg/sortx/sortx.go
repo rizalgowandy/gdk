@@ -88,3 +88,12 @@ func (s Sorts) Map() map[string]string {
 	}
 	return res
 }
+
+func (s Sorts) Desc() bool {
+	for _, v := range s {
+		if v.Order == OrderDescending {
+			return true
+		}
+	}
+	return false
+}
