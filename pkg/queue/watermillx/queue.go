@@ -4,7 +4,7 @@ import (
 	"github.com/ThreeDotsLabs/watermill/message"
 )
 
-//go:generate mockgen -destination=queue_mock.go -package=queue -source=queue.go
+//go:generate mockgen -destination=queue_mock.go -package=watermillx -source=queue.go
 
 type Publisher interface {
 	message.Publisher

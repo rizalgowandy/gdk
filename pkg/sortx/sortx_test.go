@@ -12,14 +12,14 @@ func TestNewSorts(t *testing.T) {
 	tests := []struct {
 		name string
 		args args
-		want []Sort
+		want Sorts
 	}{
 		{
 			name: "Success",
 			args: args{
 				qs: "id:desc,status:asc,created_at",
 			},
-			want: []Sort{
+			want: Sorts{
 				{
 					Key:      "id",
 					Order:    OrderDescending,
@@ -42,7 +42,7 @@ func TestNewSorts(t *testing.T) {
 			args: args{
 				qs: "ID:DESC,Status:Asc,created_at",
 			},
-			want: []Sort{
+			want: Sorts{
 				{
 					Key:      "id",
 					Order:    OrderDescending,
