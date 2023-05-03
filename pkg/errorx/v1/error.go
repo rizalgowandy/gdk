@@ -28,9 +28,10 @@ type Error struct {
 // Error returns the string representation of the error message.
 //
 // Example:
-//  userService.FindUserByID: <internal> Internal server error.:
-//      accountGateway.FindUserByID: <gateway> Gateway server error.:
-//      io.Write: Unknown error.
+//
+//	userService.FindUserByID: <internal> Internal server error.:
+//	    accountGateway.FindUserByID: <gateway> Gateway server error.:
+//	    io.Write: Unknown error.
 func (e *Error) Error() string {
 	b := new(bytes.Buffer)
 	if e.Op != "" {

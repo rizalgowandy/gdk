@@ -28,20 +28,22 @@ func GetArrJSON(input error) []byte {
 //
 // Example:
 // [
-//   {
-//     "code": "internal",
-//     "message": "Internal server error.",
-//     "op": "userService.FindUserByID"
-//   },
-//   {
-//     "code": "gateway",
-//     "message": "Gateway server error.",
-//     "op": "accountGateway.FindUserByID"
-//   },
-//   {
-//     "message": "Unknown error.",
-//     "op": "io.Write"
-//   }
+//
+//	{
+//	  "code": "internal",
+//	  "message": "Internal server error.",
+//	  "op": "userService.FindUserByID"
+//	},
+//	{
+//	  "code": "gateway",
+//	  "message": "Gateway server error.",
+//	  "op": "accountGateway.FindUserByID"
+//	},
+//	{
+//	  "message": "Unknown error.",
+//	  "op": "io.Write"
+//	}
+//
 // ]
 func GetArr(input error) []Error {
 	e, ok := input.(*Error)

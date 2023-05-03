@@ -11,15 +11,16 @@ import (
 // only the last one is recorded.
 //
 // The types are:
-//  errorx.Op
-//	    The operation being performed, usually the method
-//		being invoked (Get, Put, etc.).
-//	string
-//		Treated as an error message and assigned to the Message.
-//	errorx.Code
-// 		The class of error, such as permission failure.
-//	error
-//		The underlying error that triggered this one.
+//
+//	 errorx.Op
+//		    The operation being performed, usually the method
+//			being invoked (Get, Put, etc.).
+//		string
+//			Treated as an error message and assigned to the Message.
+//		errorx.Code
+//			The class of error, such as permission failure.
+//		error
+//			The underlying error that triggered this one.
 //
 // If the error is printed, only those items that have been
 // set to non-zero values will appear in the result.
@@ -29,7 +30,6 @@ import (
 //
 // If Message is not filled, we set it to the Message of
 // the underlying error.
-//
 func E(args ...interface{}) error {
 	if len(args) == 0 {
 		panic("call to errorx.E with no arguments")
@@ -92,8 +92,9 @@ func E(args ...interface{}) error {
 // the first are ignored.
 //
 // Example:
-//  Match(errors.E(errorx.Permission, "message"), err)
-//  tests whether err is an Error with Code=Permission and Message=message.
+//
+//	Match(errors.E(errorx.Permission, "message"), err)
+//	tests whether err is an Error with Code=Permission and Message=message.
 func Match(err1, err2 error) bool {
 	e1, ok := err1.(*Error)
 	if !ok {
