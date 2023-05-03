@@ -20,6 +20,8 @@ import (
 	_ "github.com/rizalgowandy/gdk/pkg/pagination"
 	_ "github.com/rizalgowandy/gdk/pkg/password"
 	_ "github.com/rizalgowandy/gdk/pkg/pprofx"
+	_ "github.com/rizalgowandy/gdk/pkg/queue/natsx"
+	_ "github.com/rizalgowandy/gdk/pkg/queue/natsx/interceptor"
 	_ "github.com/rizalgowandy/gdk/pkg/queue/nsqx"
 	_ "github.com/rizalgowandy/gdk/pkg/queue/nsqx/interceptor"
 	_ "github.com/rizalgowandy/gdk/pkg/regex"

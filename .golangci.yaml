@@ -1,151 +1,100 @@
-linters-settings:
-  depguard:
-    list-type: blacklist
-    packages:
-      # logging is allowed only by logutils.Log, logrus
-      # is allowed to use only in logutils package
-      - github.com/sirupsen/logrus
-    packages-with-error-message:
-      - github.com/sirupsen/logrus: "logging is allowed only by logutils.Log"
-  dupl:
-    threshold: 100
-  exhaustive:
-    default-signifies-exhaustive: false
-  funlen:
-    lines: 100
-    statements: 50
-  gci:
-    local-prefixes: github.com/golangci/golangci-lint
-  goconst:
-    min-len: 2
-    min-occurrences: 2
-  gocritic:
-    enabled-tags:
-      - diagnostic
-      - experimental
-      - opinionated
-      - performance
-      - style
-    disabled-checks:
-      - dupImport # https://github.com/go-critic/go-critic/issues/845
-      - ifElseChain
-      - octalLiteral
-      - whyNoLint
-      - wrapperFunc
-  gocyclo:
-    min-complexity: 15
-  goimports:
-    local-prefixes: github.com/golangci/golangci-lint
-  golint:
-    min-confidence: 0
-  gomnd:
-    settings:
-      mnd:
-        # don't include the "operation" and "assign"
-        checks: argument,case,condition,return
-  govet:
-    check-shadowing: true
-    settings:
-      printf:
-        funcs:
-          - (github.com/golangci/golangci-lint/pkg/logutils.Log).Infof
-          - (github.com/golangci/golangci-lint/pkg/logutils.Log).Warnf
-          - (github.com/golangci/golangci-lint/pkg/logutils.Log).Errorf
-          - (github.com/golangci/golangci-lint/pkg/logutils.Log).Fatalf
-  lll:
-    line-length: 140
-  maligned:
-    suggest-new: true
-  misspell:
-    locale: US
-  nolintlint:
-    allow-leading-space: true # don't require machine-readable nolint directives (i.e. with no leading space)
-    allow-unused: false # report any unused nolint directives
-    require-explanation: false # don't require an explanation for nolint directives
-    require-specific: false # don't require nolint directives to be specific about which linter is being skipped
-
-linters:
-  # please, do not use `enable-all`: it's deprecated and will be removed soon.
-  # inverted configuration with `enable-all` and `disable` is not scalable during updates of golangci-lint
-  disable-all: true
-  enable:
-    - bodyclose
-    - deadcode
-    - depguard
-    - dupl
-    - errcheck
-    - funlen
-    - gochecknoinits
-    - goconst
-    - gocritic
-    - gocyclo
-    - gofmt
-    - goimports
-    - golint
-    - goprintffuncname
-    - gosec
-    - gosimple
-    - govet
-    - ineffassign
-    - interfacer
-    - lll
-    - misspell
-    - nakedret
-    - noctx
-    - nolintlint
-    - rowserrcheck
-    - scopelint
-    - staticcheck
-    - structcheck
-    - stylecheck
-    - typecheck
-    - unconvert
-    - unparam
-    - unused
-    - varcheck
-    - whitespace
-
-  # don't enable:
-  # - dogsled
-  # - asciicheck
-  # - gochecknoglobals
-  # - gocognit
-  # - godot
-  # - godox
-  # - goerr113
-  # - maligned
-  # - nestif
-  # - prealloc
-  # - testpackage
-  # - wsl
-  # - gomnd
-  # - exhaustive
-
-issues:
-  # Excluding configuration per-path, per-linter, per-text and per-source
-  exclude-rules:
-    - path: _test\.go
-      linters:
-        - gomnd
-        - scopelint
-        - dupl
-        - stylecheck
-        - funlen
-        - lll
-
-    # https://github.com/go-critic/go-critic/issues/926
-    - linters:
-        - gocritic
-      text: "unnecessaryDefer:"
-
 run:
+  timeout: 5m
   skip-dirs:
     - mocks
     - docs
 
-# golangci.com configuration
-# https://github.com/golangci/golangci/wiki/Configuration
-service:
-  golangci-lint-version: 1.30.0 # use the fixed version to not introduce new linters unexpectedly
-  prepare:
-    - echo "here I can run custom commands, but no preparation needed for this repo"
+linters:
+  enable-all: true
+  disable:
+    - maligned
+    - wsl
+    - whitespace
+    - godox
+    - godot
+    - interfacer
+    - nolintlint
+    - noctx
+    - gofumpt
+    - exhaustive
+    - gci
+    - nlreturn
+    - exhaustivestruct
+    - forbidigo
+    - paralleltest
+    - cyclop # gocyclo
+    - ifshort
+    - nilerr
+    - thelper
+    - tagliatelle
+    - golint # revive
+    - scopelint # exportloopref
+    - revive
+    - ireturn
+    - nonamedreturns
+    - exhaustruct
+    - gomnd
+    - varnamelen
+    - structcheck # unused
+    - deadcode # unused
+    - nosnakecase # revive
+    - varcheck # unused
+
+linters-settings:
+  funlen:
+    lines: 100
+    statements: 40
+  nakedret:
+    max-func-lines: 0
+  lll:
+    line-length: 140
+  gocyclo:
+    min-complexity: 20
+  golint:
+    min-confidence: 0
+  dupl:
+    threshold: 100
+
+output:
+  print-issued-lines: false
+
+issues:
+  exclude-use-default: false
+  max-per-linter: 0
+  max-same-issues: 0
+  new-from-rev: HEAD~
+  exclude:
+  - "should have a package comment, unless it's in another file for this package"
+  - "(struct field|var|func|method|func parameter|range var|const|type) .* should be .*"
+  - "the channel used with signal.Notify should be buffered"
+  - "G104:" # go-sec rule of err checking, it has the same logic as errcheck linter, so ignore duplicate
+  - "Error return value of `.*.Body.Close` is not checked"
+  - "Error return value of `.*.Close()` is not checked"
+  - "Error return value of `rows.Close` is not checked"
+  - "Error return value of `viper.BindEnv` is not checked"
+  - "G108: Profiling endpoint is automatically exposed on /debug/pprof"
+  - "exported var Err.* should have comment or be unexported"
+  - "put a space between `//` and comment text"
+  - "Function 'main' has too many statements"
+  - "ST1000:"
+  - "G204:" # G204: Subprocess launched with variable (gosec) - useless, we often launch different cmds with params
+  exclude-rules:
+    - path: _test\.go
+      linters:
+        - gochecknoglobals
+        - goconst
+        - errcheck
+        - gosec
+        - gomnd
+        - varnamelen
+        - funlen
+        - testpackage
+        - lll
+        - bodyclose
+        - unparam
+        - dupl
+        - goerr113
+        - wrapcheck
+    - linters:
+        - lll
+      source: "^//go:generate "

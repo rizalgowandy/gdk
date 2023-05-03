@@ -30,6 +30,7 @@ type Sort struct {
 
 // NewSorts create sorting based on
 // Format:
+//
 //	sort=key1:asc,key2:desc,key3:asc
 func NewSorts(qs string) Sorts {
 	sorts := strings.Split(qs, ",")
