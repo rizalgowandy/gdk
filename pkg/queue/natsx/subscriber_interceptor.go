@@ -4,19 +4,19 @@ import "context"
 
 type (
 	// SubscriberHandler is the handler definition to run a subscriber.
-	SubscriberHandler func(ctx context.Context, subscriber *SubscriberImpl) error
+	SubscriberHandler func(ctx context.Context, subscriber *Subscriber) error
 
 	// SubscriberInterceptor is the middleware that will be executed before the current handler.
-	SubscriberInterceptor func(ctx context.Context, subscriber *SubscriberImpl, handler SubscriberHandler) error
+	SubscriberInterceptor func(ctx context.Context, subscriber *Subscriber, handler SubscriberHandler) error
 )
 
 // SubscriberChain returns a single interceptor from multiple interceptors.
 func SubscriberChain(interceptors ...SubscriberInterceptor) SubscriberInterceptor {
 	n := len(interceptors)
 
-	return func(ctx context.Context, subscriber *SubscriberImpl, handler SubscriberHandler) error {
+	return func(ctx context.Context, subscriber *Subscriber, handler SubscriberHandler) error {
 		chainer := func(currentInter SubscriberInterceptor, currentHandler SubscriberHandler) SubscriberHandler {
-			return func(currentCtx context.Context, currentSubscriber *SubscriberImpl) error {
+			return func(currentCtx context.Context, currentSubscriber *Subscriber) error {
 				return currentInter(currentCtx, currentSubscriber, currentHandler)
 			}
 		}

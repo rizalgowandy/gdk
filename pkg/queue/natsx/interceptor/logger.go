@@ -13,7 +13,7 @@ import (
 // Logger is a middleware that logs the current result from request.
 func Logger(
 	ctx context.Context,
-	subscriber *natsx.SubscriberImpl,
+	subscriber *natsx.Subscriber,
 	handler natsx.SubscriberHandler,
 ) error {
 	start := time.Now()

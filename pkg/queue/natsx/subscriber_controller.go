@@ -18,7 +18,7 @@ type SubscriberController struct {
 type SubscriberParam struct {
 	Subject    string
 	Queue      string
-	Subscriber Subscriber
+	Subscriber SubscriberItf
 }
 
 func NewSubscriberController(conn *nats.Conn, interceptors ...SubscriberInterceptor) *SubscriberController {

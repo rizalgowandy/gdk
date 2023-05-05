@@ -13,7 +13,7 @@ import (
 // Recover is a middleware that recovers server from panic.
 // Recover also dumps stack trace on panic occurrence.
 func Recover() natsx.SubscriberInterceptor {
-	return func(ctx context.Context, subscriber *natsx.SubscriberImpl, handler natsx.SubscriberHandler) (err error) {
+	return func(ctx context.Context, subscriber *natsx.Subscriber, handler natsx.SubscriberHandler) (err error) {
 		defer func() {
 			if err := recover(); err != nil {
 				log.WithLevel(zerolog.PanicLevel).
