@@ -7,6 +7,7 @@ require (
 	github.com/ThreeDotsLabs/watermill v1.4.6
 	github.com/ThreeDotsLabs/watermill-amqp v1.1.4
 	github.com/ThreeDotsLabs/watermill-kafka/v2 v2.5.0
+	github.com/casbin/casbin/v2 v2.105.0
 	github.com/cloudfoundry/gosigar v1.3.91
 	github.com/dgraph-io/ristretto v0.2.0
 	github.com/go-redis/redis/v8 v8.11.5
@@ -32,6 +33,8 @@ require (
 
 require (
 	github.com/Shopify/sarama v1.38.0 // indirect
+	github.com/bmatcuk/doublestar/v4 v4.6.1 // indirect
+	github.com/casbin/govaluate v1.3.0 // indirect
 	github.com/cenkalti/backoff/v3 v3.2.2 // indirect
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
