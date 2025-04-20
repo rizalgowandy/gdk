@@ -14,7 +14,7 @@ func Auth(h *auth.Operator) echo.MiddlewareFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
 			// Get Authorization header
-			authHeader := c.Request().Header.Get("Authorization")
+			authHeader := c.Request().Header.Get(echo.HeaderAuthorization)
 			if authHeader == "" {
 				return c.JSON(http.StatusUnauthorized, echo.Map{
 					"message": "Authorization header missing",
