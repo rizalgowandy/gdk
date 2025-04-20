@@ -1,0 +1,3 @@
+p, superadmin, *, *
+p, admin, /api/v1/admin/*, *
+p, user, /api/v1/*, *
