@@ -10,6 +10,7 @@ require (
 	github.com/cloudfoundry/gosigar v1.3.91
 	github.com/dgraph-io/ristretto v0.2.0
 	github.com/go-redis/redis/v8 v8.11.5
+	github.com/golang-jwt/jwt/v4 v4.5.2
 	github.com/golang/mock v1.6.0
 	github.com/gomodule/redigo v1.9.2
 	github.com/gorilla/mux v1.8.1

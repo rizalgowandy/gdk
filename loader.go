@@ -1,6 +1,7 @@
 package main
 
 import (
+	_ "github.com/rizalgowandy/gdk/pkg/auth"
 	_ "github.com/rizalgowandy/gdk/pkg/benchmark"
 	_ "github.com/rizalgowandy/gdk/pkg/build"
 	_ "github.com/rizalgowandy/gdk/pkg/converter"
