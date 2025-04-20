@@ -2,7 +2,6 @@ package filex
 
 import (
 	"errors"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 )
@@ -38,7 +37,10 @@ func FileEmpty(name string) bool {
 }
 
 func ReadFile(path string) string {
-	buff, err := ioutil.ReadFile(path)
+	// Clean the path to prevent directory traversal attacks
+	cleanPath := filepath.Clean(path)
+
+	buff, err := os.ReadFile(cleanPath)
 	if err != nil {
 		return ""
 	}

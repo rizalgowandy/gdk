@@ -1,5 +1,7 @@
 package try
 
+import "errors"
+
 // MaxRetries is the maximum number of retries before bailing.
 var MaxRetries = 10
 
@@ -29,5 +31,5 @@ func Do(fn func(attempt int) (retry bool, err error)) error {
 // IsMaxRetries checks whether the error is due to hitting the
 // maximum number of retries or not.
 func IsMaxRetries(err error) bool {
-	return err == errMaxRetriesReached
+	return errors.Is(err, errMaxRetriesReached)
 }

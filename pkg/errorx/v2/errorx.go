@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/imdario/mergo"
+	"dario.cat/mergo"
 	"github.com/rizalgowandy/gdk/pkg/fn"
 )
 
@@ -32,7 +32,7 @@ func E(args ...interface{}) error {
 			e.OpTraces = append([]Op{Op(fn.Name(callerSkip))}, e.OpTraces...)
 
 		case string:
-			e.Err = Errorf(arg)
+			e.Err = Errorf("%s", arg) // Use a constant format string with %s
 			e.Line = Line(fn.Line(callerSkip))
 			e.OpTraces = append([]Op{Op(fn.Name(callerSkip))}, e.OpTraces...)
 

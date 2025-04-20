@@ -55,8 +55,8 @@ services:
     image: docker.vectorized.io/vectorized/redpanda:v21.9.5
     container_name: gdk-redpanda
     ports:
-      - 9092:9092
-      - 29092:29092
+      - "9092:9092"
+      - "29092:29092"
     command:
       - redpanda
       - start
@@ -77,7 +77,7 @@ services:
     image: obsidiandynamics/kafdrop:3.27.0
     container_name: gdk-kafdrop
     ports:
-      - 9100:9000
+      - "9100:9000"
     environment:
       - KAFKA_BROKERCONNECT=redpanda:29092
       - JVM_OPTS=-Xms32M -Xmx64M

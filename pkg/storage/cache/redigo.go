@@ -2,6 +2,7 @@ package cache
 
 import (
 	"context"
+	"errors"
 	"strings"
 	"time"
 
@@ -81,7 +82,7 @@ func (r *Redigo) Get(_ context.Context, key string) ([]byte, error) {
 
 	const commandName = "GET"
 	data, err := redis.Bytes(con.Do(commandName, key))
-	if err != nil && err != redis.ErrNil {
+	if err != nil && !errors.Is(err, redis.ErrNil) {
 		return data, errorx.E(err, errorx.CodeGateway)
 	}
 
@@ -98,12 +99,12 @@ func (r *Redigo) SimpleSet(_ context.Context, key, value string) error {
 
 	const commandName = "SET"
 	data, err := redis.String(con.Do(commandName, key, value))
-	if err != nil && err != redis.ErrNil {
+	if err != nil && !errors.Is(err, redis.ErrNil) {
 		return errorx.E(err, errorx.CodeGateway)
 	}
 
 	// Extra check for set operations.
-	if err == redis.ErrNil || !strings.EqualFold("OK", data) {
+	if errors.Is(err, redis.ErrNil) || !strings.EqualFold("OK", data) {
 		return errorx.E("redis operation ended unsuccessfully", errorx.CodeGateway)
 	}
 
@@ -119,12 +120,12 @@ func (r *Redigo) SetEX(_ context.Context, key string, seconds int64, value strin
 
 	const commandName = "SET"
 	data, err := redis.String(con.Do(commandName, key, value, "ex", seconds))
-	if err != nil && err != redis.ErrNil {
+	if err != nil && !errors.Is(err, redis.ErrNil) {
 		return errorx.E(err, errorx.CodeGateway)
 	}
 
 	// Extra check for set operations.
-	if err == redis.ErrNil || !strings.EqualFold("OK", data) {
+	if errors.Is(err, redis.ErrNil) || !strings.EqualFold("OK", data) {
 		return errorx.E("redis operation ended unsuccessfully", errorx.CodeGateway)
 	}
 
@@ -146,11 +147,11 @@ func (r *Redigo) SetNX(
 
 	const commandName = "SET"
 	data, err := redis.String(con.Do(commandName, key, value, "ex", seconds, "nx"))
-	if err != nil && err != redis.ErrNil {
+	if err != nil && !errors.Is(err, redis.ErrNil) {
 		return false, errorx.E(err, errorx.CodeGateway)
 	}
 	// extra check for set operations
-	if err == redis.ErrNil || !strings.EqualFold("OK", data) {
+	if errors.Is(err, redis.ErrNil) || !strings.EqualFold("OK", data) {
 		return false, nil
 	}
 
@@ -166,7 +167,7 @@ func (r *Redigo) HMGet(_ context.Context, key string, fields ...string) ([][]byt
 
 	const commandName = "HMGET"
 	data, err := redis.ByteSlices(con.Do(commandName, key, fields))
-	if err != nil && err != redis.ErrNil {
+	if err != nil && !errors.Is(err, redis.ErrNil) {
 		return data, errorx.E(err, errorx.CodeGateway)
 	}
 
@@ -284,7 +285,7 @@ func (r *Redigo) HGet(_ context.Context, key, field string) ([]byte, error) {
 
 	const commandName = "HGET"
 	data, err := redis.Bytes(con.Do(commandName, key, field))
-	if err != nil && err != redis.ErrNil {
+	if err != nil && !errors.Is(err, redis.ErrNil) {
 		return data, errorx.E(err, errorx.CodeGateway)
 	}
 
@@ -319,7 +320,7 @@ func (r *Redigo) HGetAll(
 
 	const commandName = "HGETALL"
 	data, err := redis.StringMap(con.Do(commandName, key))
-	if err != nil && err != redis.ErrNil {
+	if err != nil && !errors.Is(err, redis.ErrNil) {
 		return nil, errorx.E(err, errorx.CodeGateway)
 	}
 
@@ -449,18 +450,18 @@ func (r *Redigo) LRange(
 
 	const commandName = "LRANGE"
 	data, err := redis.ByteSlices(con.Do(commandName, key, start, stop))
-	if err != nil && err != redis.ErrNil {
+	if err != nil && !errors.Is(err, redis.ErrNil) {
 		return nil, errorx.E(err, errorx.CodeGateway)
 	}
 
-	if err == redis.ErrNil {
+	if errors.Is(err, redis.ErrNil) {
 		return nil, errorx.E("redis operation ended unsuccessfully", errorx.CodeGateway)
 	}
 
 	return data, nil
 }
 
-// Trim array value that we set using LPush between index start and stop.
+// LTrim array value that we set using LPush between index start and stop.
 func (r *Redigo) LTrim(_ context.Context, key string, start, stop int64) error {
 	con := r.client.Get()
 	defer func() {
@@ -469,11 +470,11 @@ func (r *Redigo) LTrim(_ context.Context, key string, start, stop int64) error {
 
 	const commandName = "LTRIM"
 	data, err := redis.String(con.Do(commandName, key, start, stop))
-	if err != nil && err != redis.ErrNil {
+	if err != nil && !errors.Is(err, redis.ErrNil) {
 		return errorx.E(err, errorx.CodeGateway)
 	}
 
-	if err == redis.ErrNil || !strings.EqualFold("OK", data) {
+	if errors.Is(err, redis.ErrNil) || !strings.EqualFold("OK", data) {
 		return errorx.E("redis operation ended unsuccessfully", errorx.CodeGateway)
 	}
 

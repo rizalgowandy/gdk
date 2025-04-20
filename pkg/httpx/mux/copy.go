@@ -2,7 +2,7 @@ package mux
 
 import (
 	"bytes"
-	"io/ioutil"
+	"io"
 	"net/http"
 
 	"github.com/rizalgowandy/gdk/pkg/jsonx"
@@ -15,13 +15,13 @@ func CopyBody(r *http.Request) (interface{}, error) {
 	}
 
 	// Copy request body to restore it for next request.
-	buf, err := ioutil.ReadAll(r.Body)
+	buf, err := io.ReadAll(r.Body)
 	if err != nil {
 		return nil, err
 	}
 
 	// Re-append request body for next request.
-	r.Body = ioutil.NopCloser(bytes.NewBuffer(buf))
+	r.Body = io.NopCloser(bytes.NewBuffer(buf))
 
 	// Certain method doesn't have any body, e.g. DELETE.
 	if len(buf) == 0 {
