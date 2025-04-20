@@ -68,7 +68,7 @@ func SetRequestID(ctx context.Context, id string) context.Context {
 	return context.WithValue(ctx, CtxKeyRequestID, id)
 }
 
-// GetContextID returns a request id assigned inside a context.
+// GetRequestID returns a request id assigned inside a context.
 func GetRequestID(ctx context.Context) string {
 	if ctx == nil {
 		return ""

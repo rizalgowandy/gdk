@@ -51,7 +51,7 @@ func ArrInt(v interface{}) []int {
 	}
 }
 
-// ToArrStr convert any value to []string.
+// ArrStr convert any value to []string.
 func ArrStr(v interface{}) []string {
 	switch v := v.(type) {
 	case string:
@@ -74,7 +74,7 @@ func ArrStr(v interface{}) []string {
 	}
 }
 
-// ToArrInt64 convert any value to []int64.
+// ArrInt64 convert any value to []int64.
 func ArrInt64(v interface{}) []int64 {
 	switch v := v.(type) {
 	case []int:

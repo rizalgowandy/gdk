@@ -2,7 +2,7 @@ package filepathx
 
 import (
 	"fmt"
-	"io/ioutil"
+	"os"
 	"path/filepath"
 )
 
@@ -35,7 +35,7 @@ func findProjectAbs(currentPath string, recursive int) (string, error) {
 		return "", fmt.Errorf("can't find go.mod in parent ancestor")
 	}
 
-	files, err := ioutil.ReadDir(currentPath)
+	files, err := os.ReadDir(currentPath)
 	if err != nil {
 		return "", fmt.Errorf(
 			"can't find go.mod in parent ancestor: cannot read in '%s'",
