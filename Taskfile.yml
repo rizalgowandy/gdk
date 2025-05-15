@@ -39,16 +39,3 @@ tasks:
     deps: [generate]
     cmds:
       - go build -o bin/go_build_gdk && rm bin/go_build_gdk
-
-  run-simplest:
-    deps: [build]
-    cmds:
-      - air -c ./scripts/.air-simplest.toml
-
-  run-storage:
-    deps: [build]
-    cmds:
-      - docker-compose down -v
-      - docker-compose up -d
-      - until docker exec postgres pg_isready -U unicorn_user -d magical_password; do echo "Waiting for database..."; sleep 2; done;
-      - air -c ./scripts/.air-storage.toml
