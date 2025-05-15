@@ -29,6 +29,8 @@ const (
 	// RequestID describes current request id from context.
 	// Each operation should have one unique request id.
 	RequestID = "request_id"
+	// ActorID describes current actor id from context.
+	ActorID = "actor_id"
 	// ContextID describes current context id from context.
 	// Context id is not unique but based on current operation context.
 	// For instance, operation get subscription detail,
@@ -126,4 +128,8 @@ const (
 	Type = "type"
 	// Index
 	Index = "index"
+	// HTTPStatus
+	HTTPStatus = "http_status"
+	// HTTPMethod
+	HTTPMethod = "http_method"
 )

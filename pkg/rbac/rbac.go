@@ -14,6 +14,7 @@ import (
 
 // Manager represents the role-based access control manager
 type Manager struct {
+	enable   bool
 	enforcer *casbin.Enforcer
 	mutex    sync.RWMutex
 }
@@ -25,24 +26,24 @@ type Manager struct {
 // Example usage:
 //
 //	policyFile := "pkg/rbac/policy_example.csv"
-func NewManager(policyFile string) (*Manager, error) {
+func NewManager(enable bool, policyFile string) (*Manager, error) {
 	// Clean the path to prevent directory traversal attacks
 	policyFile = filepath.Clean(policyFile)
 
 	// Load model from string
 	m, err := model.NewModelFromString(modelText)
 	if err != nil {
-		return nil, fmt.Errorf("failed to create model: %w", err)
+		return nil, fmt.Errorf("create model: %w", err)
 	}
 
 	// Check if a policy file exists, if not, create it
 	if _, err := os.Stat(policyFile); os.IsNotExist(err) {
 		file, err := os.Create(policyFile)
 		if err != nil {
-			return nil, fmt.Errorf("failed to create policy file: %w", err)
+			return nil, fmt.Errorf("create policy file: %w", err)
 		}
 		if err := file.Close(); err != nil {
-			return nil, fmt.Errorf("failed to close policy file: %w", err)
+			return nil, fmt.Errorf("close policy file: %w", err)
 		}
 	}
 
@@ -52,15 +53,16 @@ func NewManager(policyFile string) (*Manager, error) {
 	// Create enforcer
 	enforcer, err := casbin.NewEnforcer(m, a)
 	if err != nil {
-		return nil, fmt.Errorf("failed to create enforcer: %w", err)
+		return nil, fmt.Errorf("create enforcer: %w", err)
 	}
 
 	// Load policies from a file
 	if err := enforcer.LoadPolicy(); err != nil {
-		return nil, fmt.Errorf("failed to load policy: %w", err)
+		return nil, fmt.Errorf("load policy: %w", err)
 	}
 
 	return &Manager{
+		enable:   enable,
 		enforcer: enforcer,
 		mutex:    sync.RWMutex{},
 	}, nil
@@ -72,7 +74,7 @@ func (r *Manager) AddRoleForUser(user, role string) (bool, error) {
 	defer r.mutex.Unlock()
 	added, err := r.enforcer.AddRoleForUser(user, role)
 	if err != nil {
-		return false, fmt.Errorf("failed to add role for user: %w", err)
+		return false, fmt.Errorf("add role for user: %w", err)
 	}
 	return added, nil
 }
@@ -83,7 +85,7 @@ func (r *Manager) DeleteRoleForUser(user, role string) (bool, error) {
 	defer r.mutex.Unlock()
 	deleted, err := r.enforcer.DeleteRoleForUser(user, role)
 	if err != nil {
-		return false, fmt.Errorf("failed to delete role for user: %w", err)
+		return false, fmt.Errorf("delete role for user: %w", err)
 	}
 	return deleted, nil
 }
@@ -94,7 +96,7 @@ func (r *Manager) HasRoleForUser(user, role string) (bool, error) {
 	defer r.mutex.RUnlock()
 	hasRole, err := r.enforcer.HasRoleForUser(user, role)
 	if err != nil {
-		return false, fmt.Errorf("failed to check role for user: %w", err)
+		return false, fmt.Errorf("check role for user: %w", err)
 	}
 	return hasRole, nil
 }
@@ -105,18 +107,22 @@ func (r *Manager) GetRolesForUser(user string) ([]string, error) {
 	defer r.mutex.RUnlock()
 	roles, err := r.enforcer.GetRolesForUser(user)
 	if err != nil {
-		return nil, fmt.Errorf("failed to get roles for user: %w", err)
+		return nil, fmt.Errorf("get roles for user: %w", err)
 	}
 	return roles, nil
 }
 
 // Enforce checks permission for a user
 func (r *Manager) Enforce(sub, obj, act string) (bool, error) {
+	if !r.enable {
+		return true, nil
+	}
+
 	r.mutex.RLock()
 	defer r.mutex.RUnlock()
 	allowed, err := r.enforcer.Enforce(sub, obj, act)
 	if err != nil {
-		return false, fmt.Errorf("failed to enforce policy: %w", err)
+		return false, fmt.Errorf("enforce policy: %w", err)
 	}
 	return allowed, nil
 }

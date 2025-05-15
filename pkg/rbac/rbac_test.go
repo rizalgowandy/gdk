@@ -9,7 +9,7 @@ import (
 
 func TestRBACManager(t *testing.T) {
 	// Initialize RBAC Manager
-	manager, err := NewManager("policy_example.csv")
+	manager, err := NewManager(true, "policy_example.csv")
 	require.NoError(t, err)
 
 	// Test AddRoleForUser
