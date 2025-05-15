@@ -6,7 +6,7 @@ import (
 
 func TestStr(t *testing.T) {
 	type args struct {
-		v interface{}
+		v any
 	}
 	type Person struct {
 		Name string
@@ -105,7 +105,7 @@ func TestStr(t *testing.T) {
 
 func TestBool(t *testing.T) {
 	type args struct {
-		v interface{}
+		v any
 	}
 	tests := []struct {
 		name string
@@ -166,7 +166,7 @@ func TestBool(t *testing.T) {
 
 func TestInt(t *testing.T) {
 	type args struct {
-		v interface{}
+		v any
 	}
 	tests := []struct {
 		name string
@@ -269,7 +269,7 @@ func TestInt(t *testing.T) {
 
 func TestInt64(t *testing.T) {
 	type args struct {
-		v interface{}
+		v any
 	}
 	tests := []struct {
 		name string

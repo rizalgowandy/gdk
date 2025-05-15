@@ -6,8 +6,8 @@ import (
 	"github.com/rizalgowandy/gdk/pkg/syncx"
 )
 
-// KV is wrapper for map[string]interface{}.
-type KV map[string]interface{}
+// KV is wrapper for map[string]any.
+type KV map[string]any
 
 type Config struct {
 	Debug    bool
@@ -50,44 +50,44 @@ func New(configs ...Config) error {
 	return onceErr
 }
 
-func TRC(ctx context.Context, metadata interface{}, message string) {
+func TRC(ctx context.Context, metadata any, message string) {
 	if createErr := New(); createErr != nil {
 		return
 	}
-	onceRes.Trace(GetRequestID(ctx), Metadata(metadata), message)
+	onceRes.Trace(GetRequestID(ctx), GetActorID(ctx), Metadata(metadata), message)
 }
 
-func DBG(ctx context.Context, metadata interface{}, message string) {
+func DBG(ctx context.Context, metadata any, message string) {
 	if createErr := New(); createErr != nil {
 		return
 	}
-	onceRes.Debug(GetRequestID(ctx), Metadata(metadata), message)
+	onceRes.Debug(GetRequestID(ctx), GetActorID(ctx), Metadata(metadata), message)
 }
 
-func INF(ctx context.Context, metadata interface{}, message string) {
+func INF(ctx context.Context, metadata any, message string) {
 	if createErr := New(); createErr != nil {
 		return
 	}
-	onceRes.Info(GetRequestID(ctx), Metadata(metadata), message)
+	onceRes.Info(GetRequestID(ctx), GetActorID(ctx), Metadata(metadata), message)
 }
 
 func WRN(ctx context.Context, err error, message string) {
 	if createErr := New(); createErr != nil {
 		return
 	}
-	onceRes.Warn(GetRequestID(ctx), err, ErrMetadata(err), message)
+	onceRes.Warn(GetRequestID(ctx), GetActorID(ctx), err, ErrMetadata(err), message)
 }
 
 func ERR(ctx context.Context, err error, message string) {
 	if createErr := New(); createErr != nil {
 		return
 	}
-	onceRes.Error(GetRequestID(ctx), err, ErrMetadata(err), message)
+	onceRes.Error(GetRequestID(ctx), GetActorID(ctx), err, ErrMetadata(err), message)
 }
 
 func FTL(ctx context.Context, err error, message string) {
 	if createErr := New(); createErr != nil {
 		return
 	}
-	onceRes.Fatal(GetRequestID(ctx), err, ErrMetadata(err), message)
+	onceRes.Fatal(GetRequestID(ctx), GetActorID(ctx), err, ErrMetadata(err), message)
 }

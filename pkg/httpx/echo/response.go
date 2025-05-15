@@ -26,7 +26,7 @@ func GetDefaultResponse(c echo.Context) Response {
 }
 
 // GetSuccessResponse is the success response for http get request
-func GetSuccessResponse(c echo.Context, totalData int, data interface{}) Response {
+func GetSuccessResponse(c echo.Context, totalData int, data any) Response {
 	return Response{
 		Code:       converter.String(http.StatusOK),
 		DisplayMsg: http.StatusText(http.StatusOK),
@@ -57,7 +57,7 @@ func PostDefaultResponse(c echo.Context) Response {
 }
 
 // PostSuccessResponse is the success response for http post request
-func PostSuccessResponse(c echo.Context, param interface{}, rowsAffected int) Response {
+func PostSuccessResponse(c echo.Context, param any, rowsAffected int) Response {
 	return Response{
 		Code:       converter.String(http.StatusOK),
 		DisplayMsg: http.StatusText(http.StatusOK),

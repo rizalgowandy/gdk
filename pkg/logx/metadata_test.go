@@ -17,7 +17,7 @@ func TestErrMetadata(t *testing.T) {
 	tests := []struct {
 		name string
 		args args
-		want map[string]interface{}
+		want map[string]any
 	}{
 		{
 			name: "Success with nil error",
@@ -31,7 +31,7 @@ func TestErrMetadata(t *testing.T) {
 			args: args{
 				err: fmt.Errorf("abc"),
 			},
-			want: map[string]interface{}{},
+			want: map[string]any{},
 		},
 		{
 			name: "Success with custom error",
@@ -40,8 +40,8 @@ func TestErrMetadata(t *testing.T) {
 					"k": "v",
 				}, errorx.CodeInternal, errorx.Op("abc"), errorx.MetricStatusExpectedErr, errorx.Message("qwerty")),
 			},
-			want: map[string]interface{}{
-				tags.Detail: map[string]interface{}{
+			want: map[string]any{
+				tags.Detail: map[string]any{
 					tags.Code:         errorx.CodeInternal,
 					tags.Fields:       errorx.Fields{"k": "v"},
 					tags.Message:      errorx.Message("qwerty"),
@@ -60,10 +60,10 @@ func TestErrMetadata(t *testing.T) {
 
 			// Inject got err origin to want because it's gonna be different on each machine.
 			if err, ok := got[tags.Detail]; ok {
-				if origin, ok := (err.(map[string]interface{}))[tags.ErrorLine]; ok {
+				if origin, ok := (err.(map[string]any))[tags.ErrorLine]; ok {
 					if err2, ok := tt.want[tags.Detail]; ok {
-						if _, ok := (err2.(map[string]interface{}))[tags.ErrorLine]; ok {
-							(err2.(map[string]interface{}))[tags.ErrorLine] = origin
+						if _, ok := (err2.(map[string]any))[tags.ErrorLine]; ok {
+							(err2.(map[string]any))[tags.ErrorLine] = origin
 						}
 					}
 				}
@@ -76,27 +76,27 @@ func TestErrMetadata(t *testing.T) {
 
 func TestMetadata(t *testing.T) {
 	type args struct {
-		detail interface{}
+		detail any
 	}
 	tests := []struct {
 		name string
 		args args
-		want map[string]interface{}
+		want map[string]any
 	}{
 		{
 			name: "Success without detail",
 			args: args{},
-			want: map[string]interface{}{},
+			want: map[string]any{},
 		},
 		{
 			name: "Success",
 			args: args{
-				detail: map[string]interface{}{
+				detail: map[string]any{
 					"k": "v",
 				},
 			},
-			want: map[string]interface{}{
-				tags.Detail: map[string]interface{}{
+			want: map[string]any{
+				tags.Detail: map[string]any{
 					"k": "v",
 				},
 			},

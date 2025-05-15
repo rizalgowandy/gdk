@@ -58,7 +58,10 @@ func NewPGXClient(ctx context.Context, config ...*PostgreConfiguration) (*PGXCli
 			})
 			if errReader != nil {
 				onceNewPGXClientRes = nil
-				onceNewPGXClientErr = errorx.E(errReader, errorx.Fields{tags.Type: "reader", tags.Index: i})
+				onceNewPGXClientErr = errorx.E(
+					errReader,
+					errorx.Fields{tags.Type: "reader", tags.Index: i},
+				)
 				return
 			}
 			readers = append(readers, reader)
@@ -156,8 +159,8 @@ func connect(ctx context.Context, config *configuration) (*pgxpool.Pool, error) 
 	return conn, nil
 }
 
-func toArrItf(v []*pgxpool.Pool) []interface{} {
-	result := make([]interface{}, len(v))
+func toArrItf(v []*pgxpool.Pool) []any {
+	result := make([]any, len(v))
 	for k := range v {
 		result[k] = v[k]
 	}

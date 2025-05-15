@@ -5,7 +5,7 @@ import (
 )
 
 // ArrInt convert any value to []int.
-func ArrInt(v interface{}) []int {
+func ArrInt(v any) []int {
 	switch v := v.(type) {
 	case []int:
 		return v
@@ -52,7 +52,7 @@ func ArrInt(v interface{}) []int {
 }
 
 // ArrStr convert any value to []string.
-func ArrStr(v interface{}) []string {
+func ArrStr(v any) []string {
 	switch v := v.(type) {
 	case string:
 		var result []string
@@ -75,7 +75,7 @@ func ArrStr(v interface{}) []string {
 }
 
 // ArrInt64 convert any value to []int64.
-func ArrInt64(v interface{}) []int64 {
+func ArrInt64(v any) []int64 {
 	switch v := v.(type) {
 	case []int:
 		result := make([]int64, len(v))

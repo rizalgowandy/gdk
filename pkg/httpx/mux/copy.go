@@ -9,7 +9,7 @@ import (
 )
 
 // CopyBody returns query param for get method, and body for others.
-func CopyBody(r *http.Request) (interface{}, error) {
+func CopyBody(r *http.Request) (any, error) {
 	if r.Method == http.MethodGet {
 		return r.URL.Query(), nil
 	}
@@ -29,7 +29,7 @@ func CopyBody(r *http.Request) (interface{}, error) {
 	}
 
 	// Unmarshal binary to struct.
-	var res interface{}
+	var res any
 	err = jsonx.Unmarshal(buf, &res)
 	if err != nil {
 		return nil, NewHTTPError(http.StatusInternalServerError, err.Error()).SetInternal(err)

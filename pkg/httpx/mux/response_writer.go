@@ -13,11 +13,11 @@ type Writer struct {
 	// Response contains the whole operation response data.
 	// Since certain operation has a big response data,
 	// response will only be filled on [development, staging] environment.
-	Response map[string]interface{}
+	Response map[string]any
 }
 
 func NewWriter(w http.ResponseWriter) *Writer {
-	return &Writer{w, http.StatusOK, map[string]interface{}{}}
+	return &Writer{w, http.StatusOK, map[string]any{}}
 }
 
 func (w *Writer) WriteHeader(code int) {

@@ -1,37 +1,44 @@
 package logx
 
+// Logger is an interface that provides logging functionality.
 type Logger interface {
 	Trace(
 		requestID string,
-		fields map[string]interface{},
+		actorID int,
+		fields map[string]any,
 		message string,
 	)
 	Debug(
 		requestID string,
-		fields map[string]interface{},
+		actorID int,
+		fields map[string]any,
 		message string,
 	)
 	Info(
 		requestID string,
-		fields map[string]interface{},
+		actorID int,
+		fields map[string]any,
 		message string,
 	)
 	Warn(
 		requestID string,
+		actorID int,
 		err error,
-		fields map[string]interface{},
+		fields map[string]any,
 		message string,
 	)
 	Error(
 		requestID string,
+		actorID int,
 		err error,
-		fields map[string]interface{},
+		fields map[string]any,
 		message string,
 	)
 	Fatal(
 		requestID string,
+		actorID int,
 		err error,
-		fields map[string]interface{},
+		fields map[string]any,
 		message string,
 	)
 }

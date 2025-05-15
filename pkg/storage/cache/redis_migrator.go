@@ -213,7 +213,7 @@ func (r *RedisMigrator) HSet(ctx context.Context, key, field, value string) (boo
 }
 
 // Del deletes a key.
-func (r *RedisMigrator) Del(ctx context.Context, key ...interface{}) (int64, error) {
+func (r *RedisMigrator) Del(ctx context.Context, key ...any) (int64, error) {
 	// Update to old client.
 	res, err := r.origin.Del(ctx, key...)
 	if err == nil && res > 0 {

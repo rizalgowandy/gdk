@@ -30,7 +30,7 @@ import (
 //
 // If Message is not filled, we set it to the Message of
 // the underlying error.
-func E(args ...interface{}) error {
+func E(args ...any) error {
 	if len(args) == 0 {
 		panic("call to errorx.E with no arguments")
 	}

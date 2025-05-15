@@ -9,18 +9,18 @@ import (
 // ErrMetadata returns a metadata constructed from error.
 // If you are printing a log, this metadata should always be set.
 // Useful if you want to trace log with certain information.
-func ErrMetadata(err error) map[string]interface{} {
+func ErrMetadata(err error) map[string]any {
 	if err == nil {
 		return nil
 	}
 
-	metadata := map[string]interface{}{}
+	metadata := map[string]any{}
 	if build.Info() != nil {
 		metadata[tags.Build] = build.Info()
 	}
 
 	if e, ok := err.(*errorx.Error); ok {
-		detail := map[string]interface{}{
+		detail := map[string]any{
 			tags.ErrorLine: e.Line,
 		}
 
@@ -51,8 +51,8 @@ func ErrMetadata(err error) map[string]interface{} {
 }
 
 // Metadata returns a basic metadata added a more detail metadata.
-func Metadata(detail interface{}) map[string]interface{} {
-	metadata := map[string]interface{}{}
+func Metadata(detail any) map[string]any {
+	metadata := map[string]any{}
 	if build.Info() != nil {
 		metadata[tags.Build] = build.Info()
 	}

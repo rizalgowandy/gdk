@@ -14,7 +14,7 @@ type (
 	Line string
 
 	// Fields of error
-	Fields map[string]interface{}
+	Fields map[string]any
 
 	// Message is a human-readable message.
 	Message string

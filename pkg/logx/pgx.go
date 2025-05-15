@@ -19,7 +19,7 @@ func (p *PGX) Log(
 	ctx context.Context,
 	level pgx.LogLevel,
 	msg string,
-	data map[string]interface{},
+	data map[string]any,
 ) {
 	err := errorx.E("db operation error", errorx.Fields(data))
 

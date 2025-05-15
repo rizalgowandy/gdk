@@ -47,7 +47,7 @@ func NewProducer(config *ProducerConfiguration) (*Producer, error) {
 }
 
 // Publish sends data to nsq.
-func (p *Producer) Publish(_ context.Context, topic string, data interface{}) error {
+func (p *Producer) Publish(_ context.Context, topic string, data any) error {
 	if topic == "" {
 		return errorx.E("topic cannot be empty")
 	}
@@ -74,7 +74,7 @@ func (p *Producer) DeferredPublish(
 	_ context.Context,
 	topic string,
 	delay time.Duration,
-	data interface{},
+	data any,
 ) error {
 	if topic == "" {
 		return errorx.E("topic cannot be empty")

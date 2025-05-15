@@ -54,72 +54,108 @@ func NewZerolog(config Config) (*ZeroLogger, error) {
 
 func (z *ZeroLogger) Trace(
 	requestID string,
-	fields map[string]interface{},
+	actorID int,
+	fields map[string]any,
 	message string,
 ) {
-	z.client.Trace().
+	event := z.client.Trace().
 		Str(tags.RequestID, requestID).
-		Fields(fields).
-		Msg(message)
+		Fields(fields)
+
+	if actorID != 0 {
+		event = event.Int(tags.ActorID, actorID)
+	}
+
+	event.Msg(message)
 }
 
 func (z *ZeroLogger) Debug(
 	requestID string,
-	fields map[string]interface{},
+	actorID int,
+	fields map[string]any,
 	message string,
 ) {
-	z.client.Debug().
+	event := z.client.Debug().
 		Str(tags.RequestID, requestID).
-		Fields(fields).
-		Msg(message)
+		Fields(fields)
+
+	if actorID != 0 {
+		event = event.Int(tags.ActorID, actorID)
+	}
+
+	event.Msg(message)
 }
 
 func (z *ZeroLogger) Info(
 	requestID string,
-	fields map[string]interface{},
+	actorID int,
+	fields map[string]any,
 	message string,
 ) {
-	z.client.Info().
+	event := z.client.Info().
 		Str(tags.RequestID, requestID).
-		Fields(fields).
-		Msg(message)
+		Fields(fields)
+
+	if actorID != 0 {
+		event = event.Int(tags.ActorID, actorID)
+	}
+
+	event.Msg(message)
 }
 
 func (z *ZeroLogger) Warn(
 	requestID string,
+	actorID int,
 	err error,
-	fields map[string]interface{},
+	fields map[string]any,
 	message string,
 ) {
-	z.client.Warn().
+	event := z.client.Warn().
 		Str(tags.RequestID, requestID).
 		Fields(fields).
-		Err(err).
-		Msg(message)
+		Err(err)
+
+	if actorID != 0 {
+		event = event.Int(tags.ActorID, actorID)
+	}
+
+	event.Msg(message)
 }
 
 func (z *ZeroLogger) Error(
 	requestID string,
+	actorID int,
 	err error,
-	fields map[string]interface{},
+	fields map[string]any,
 	message string,
 ) {
-	z.client.Error().
+	event := z.client.Error().
 		Str(tags.RequestID, requestID).
 		Fields(fields).
-		Err(err).
-		Msg(message)
+		Err(err)
+
+	if actorID != 0 {
+		event = event.Int(tags.ActorID, actorID)
+	}
+
+	event.Msg(message)
 }
 
 func (z *ZeroLogger) Fatal(
 	requestID string,
+	actorID int,
 	err error,
-	fields map[string]interface{},
+	fields map[string]any,
 	message string,
 ) {
-	z.client.Fatal().
+	event := z.client.Fatal().
 		Str(tags.RequestID, requestID).
 		Fields(fields).
-		Err(err).
-		Msg(message)
+		Err(err)
+
+	if actorID != 0 {
+		event = event.Int(tags.ActorID, actorID)
+	}
+
+	event.Msg(message)
 }

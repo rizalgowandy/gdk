@@ -10,7 +10,7 @@ import (
 func TestRFC3339(t *testing.T) {
 	tests := []struct {
 		name    string
-		input   interface{}
+		input   any
 		wantErr bool
 	}{
 		{

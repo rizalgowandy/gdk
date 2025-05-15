@@ -62,7 +62,8 @@ func TestZeroLogger_Trace(t *testing.T) {
 	}
 	type args struct {
 		requestID string
-		fields    map[string]interface{}
+		actorID   int
+		fields    map[string]any
 		message   string
 	}
 	tests := []struct {
@@ -77,6 +78,7 @@ func TestZeroLogger_Trace(t *testing.T) {
 			},
 			args: args{
 				requestID: "",
+				actorID:   0,
 				fields:    nil,
 				message:   "",
 			},
@@ -87,7 +89,7 @@ func TestZeroLogger_Trace(t *testing.T) {
 			z := &ZeroLogger{
 				client: tt.fields.client,
 			}
-			z.Trace(tt.args.requestID, tt.args.fields, tt.args.message)
+			z.Trace(tt.args.requestID, tt.args.actorID, tt.args.fields, tt.args.message)
 		})
 	}
 }
@@ -98,7 +100,8 @@ func TestZeroLogger_Debug(t *testing.T) {
 	}
 	type args struct {
 		requestID string
-		fields    map[string]interface{}
+		actorID   int
+		fields    map[string]any
 		message   string
 	}
 	tests := []struct {
@@ -113,6 +116,7 @@ func TestZeroLogger_Debug(t *testing.T) {
 			},
 			args: args{
 				requestID: "",
+				actorID:   0,
 				fields:    nil,
 				message:   "",
 			},
@@ -123,7 +127,7 @@ func TestZeroLogger_Debug(t *testing.T) {
 			z := &ZeroLogger{
 				client: tt.fields.client,
 			}
-			z.Debug(tt.args.requestID, tt.args.fields, tt.args.message)
+			z.Debug(tt.args.requestID, tt.args.actorID, tt.args.fields, tt.args.message)
 		})
 	}
 }
@@ -134,7 +138,8 @@ func TestZeroLogger_Info(t *testing.T) {
 	}
 	type args struct {
 		requestID string
-		fields    map[string]interface{}
+		actorID   int
+		fields    map[string]any
 		message   string
 	}
 	tests := []struct {
@@ -149,6 +154,7 @@ func TestZeroLogger_Info(t *testing.T) {
 			},
 			args: args{
 				requestID: "",
+				actorID:   0,
 				fields:    nil,
 				message:   "",
 			},
@@ -159,7 +165,7 @@ func TestZeroLogger_Info(t *testing.T) {
 			z := &ZeroLogger{
 				client: tt.fields.client,
 			}
-			z.Info(tt.args.requestID, tt.args.fields, tt.args.message)
+			z.Info(tt.args.requestID, tt.args.actorID, tt.args.fields, tt.args.message)
 		})
 	}
 }
@@ -170,8 +176,9 @@ func TestZeroLogger_Warn(t *testing.T) {
 	}
 	type args struct {
 		requestID string
+		actorID   int
 		err       error
-		fields    map[string]interface{}
+		fields    map[string]any
 		message   string
 	}
 	tests := []struct {
@@ -186,6 +193,7 @@ func TestZeroLogger_Warn(t *testing.T) {
 			},
 			args: args{
 				requestID: "",
+				actorID:   0,
 				err:       errorx.E("abc"),
 				fields:    nil,
 				message:   "",
@@ -197,7 +205,7 @@ func TestZeroLogger_Warn(t *testing.T) {
 			z := &ZeroLogger{
 				client: tt.fields.client,
 			}
-			z.Warn(tt.args.requestID, tt.args.err, tt.args.fields, tt.args.message)
+			z.Warn(tt.args.requestID, tt.args.actorID, tt.args.err, tt.args.fields, tt.args.message)
 		})
 	}
 }
@@ -208,8 +216,9 @@ func TestZeroLogger_Error(t *testing.T) {
 	}
 	type args struct {
 		requestID string
+		actorID   int
 		err       error
-		fields    map[string]interface{}
+		fields    map[string]any
 		message   string
 	}
 	tests := []struct {
@@ -224,6 +233,7 @@ func TestZeroLogger_Error(t *testing.T) {
 			},
 			args: args{
 				requestID: "",
+				actorID:   0,
 				err:       errorx.E("abc"),
 				fields:    nil,
 				message:   "",
@@ -235,7 +245,13 @@ func TestZeroLogger_Error(t *testing.T) {
 			z := &ZeroLogger{
 				client: tt.fields.client,
 			}
-			z.Error(tt.args.requestID, tt.args.err, tt.args.fields, tt.args.message)
+			z.Error(
+				tt.args.requestID,
+				tt.args.actorID,
+				tt.args.err,
+				tt.args.fields,
+				tt.args.message,
+			)
 		})
 	}
 }

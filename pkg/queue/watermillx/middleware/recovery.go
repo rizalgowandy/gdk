@@ -10,7 +10,7 @@ import (
 )
 
 type RecoveryPanicError struct {
-	V          interface{}
+	V          any
 	Stacktrace string
 }
 

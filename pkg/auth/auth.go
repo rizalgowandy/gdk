@@ -15,16 +15,9 @@ var (
 )
 
 type Operator struct {
+	Enable      bool
 	JWTSecret   string
 	JWTDuration time.Duration
-}
-
-// NewOperator creates a new Operator instance
-func NewOperator(secret string, duration time.Duration) *Operator {
-	return &Operator{
-		JWTSecret:   secret,
-		JWTDuration: duration,
-	}
 }
 
 // GenerateToken creates a new JWT token for a user
@@ -54,10 +47,50 @@ func (h *Operator) GenerateToken(user Claims) (TokenResponse, error) {
 	}, nil
 }
 
+func (h *Operator) GenerateTokenWithTTL(
+	user Claims,
+	ttl time.Duration,
+) (TokenResponse, error) {
+	if ttl.Seconds() <= 0 {
+		return TokenResponse{}, fmt.Errorf("invalid TTL: %w", ErrInvalidType)
+	}
+
+	expirationTime := time.Now().Add(ttl)
+
+	// Create the JWT claims
+	claims := jwt.MapClaims{
+		"user_id": user.UserID,
+		"email":   user.Email,
+		"exp":     expirationTime.Unix(),
+		"iat":     time.Now().Unix(),
+	}
+
+	// Create a token with claims
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+
+	// Generate encoded token
+	tokenString, err := token.SignedString([]byte(h.JWTSecret))
+	if err != nil {
+		return TokenResponse{}, fmt.Errorf("signing JWT token: %w", err)
+	}
+
+	return TokenResponse{
+		Token:     tokenString,
+		ExpiresAt: expirationTime,
+	}, nil
+}
+
 // ValidateToken validates and parses the JWT token
 func (h *Operator) ValidateToken(tokenString string) (Claims, error) {
+	if !h.Enable {
+		return Claims{
+			UserID: 1,
+			Email:  "admin@gmail.com",
+		}, nil
+	}
+
 	// Parse the token
-	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (any, error) {
 		// Validate the signing method
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf(
@@ -104,4 +137,12 @@ func (h *Operator) ValidateToken(tokenString string) (Claims, error) {
 		UserID: int(userID),
 		Email:  email,
 	}, nil
+}
+
+func NewOperator(enable bool, secret string, duration time.Duration) *Operator {
+	return &Operator{
+		Enable:      enable,
+		JWTSecret:   secret,
+		JWTDuration: duration,
+	}
 }

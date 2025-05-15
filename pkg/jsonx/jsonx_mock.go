@@ -35,7 +35,7 @@ func (m *MockOperatorItf) EXPECT() *MockOperatorItfMockRecorder {
 }
 
 // Marshal mocks base method.
-func (m *MockOperatorItf) Marshal(v interface{}) ([]byte, error) {
+func (m *MockOperatorItf) Marshal(v any) ([]byte, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Marshal", v)
 	ret0, _ := ret[0].([]byte)
@@ -78,7 +78,7 @@ func (mr *MockOperatorItfMockRecorder) NewEncoder(w interface{}) *gomock.Call {
 }
 
 // Unmarshal mocks base method.
-func (m *MockOperatorItf) Unmarshal(data []byte, v interface{}) error {
+func (m *MockOperatorItf) Unmarshal(data []byte, v any) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Unmarshal", data, v)
 	ret0, _ := ret[0].(error)
@@ -115,7 +115,7 @@ func (m *MockEncoderItf) EXPECT() *MockEncoderItfMockRecorder {
 }
 
 // Encode mocks base method.
-func (m *MockEncoderItf) Encode(v interface{}) error {
+func (m *MockEncoderItf) Encode(v any) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Encode", v)
 	ret0, _ := ret[0].(error)
@@ -152,7 +152,7 @@ func (m *MockDecoderItf) EXPECT() *MockDecoderItfMockRecorder {
 }
 
 // Decode mocks base method.
-func (m *MockDecoderItf) Decode(v interface{}) error {
+func (m *MockDecoderItf) Decode(v any) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Decode", v)
 	ret0, _ := ret[0].(error)

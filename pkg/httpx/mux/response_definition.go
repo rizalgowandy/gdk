@@ -17,7 +17,7 @@ type Response struct {
 	RequestID string `json:"trace_id"`
 
 	// Describes current api generated result data.
-	ResultData interface{} `json:"api_result_data"`
+	ResultData any `json:"api_result_data"`
 }
 
 // GetResultData is the default response result data format.
@@ -25,7 +25,7 @@ type Response struct {
 type GetResultData struct {
 	// Contains query param passed by client.
 	// To cross check if server accept the correct param from client.
-	Param interface{} `json:"http_param"`
+	Param any `json:"http_param"`
 
 	// Defines the current API response generated.
 	GeneratedDate string `json:"generated_date"`
@@ -34,7 +34,7 @@ type GetResultData struct {
 	TotalData string `json:"total_data"`
 
 	// Request result data.
-	Data interface{} `json:"data"`
+	Data any `json:"data"`
 }
 
 // PostResultData is the default response result data format.
@@ -42,7 +42,7 @@ type GetResultData struct {
 type PostResultData struct {
 	// Contains json body passed by client.
 	// To cross check if server accept the correct param from client.
-	Param interface{} `json:"http_param"`
+	Param any `json:"http_param"`
 
 	// Defines the current API request execution time.
 	ExecutedDate string `json:"executed_date"`

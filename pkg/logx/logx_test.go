@@ -10,7 +10,7 @@ import (
 func TestTRC(t *testing.T) {
 	type args struct {
 		ctx      context.Context
-		metadata interface{}
+		metadata any
 		message  string
 	}
 	tests := []struct {
@@ -38,7 +38,7 @@ func TestTRC(t *testing.T) {
 func TestDBG(t *testing.T) {
 	type args struct {
 		ctx      context.Context
-		metadata interface{}
+		metadata any
 		message  string
 	}
 	tests := []struct {
@@ -66,7 +66,7 @@ func TestDBG(t *testing.T) {
 func TestINF(t *testing.T) {
 	type args struct {
 		ctx      context.Context
-		metadata interface{}
+		metadata any
 		message  string
 	}
 	tests := []struct {

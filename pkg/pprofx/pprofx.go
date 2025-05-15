@@ -54,14 +54,14 @@ func Summary(w http.ResponseWriter, _ *http.Request) {
 	var m runtime.MemStats
 	runtime.ReadMemStats(&m)
 
-	resp := map[string]interface{}{
+	resp := map[string]any{
 		"htop": map[string]string{
 			"uptime":      uptime.Format(),
 			"load_avg_1":  fmt.Sprintf("%.2f", avg.One),
 			"load_avg_5":  fmt.Sprintf("%.2f", avg.Five),
 			"load_avg_15": fmt.Sprintf("%.2f", avg.Fifteen),
 		},
-		"free": map[string]interface{}{
+		"free": map[string]any{
 			"mem": map[string]string{
 				"total":           converter.ByteSize(mem.Total),
 				"used":            converter.ByteSize(mem.ActualUsed),

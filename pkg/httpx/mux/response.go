@@ -24,7 +24,7 @@ func GetDefaultResponse(r *http.Request) Response {
 }
 
 // GetSuccessResponse is the success response for http get request
-func GetSuccessResponse(r *http.Request, totalData int, data interface{}) Response {
+func GetSuccessResponse(r *http.Request, totalData int, data any) Response {
 	return Response{
 		Code:       converter.String(http.StatusOK),
 		DisplayMsg: http.StatusText(http.StatusOK),
@@ -55,7 +55,7 @@ func PostDefaultResponse(r *http.Request) Response {
 }
 
 // PostSuccessResponse is the success response for http post request
-func PostSuccessResponse(r *http.Request, param interface{}, rowsAffected int) Response {
+func PostSuccessResponse(r *http.Request, param any, rowsAffected int) Response {
 	return Response{
 		Code:       converter.String(http.StatusOK),
 		DisplayMsg: http.StatusText(http.StatusOK),

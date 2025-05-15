@@ -8,7 +8,7 @@ import (
 var ErrUnsupportedMediaType = NewHTTPError(http.StatusUnsupportedMediaType)
 
 // NewHTTPError creates a new HTTPError instance.
-func NewHTTPError(code int, message ...interface{}) *HTTPError {
+func NewHTTPError(code int, message ...any) *HTTPError {
 	he := &HTTPError{Code: code, Message: http.StatusText(code)}
 	if len(message) > 0 {
 		he.Message = message[0]
@@ -18,9 +18,9 @@ func NewHTTPError(code int, message ...interface{}) *HTTPError {
 
 // HTTPError represents an error that occurred while handling a request.
 type HTTPError struct {
-	Code     int         `json:"-"`
-	Message  interface{} `json:"message"`
-	Internal error       `json:"-"` // Stores the error returned by an external dependency
+	Code     int   `json:"-"`
+	Message  any   `json:"message"`
+	Internal error `json:"-"` // Stores the error returned by an external dependency
 }
 
 // Error makes it compatible with `error` interface.

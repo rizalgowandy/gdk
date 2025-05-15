@@ -48,7 +48,7 @@ func (mr *MockRedisClientItfMockRecorder) Close() *gomock.Call {
 }
 
 // Del mocks base method.
-func (m *MockRedisClientItf) Del(ctx context.Context, key ...interface{}) (int64, error) {
+func (m *MockRedisClientItf) Del(ctx context.Context, key ...any) (int64, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx}
 	for _, a := range key {
@@ -261,10 +261,10 @@ func (mr *MockRistrettoClientItfMockRecorder) Del(ctx, key interface{}) *gomock.
 }
 
 // Get mocks base method.
-func (m *MockRistrettoClientItf) Get(ctx context.Context, key string) (interface{}, bool) {
+func (m *MockRistrettoClientItf) Get(ctx context.Context, key string) (any, bool) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Get", ctx, key)
-	ret0, _ := ret[0].(interface{})
+	ret0, _ := ret[0].(any)
 	ret1, _ := ret[1].(bool)
 	return ret0, ret1
 }
@@ -276,7 +276,7 @@ func (mr *MockRistrettoClientItfMockRecorder) Get(ctx, key interface{}) *gomock.
 }
 
 // Set mocks base method.
-func (m *MockRistrettoClientItf) Set(ctx context.Context, key string, value interface{}) bool {
+func (m *MockRistrettoClientItf) Set(ctx context.Context, key string, value any) bool {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Set", ctx, key, value)
 	ret0, _ := ret[0].(bool)
@@ -290,7 +290,7 @@ func (mr *MockRistrettoClientItfMockRecorder) Set(ctx, key, value interface{}) *
 }
 
 // SetEX mocks base method.
-func (m *MockRistrettoClientItf) SetEX(ctx context.Context, key string, value interface{}, TTL time.Duration) bool {
+func (m *MockRistrettoClientItf) SetEX(ctx context.Context, key string, value any, TTL time.Duration) bool {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "SetEX", ctx, key, value, TTL)
 	ret0, _ := ret[0].(bool)
