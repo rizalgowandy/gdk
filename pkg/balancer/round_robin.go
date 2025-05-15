@@ -6,7 +6,7 @@ import (
 	"github.com/rizalgowandy/gdk/pkg/errorx/v1"
 )
 
-func NewRoundRobin(items []interface{}) (*RoundRobin, error) {
+func NewRoundRobin(items []any) (*RoundRobin, error) {
 	if len(items) == 0 {
 		return nil, errorx.E("no items passed")
 	}
@@ -19,10 +19,10 @@ func NewRoundRobin(items []interface{}) (*RoundRobin, error) {
 type RoundRobin struct {
 	mux   sync.Mutex
 	next  int
-	items []interface{}
+	items []any
 }
 
-func (b *RoundRobin) Next() interface{} {
+func (b *RoundRobin) Next() any {
 	b.mux.Lock()
 	r := b.items[b.next]
 	b.next = (b.next + 1) % len(b.items)

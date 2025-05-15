@@ -6,8 +6,8 @@ import (
 	"github.com/rizalgowandy/gdk/pkg/syncx"
 )
 
-// KV is wrapper for map[string]interface{}.
-type KV map[string]interface{}
+// KV is wrapper for map[string]any.
+type KV map[string]any
 
 type Config struct {
 	Debug    bool
@@ -50,21 +50,21 @@ func New(configs ...Config) error {
 	return onceErr
 }
 
-func TRC(ctx context.Context, metadata interface{}, message string) {
+func TRC(ctx context.Context, metadata any, message string) {
 	if createErr := New(); createErr != nil {
 		return
 	}
 	onceRes.Trace(GetRequestID(ctx), Metadata(metadata), message)
 }
 
-func DBG(ctx context.Context, metadata interface{}, message string) {
+func DBG(ctx context.Context, metadata any, message string) {
 	if createErr := New(); createErr != nil {
 		return
 	}
 	onceRes.Debug(GetRequestID(ctx), Metadata(metadata), message)
 }
 
-func INF(ctx context.Context, metadata interface{}, message string) {
+func INF(ctx context.Context, metadata any, message string) {
 	if createErr := New(); createErr != nil {
 		return
 	}

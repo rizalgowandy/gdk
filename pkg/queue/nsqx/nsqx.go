@@ -13,10 +13,10 @@ import (
 type ProducerItf interface {
 	// Publish sends data to nsq.
 	// Data should be json bytes but the struct or map.
-	Publish(ctx context.Context, topic string, data interface{}) error
+	Publish(ctx context.Context, topic string, data any) error
 
 	// DeferredPublish sends data to nsq after certain delay.
-	DeferredPublish(ctx context.Context, topic string, delay time.Duration, data interface{}) error
+	DeferredPublish(ctx context.Context, topic string, delay time.Duration, data any) error
 }
 
 // ConsumerItf is consumer interface to consume nsq message.

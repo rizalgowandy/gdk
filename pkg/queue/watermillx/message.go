@@ -9,7 +9,7 @@ import (
 	"github.com/segmentio/ksuid"
 )
 
-func NewMessage(_ context.Context, data interface{}) (*message.Message, error) {
+func NewMessage(_ context.Context, data any) (*message.Message, error) {
 	if data == nil {
 		return nil, errorx.E("data cannot be empty")
 	}

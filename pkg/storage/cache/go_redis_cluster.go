@@ -202,7 +202,7 @@ func (r *GoRedisCluster) HSet(ctx context.Context, key, field, value string) (bo
 }
 
 // Del deletes a key.
-func (r *GoRedisCluster) Del(ctx context.Context, key ...interface{}) (int64, error) {
+func (r *GoRedisCluster) Del(ctx context.Context, key ...any) (int64, error) {
 	stdKeys := make([]string, len(key))
 	for i, v := range key {
 		stdKey, ok := v.(string)

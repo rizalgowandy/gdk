@@ -62,7 +62,7 @@ func TestZeroLogger_Trace(t *testing.T) {
 	}
 	type args struct {
 		requestID string
-		fields    map[string]interface{}
+		fields    map[string]any
 		message   string
 	}
 	tests := []struct {
@@ -98,7 +98,7 @@ func TestZeroLogger_Debug(t *testing.T) {
 	}
 	type args struct {
 		requestID string
-		fields    map[string]interface{}
+		fields    map[string]any
 		message   string
 	}
 	tests := []struct {
@@ -134,7 +134,7 @@ func TestZeroLogger_Info(t *testing.T) {
 	}
 	type args struct {
 		requestID string
-		fields    map[string]interface{}
+		fields    map[string]any
 		message   string
 	}
 	tests := []struct {
@@ -171,7 +171,7 @@ func TestZeroLogger_Warn(t *testing.T) {
 	type args struct {
 		requestID string
 		err       error
-		fields    map[string]interface{}
+		fields    map[string]any
 		message   string
 	}
 	tests := []struct {
@@ -209,7 +209,7 @@ func TestZeroLogger_Error(t *testing.T) {
 	type args struct {
 		requestID string
 		err       error
-		fields    map[string]interface{}
+		fields    map[string]any
 		message   string
 	}
 	tests := []struct {

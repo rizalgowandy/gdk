@@ -7,7 +7,7 @@ import (
 
 func TestArrInt(t *testing.T) {
 	type args struct {
-		v interface{}
+		v any
 	}
 	tests := []struct {
 		name string
@@ -85,7 +85,7 @@ func TestArrInt(t *testing.T) {
 
 func TestArrStr(t *testing.T) {
 	type args struct {
-		v interface{}
+		v any
 	}
 	tests := []struct {
 		name string
@@ -142,7 +142,7 @@ func TestArrStr(t *testing.T) {
 
 func TestArrInt64(t *testing.T) {
 	type args struct {
-		v interface{}
+		v any
 	}
 	tests := []struct {
 		name string

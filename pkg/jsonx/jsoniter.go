@@ -19,12 +19,12 @@ func NewJSONIterator() *JSONIterator {
 }
 
 // Unmarshal copy input data to interface.
-func (j *JSONIterator) Unmarshal(data []byte, v interface{}) error {
+func (j *JSONIterator) Unmarshal(data []byte, v any) error {
 	return j.json.Unmarshal(data, v)
 }
 
 // Marshal returns bytes of interface.
-func (j *JSONIterator) Marshal(v interface{}) ([]byte, error) {
+func (j *JSONIterator) Marshal(v any) ([]byte, error) {
 	return j.json.Marshal(v)
 }
 

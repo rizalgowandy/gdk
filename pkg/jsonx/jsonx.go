@@ -10,20 +10,20 @@ import (
 
 // OperatorItf interface for json library.
 type OperatorItf interface {
-	Unmarshal(data []byte, v interface{}) error
-	Marshal(v interface{}) ([]byte, error)
+	Unmarshal(data []byte, v any) error
+	Marshal(v any) ([]byte, error)
 	NewEncoder(w io.Writer) EncoderItf
 	NewDecoder(r io.Reader) DecoderItf
 }
 
 // EncoderItf interface for json library encoder.
 type EncoderItf interface {
-	Encode(v interface{}) error
+	Encode(v any) error
 }
 
 // DecoderItf interface for json library decoder.
 type DecoderItf interface {
-	Decode(v interface{}) error
+	Decode(v any) error
 }
 
 var (
@@ -41,12 +41,12 @@ func New() OperatorItf {
 }
 
 // Unmarshal copy input data to interface.
-func Marshal(v interface{}) ([]byte, error) {
+func Marshal(v any) ([]byte, error) {
 	return New().Marshal(v)
 }
 
 // Marshal returns bytes of interface.
-func Unmarshal(data []byte, v interface{}) error {
+func Unmarshal(data []byte, v any) error {
 	return New().Unmarshal(data, v)
 }
 

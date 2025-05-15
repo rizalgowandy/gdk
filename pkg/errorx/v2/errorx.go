@@ -12,7 +12,7 @@ const callerSkip = 2
 
 // E for creating new error.
 // error should always be the first param.
-func E(args ...interface{}) error {
+func E(args ...any) error {
 	if len(args) == 0 {
 		return Errorf("errorx.E: bad call without args from file=%s", fn.Line(callerSkip))
 	}

@@ -37,7 +37,7 @@ func (m *MockProducerItf) EXPECT() *MockProducerItfMockRecorder {
 }
 
 // DeferredPublish mocks base method.
-func (m *MockProducerItf) DeferredPublish(ctx context.Context, topic string, delay time.Duration, data interface{}) error {
+func (m *MockProducerItf) DeferredPublish(ctx context.Context, topic string, delay time.Duration, data any) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DeferredPublish", ctx, topic, delay, data)
 	ret0, _ := ret[0].(error)
@@ -51,7 +51,7 @@ func (mr *MockProducerItfMockRecorder) DeferredPublish(ctx, topic, delay, data i
 }
 
 // Publish mocks base method.
-func (m *MockProducerItf) Publish(ctx context.Context, topic string, data interface{}) error {
+func (m *MockProducerItf) Publish(ctx context.Context, topic string, data any) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Publish", ctx, topic, data)
 	ret0, _ := ret[0].(error)

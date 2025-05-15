@@ -10,7 +10,7 @@ import (
 func TestE(t *testing.T) {
 	tests := []struct {
 		name string
-		args []interface{}
+		args []any
 		want error
 	}{
 		{
@@ -20,7 +20,7 @@ func TestE(t *testing.T) {
 		},
 		{
 			name: "1 layer",
-			args: []interface{}{
+			args: []any{
 				"message",
 				Conflict,
 				Op("userService.CreateUser"),
@@ -34,7 +34,7 @@ func TestE(t *testing.T) {
 		},
 		{
 			name: "2 layer with standard error",
-			args: []interface{}{
+			args: []any{
 				"message",
 				Conflict,
 				Op("userService.CreateUser"),
@@ -49,7 +49,7 @@ func TestE(t *testing.T) {
 		},
 		{
 			name: "2 layer",
-			args: []interface{}{
+			args: []any{
 				"message",
 				Conflict,
 				Op("userService.CreateUser"),
@@ -74,14 +74,14 @@ func TestE(t *testing.T) {
 		},
 		{
 			name: "Invalid type",
-			args: []interface{}{
+			args: []any{
 				123,
 			},
 			want: errors.New("unknown type int, value 123 in error call"),
 		},
 		{
 			name: "Same code",
-			args: []interface{}{
+			args: []any{
 				"message",
 				Conflict,
 				Op("userService.CreateUser"),
@@ -106,7 +106,7 @@ func TestE(t *testing.T) {
 		},
 		{
 			name: "Missing code",
-			args: []interface{}{
+			args: []any{
 				"message",
 				Op("userService.CreateUser"),
 				&Error{
@@ -130,7 +130,7 @@ func TestE(t *testing.T) {
 		},
 		{
 			name: "Missing code",
-			args: []interface{}{
+			args: []any{
 				Internal,
 				Op("userService.CreateUser"),
 				&Error{

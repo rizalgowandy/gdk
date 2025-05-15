@@ -27,7 +27,7 @@ func New(text string) error {
 
 // Errorf is equivalent to fmt.Errorf, but allows clients to import only this
 // package for all error handling.
-func Errorf(format string, args ...interface{}) error {
+func Errorf(format string, args ...any) error {
 	return &errorString{
 		s: fmt.Sprintf(format, args...),
 	}

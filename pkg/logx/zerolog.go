@@ -54,7 +54,7 @@ func NewZerolog(config Config) (*ZeroLogger, error) {
 
 func (z *ZeroLogger) Trace(
 	requestID string,
-	fields map[string]interface{},
+	fields map[string]any,
 	message string,
 ) {
 	z.client.Trace().
@@ -65,7 +65,7 @@ func (z *ZeroLogger) Trace(
 
 func (z *ZeroLogger) Debug(
 	requestID string,
-	fields map[string]interface{},
+	fields map[string]any,
 	message string,
 ) {
 	z.client.Debug().
@@ -76,7 +76,7 @@ func (z *ZeroLogger) Debug(
 
 func (z *ZeroLogger) Info(
 	requestID string,
-	fields map[string]interface{},
+	fields map[string]any,
 	message string,
 ) {
 	z.client.Info().
@@ -88,7 +88,7 @@ func (z *ZeroLogger) Info(
 func (z *ZeroLogger) Warn(
 	requestID string,
 	err error,
-	fields map[string]interface{},
+	fields map[string]any,
 	message string,
 ) {
 	z.client.Warn().
@@ -101,7 +101,7 @@ func (z *ZeroLogger) Warn(
 func (z *ZeroLogger) Error(
 	requestID string,
 	err error,
-	fields map[string]interface{},
+	fields map[string]any,
 	message string,
 ) {
 	z.client.Error().
@@ -114,7 +114,7 @@ func (z *ZeroLogger) Error(
 func (z *ZeroLogger) Fatal(
 	requestID string,
 	err error,
-	fields map[string]interface{},
+	fields map[string]any,
 	message string,
 ) {
 	z.client.Fatal().

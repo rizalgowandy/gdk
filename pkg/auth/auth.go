@@ -57,7 +57,7 @@ func (h *Operator) GenerateToken(user Claims) (TokenResponse, error) {
 // ValidateToken validates and parses the JWT token
 func (h *Operator) ValidateToken(tokenString string) (Claims, error) {
 	// Parse the token
-	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (any, error) {
 		// Validate the signing method
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf(

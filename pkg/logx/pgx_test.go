@@ -12,7 +12,7 @@ func TestPGX_Log(t *testing.T) {
 		ctx   context.Context
 		level pgx.LogLevel
 		msg   string
-		data  map[string]interface{}
+		data  map[string]any
 	}
 	tests := []struct {
 		name string
@@ -24,7 +24,7 @@ func TestPGX_Log(t *testing.T) {
 				ctx:   context.Background(),
 				level: pgx.LogLevelInfo,
 				msg:   "testing",
-				data: map[string]interface{}{
+				data: map[string]any{
 					"sql": " INSERT INTO cronx_histories (\tid,\tcreated_at,\tname,\tstatus,\tstatus_code,\tstarted_at,\tfinished_at,\tlatency,\tmetadata   )   VALUES (\t  $1,\t  $2,\t  $3,\t  $4,\t  $5,\t  $6,\t  $7,\t  $8,\t  $9   )\n;  ",
 				},
 			},

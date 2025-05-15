@@ -27,7 +27,7 @@ type BindUnmarshaler interface {
 
 // Bind binds the request to the destination struct.
 // nolint:gocyclo
-func Bind(r *http.Request, i interface{}) (err error) {
+func Bind(r *http.Request, i any) (err error) {
 	muxParams := mux.Vars(r)
 	params := map[string][]string{}
 	for k, v := range muxParams {
@@ -120,7 +120,7 @@ func FormParams(r *http.Request) (url.Values, error) {
 }
 
 // nolint:gocyclo
-func bindData(ptr interface{}, data map[string][]string, tag string) error {
+func bindData(ptr any, data map[string][]string, tag string) error {
 	if ptr == nil || len(data) == 0 {
 		return nil
 	}

@@ -44,7 +44,7 @@ type Ristretto struct {
 }
 
 // Get returns the value (if any) and a boolean representing whether the value was found or not.
-func (r *Ristretto) Get(_ context.Context, key string) (res interface{}, exists bool) {
+func (r *Ristretto) Get(_ context.Context, key string) (res any, exists bool) {
 	res, exist := r.cache.Get(key)
 	if !exist || res == nil {
 		return nil, false
@@ -58,7 +58,7 @@ func (r *Ristretto) Get(_ context.Context, key string) (res interface{}, exists 
 // If it returns true, there's still a chance it could be dropped by the policy
 // if its determined that the key-value item isn't worth keeping,
 // but otherwise the item will be added and other items will be evicted in order to make room.
-func (r *Ristretto) Set(_ context.Context, key string, value interface{}) bool {
+func (r *Ristretto) Set(_ context.Context, key string, value any) bool {
 	return r.cache.Set(key, value, 1)
 }
 
@@ -69,7 +69,7 @@ func (r *Ristretto) Set(_ context.Context, key string, value interface{}) bool {
 func (r *Ristretto) SetEX(
 	_ context.Context,
 	key string,
-	value interface{},
+	value any,
 	ttl time.Duration,
 ) bool {
 	return r.cache.SetWithTTL(key, value, 1, ttl)

@@ -6,8 +6,8 @@ import (
 
 func TestPercentage(t *testing.T) {
 	type args struct {
-		a interface{}
-		b interface{}
+		a any
+		b any
 	}
 	tests := []struct {
 		name string

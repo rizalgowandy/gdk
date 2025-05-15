@@ -8,7 +8,7 @@ import (
 )
 
 // String converts any value to string.
-func String(v interface{}) string {
+func String(v any) string {
 	if v == nil {
 		return ""
 	}
@@ -41,7 +41,7 @@ func String(v interface{}) string {
 }
 
 // Bool convert any value to boolean.
-func Bool(v interface{}) bool {
+func Bool(v any) bool {
 	switch v := v.(type) {
 	case string:
 		str := strings.TrimSpace(v)
@@ -58,7 +58,7 @@ func Bool(v interface{}) bool {
 }
 
 // Int converts any value to int
-func Int(v interface{}) int {
+func Int(v any) int {
 	switch v := v.(type) {
 	case string:
 		str := strings.TrimSpace(v)
@@ -91,7 +91,7 @@ func Int(v interface{}) int {
 }
 
 // Int64 converts any value to int64
-func Int64(v interface{}) int64 {
+func Int64(v any) int64 {
 	switch v := v.(type) {
 	case string:
 		str := strings.TrimSpace(v)
@@ -124,7 +124,7 @@ func Int64(v interface{}) int64 {
 }
 
 // Float64 converts any value to float64
-func Float64(v interface{}) float64 {
+func Float64(v any) float64 {
 	switch v := v.(type) {
 	case string:
 		str := strings.TrimSpace(v)

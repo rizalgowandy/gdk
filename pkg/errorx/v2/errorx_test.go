@@ -39,7 +39,7 @@ func TestMatch(t *testing.T) {
 func TestE(t *testing.T) {
 	tests := []struct {
 		name string
-		args []interface{}
+		args []any
 	}{
 		{
 			name: "No args",
@@ -47,7 +47,7 @@ func TestE(t *testing.T) {
 		},
 		{
 			name: "1 layer",
-			args: []interface{}{
+			args: []any{
 				Message("message"),
 				CodeConflict,
 				MetricStatusSuccess,
@@ -59,7 +59,7 @@ func TestE(t *testing.T) {
 		},
 		{
 			name: "2 layer with standard error",
-			args: []interface{}{
+			args: []any{
 				errors.New("standard-error"),
 				Message("message"),
 				CodeConflict,
@@ -68,7 +68,7 @@ func TestE(t *testing.T) {
 		},
 		{
 			name: "2 layer",
-			args: []interface{}{
+			args: []any{
 				&Error{
 					Code:     CodeGateway,
 					Message:  "gateway-message",
@@ -82,7 +82,7 @@ func TestE(t *testing.T) {
 		},
 		{
 			name: "3 layer with fields merged",
-			args: []interface{}{
+			args: []any{
 				E(
 					E(
 						New("timeout"),
@@ -103,13 +103,13 @@ func TestE(t *testing.T) {
 		},
 		{
 			name: "Invalid type",
-			args: []interface{}{
+			args: []any{
 				123,
 			},
 		},
 		{
 			name: "Same code",
-			args: []interface{}{
+			args: []any{
 				&Error{
 					Code:     CodeConflict,
 					Message:  "gateway-message",
@@ -123,7 +123,7 @@ func TestE(t *testing.T) {
 		},
 		{
 			name: "Missing code",
-			args: []interface{}{
+			args: []any{
 				&Error{
 					Code:    CodeConflict,
 					Message: "gateway-message",
@@ -135,7 +135,7 @@ func TestE(t *testing.T) {
 		},
 		{
 			name: "New from string",
-			args: []interface{}{
+			args: []any{
 				"this is an error",
 				Message("message"),
 				Op("userService.CreateUser"),

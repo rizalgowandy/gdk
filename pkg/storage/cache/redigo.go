@@ -375,7 +375,7 @@ func (r *Redigo) HDel(_ context.Context, key string, fields ...string) (int64, e
 		_ = con.Close()
 	}()
 
-	params := make([]interface{}, 0, len(fields)+1)
+	params := make([]any, 0, len(fields)+1)
 
 	params = append(params, key)
 	for _, f := range fields {
@@ -392,7 +392,7 @@ func (r *Redigo) HDel(_ context.Context, key string, fields ...string) (int64, e
 }
 
 // Del deletes a key.
-func (r *Redigo) Del(_ context.Context, key ...interface{}) (int64, error) {
+func (r *Redigo) Del(_ context.Context, key ...any) (int64, error) {
 	con := r.client.Get()
 	defer func() {
 		_ = con.Close()
@@ -489,7 +489,7 @@ func (r *Redigo) SAdd(_ context.Context, key string, value ...string) (bool, err
 		_ = con.Close()
 	}()
 
-	args := []interface{}{key}
+	args := []any{key}
 	for _, v := range value {
 		args = append(args, v)
 	}
