@@ -16,6 +16,15 @@ A collection of libraries to speed your Go development.
 go get -v github.com/rizalgowandy/gdk
 ```
 
+## For Development
+
+Install task:
+
+```shell
+sudo snap install task --classic # linux
+brew install go-task/tap/go-task # mac
+```
+
 ## Examples
 
 ### Logx
