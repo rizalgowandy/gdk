@@ -16,6 +16,7 @@ vendor/
 
 # IDE
 .idea/
+test.log
 
 # App binary, built with `go build`
 bin/
