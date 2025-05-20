@@ -27,6 +27,7 @@ linters:
     - forcetypeassert
     - gocognit
     - funlen
+    - err113
   settings:
     dupl:
       threshold: 100
