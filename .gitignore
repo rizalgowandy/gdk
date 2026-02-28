@@ -21,6 +21,7 @@ test.log
 # App binary, built with `go build`
 bin/
 tmp/
+gdk
 
 # Credential for testing purpose.
 .env

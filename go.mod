@@ -1,6 +1,6 @@
 module github.com/rizalgowandy/gdk
 
-go 1.24
+go 1.26
 
 require (
 	dario.cat/mergo v1.0.2
